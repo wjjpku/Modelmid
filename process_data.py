@@ -52,7 +52,9 @@ def process_ode(file_path):
                     data.append({
                         'id': f'ode_{len(data)+1}',
                         'course': '常微分方程',
-                        'content': prob_content.strip()
+                        'content': prob_content.strip(),
+                        'answer': '',
+                        'source': ''
                     })
                     current_item = []
                 prefix_text = [] 
@@ -70,7 +72,9 @@ def process_ode(file_path):
                     data.append({
                         'id': f'ode_{len(data)+1}',
                         'course': '常微分方程',
-                        'content': prob_content.strip()
+                        'content': prob_content.strip(),
+                        'answer': '',
+                        'source': ''
                     })
                 
                 item_content = line[line.find(r'\item')+5:].lstrip()
@@ -91,51 +95,64 @@ def process_algebra(file_path):
     data = []
     
     with open(file_path, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
+        # We parse the file starting from line 554 since the second part
+        # contains BOTH the questions and their respective answers.
+        lines = f.readlines()[554:]
         
-    current_item = []
+    current_id = None
+    current_content = []
+    current_answer = []
+    in_answer = False
     
-    in_document = False
+    prob_re = re.compile(r'^(\d+\.\d+\.\d+\*?)\.\s*(.*)')
+    ans_re = re.compile(r'^\s*\\textbf\{(证|解|注)\}\s*(.*)')
     
-    for i, line in enumerate(lines):
-        if i >= 554: # Stop after line 554 as requested
-            break
-            
+    for line in lines:
         stripped = line.strip()
         
-        if not in_document:
-            if stripped == r'\begin{document}':
-                in_document = True
-            continue
+        # Skip section headers in part 2 if any, but only if we are not inside a problem content/answer
+        if not current_id:
+            if stripped.startswith(r'\section') or stripped.startswith(r'\subsection') or stripped.startswith(r'\addcontentsline') or stripped == r'\newpage':
+                continue
             
-        if stripped.startswith(r'\section{'):
-            continue
-            
-        if stripped.startswith(r'\subsection{'):
-            continue
-            
-        # Match problem start: "1.1.1. " or "1.2.7*. "
-        match = re.match(r'^(\d+\.\d+\.\d+\*?)\.\s*(.*)', stripped)
-        if match:
-            if current_item:
+        match_prob = prob_re.match(stripped)
+        if match_prob:
+            if current_id:
+                ans_str = "".join(current_answer).strip()
                 data.append({
                     'id': f'algebra_{len(data)+1}',
                     'course': '近世代数',
-                    'content': "".join(current_item).strip()
+                    'content': "".join(current_content).strip(),
+                    'answer': ans_str,
+                    'source': 'Human' if ans_str else ''
                 })
-            item_content = match.group(2)
-            current_item = [item_content + "\n"]
-        else:
-            if current_item:
-                # ignore \newpage
-                if stripped != r'\newpage':
-                    current_item.append(line)
-                
-    if current_item:
+            
+            current_id = match_prob.group(1)
+            current_content = [match_prob.group(2) + "\n"]
+            current_answer = []
+            in_answer = False
+            continue
+            
+        match_ans = ans_re.match(stripped)
+        if match_ans and current_id:
+            in_answer = True
+            current_answer.append(line)
+            continue
+            
+        if current_id:
+            if in_answer:
+                current_answer.append(line)
+            else:
+                current_content.append(line)
+
+    if current_id:
+        ans_str = "".join(current_answer).strip()
         data.append({
             'id': f'algebra_{len(data)+1}',
             'course': '近世代数',
-            'content': "".join(current_item).strip()
+            'content': "".join(current_content).strip(),
+            'answer': ans_str,
+            'source': 'Human' if ans_str else ''
         })
         
     return data
@@ -143,7 +160,7 @@ def process_algebra(file_path):
 def main():
     base_dir = '/Users/jiaju/Documents/github/Modelmid'
     data_dir = os.path.join(base_dir, 'data')
-    output_dir = os.path.join(base_dir, 'processed_data')
+    output_dir = os.path.join(base_dir, 'dataset')
     
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -161,10 +178,10 @@ def main():
         print(f"Processing {algebra_file}...")
         all_data.extend(process_algebra(algebra_file))
         
-    output_csv = os.path.join(output_dir, 'processed_data.csv')
+    output_csv = os.path.join(output_dir, 'full_dataset.csv')
     
     with open(output_csv, 'w', encoding='utf-8', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['id', 'course', 'content'])
+        writer = csv.DictWriter(f, fieldnames=['id', 'course', 'content', 'answer', 'source'])
         writer.writeheader()
         for row in all_data:
             writer.writerow(row)
