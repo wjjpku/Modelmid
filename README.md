@@ -1,80 +1,100 @@
-# 项目三：基于文本与逻辑特征的数学作业来源判别（Human vs 各类LLMs）
+# 项目：基于文本与逻辑特征的数学作业来源判别 (Human vs Deepseek vs Kimi)
 
-## 1. 项目背景
-随着大语言模型（LLM）的普及，利用 ChatGPT、Kimi、文心一言等工具辅助完成数学理论推导作业或编程作业已成为常见现象。本项目的目标是通过批量采集人类真实作业与不同大语言模型生成的数学题解答，提取风格与逻辑特征，构建分类器，实现对解答来源的精准判别。
+## 1. 项目背景与目标
+随着大语言模型（LLM）的普及，利用 ChatGPT、Kimi、Deepseek 等工具辅助完成数学理论推导作业已成为常见现象。
+本项目的核心目标是：**通过采集人类真实的数学作业解答，并利用不同大语言模型生成相同题目的解答，提取其风格、排版与逻辑特征，构建一个高精度的机器学习分类器，实现对解答来源（人类还是某种特定 AI）的精准判别。**
 
-## 2. 数据处理说明
-为了方便大语言模型 API 批量读取、处理并生成对应的数学题目解答，我们将收集到的原始 LaTeX 题目文件及人类已有解答进行了结构化清洗和规范转换。
+---
 
-### 2.1 原始数据
-原始数据存放于 `data/` 目录下，包含：
-- `近世代数群论部分题目及解答latex代码（前554行为题目）`（《近世代数》群论相关题目及解答，包含人类标准解答）
+## 2. 项目目录结构
 
-### 2.2 处理与提取脚本
-我们编写了 `process_data.py` 脚本，该脚本能够：
-1. 自动解析并过滤原始 LaTeX 文件中的格式控制标签。
-2. 智能识别近世代数中的题目及其对应的人类解答部分。
-3. **数据清洗**：专门剔除了原作者个人习惯的排版前缀（如 `\textbf{证}`、`\textbf{解}`），以防造成分类模型数据泄露 (Data Leakage)。
-4. 将提取的题目和解答组装成统一规范的数据格式，每一行记录对应一道题，使用独立的字段 `human` 存储人类解答，并保留 `deepseek` 和 `kimi` 字段以供后续生成对照。
-
-**运行方式**：
-```bash
-python3 scripts/process_data.py
+```text
+Modelmid/
+├── data/                   # 原始数据目录
+│   └── 近世代数群论部分题目及解答latex代码...  # 包含题目与人类标准解答的原始 LaTeX 文件
+├── dataset/                # 处理后的结构化数据目录
+│   └── full_dataset.csv    # 核心数据集 (id, course, content, human, deepseek, kimi)
+├── docs/                   # 项目文档
+│   └── data_standard.md    # 数据集字段定义与规范说明
+├── models/                 # 训练好的机器学习模型
+│   └── best_classifier_model.pkl  # 表现最好的组合特征 SVM 模型
+├── scripts/                # 自动化处理与模型训练脚本
+│   ├── process_data.py               # 提取原始数据、清洗并生成 CSV
+│   ├── generate_deepseek_answers.py  # 并发调用 Deepseek API 补充解答
+│   ├── generate_kimi_answers.py      # 并发调用 Kimi API 补充解答
+│   ├── train_classifier.py           # 特征工程、模型训练与交叉验证
+│   └── check_dist.py                 # 检查数据集标签分布
+├── .env                    # 环境变量配置文件 (存放 API Keys)
+├── experience.md           # 记录项目探索过程、踩坑经验与反思
+└── README.md               # 项目主说明文档 (本文档)
 ```
 
-处理后的文件保存在 `dataset/full_dataset.csv`，共提取了 174 道题目及其现有的解答。详细的字段定义与规范请参考 [docs/data_standard.md](docs/data_standard.md)。
+---
 
-## 3. 生成 LLM 数据解答 (并发提速版)
-为了构建判别分类器所需的负样本，我们编写了自动化生成脚本 `generate_deepseek_answers.py` 和 `generate_kimi_answers.py`。这些脚本读取 `dataset/full_dataset.csv`：
-- 遍历所有题目，检查对应的 LLM 字段（`deepseek` 或 `kimi`）是否为空。
-- 若为空，则将题干配合鲁棒的提示词，**通过多线程并发方式 (默认 5 个 worker)** 发送给对应的 API 进行批量解答。
-- 将生成的解答自动保存回对应的字段中。
+## 3. 核心工作流与运行方式
 
-**运行方式**：
-脚本支持自动读取项目根目录下的 `.env` 文件。只需在 `.env` 中配置对应的 API 密钥：
-```env
-DEEPSEEK_API_KEY="your_deepseek_key_here"
-MOONSHOT_API_KEY="your_kimi_key_here"
-```
-然后分别运行：
-```bash
-# 获取 Deepseek 答案
-python3 scripts/generate_deepseek_answers.py
+整个项目分为三个主要阶段：数据处理、LLM 数据生成、特征工程与模型训练。所有脚本均放置在 `scripts/` 目录下，并在项目根目录下运行。
 
-# 获取 Kimi (Moonshot) 答案
-python3 scripts/generate_kimi_answers.py
-```
+### 阶段一：数据清洗与结构化提取
+我们编写了 `scripts/process_data.py` 脚本，从原始的 LaTeX 文件中智能提取题目和对应的人类解答。
+**关键处理**：为了防止数据泄露（Data Leakage），脚本专门使用正则表达式剔除了人类解答中强烈的个人习惯排版前缀（如 `\textbf{证}`、`\textbf{解}`）。
+- **运行命令**：
+  ```bash
+  python3 scripts/process_data.py
+  ```
+- **输出结果**：生成规范的 `dataset/full_dataset.csv` 文件，包含 174 道题目及其纯净的人类解答。
 
-## 4. 模型设计与特征工程
-在数据（目前包含 Human 174 条, Deepseek 174 条, Kimi 173 条，共 521 条）清洗后，我们排除了人工标记的干扰，设计了多层次的特征提取和三分类模型：
+### 阶段二：大语言模型数据生成 (多线程并发)
+为了构建用于对比的负样本，我们编写了自动化生成脚本。脚本会读取 CSV 文件中空缺的 LLM 字段，将题干配合鲁棒的提示词，**通过多线程并发方式 (默认 5 个 worker)** 发送给对应的 API 进行批量解答，并将结果覆写回 CSV。
+- **环境配置**：在根目录创建或编辑 `.env` 文件，填入你的 API 密钥：
+  ```env
+  DEEPSEEK_API_KEY="your_deepseek_key_here"
+  MOONSHOT_API_KEY="your_kimi_key_here"
+  ```
+- **运行命令**：
+  ```bash
+  python3 scripts/generate_deepseek_answers.py
+  python3 scripts/generate_kimi_answers.py
+  ```
 
-### 4.1 特征设计
-除了传统的 **TF-IDF** (词袋特征)，我们还设计了领域特异性的**自定义结构特征**：
-- **基础排版特征**：回答总长度、行数、平均每行长度。
-- **公式特征**：行内和块级公式的总数、公式密度。
-- **特定 LaTeX 宏**：`\textbf`、`\frac`、`\sum` 等。
-- **逻辑词频**：人类常用的连词（如：因为、所以、显然、同理、从而、故等）的出现次数和密度。
-- **结构化标识**：列表/步骤序号。
+### 阶段三：模型训练与特征工程
+在凑齐 Human (174条)、Deepseek (174条)、Kimi (173条) 的均衡三分类数据集后，我们执行了多层次的特征提取和模型训练。
+- **运行命令**：
+  ```bash
+  python3 scripts/train_classifier.py
+  ```
+- **输出结果**：在终端打印 5-fold 交叉验证的准确率、详细的分类报告以及随机森林分析出的特征重要性，并将最优模型固化保存至 `models/best_classifier_model.pkl`。
 
-### 4.2 训练结果与分析 (Human vs Deepseek vs Kimi)
-在剔除了数据泄露干扰后，我们在三分类（三个类别样本极度均衡）场景下评估了模型：
-- **模型表现**：组合特征 (TF-IDF + 自定义特征) + SVM 能够达到 **98%** 的整体准确率！
-- 模型在判断 **Human** 时的 F1-score 为 1.00，在区分 **Deepseek** (F1: 0.97) 与 **Kimi** (F1: 0.97) 时也展现出了极高的辨识度。
+---
 
-**特征重要性结论 (基于随机森林分析)**：
-随着 Kimi 数据的加入，模型用于区别人类和两个不同大模型的关键特征为：
-1. `num_textbf` (0.1953): 虽然剔除了 `\textbf{证}`，但人类在正文中其他地方使用加粗的习惯与大模型仍有显著差异。
-2. `num_lines` (0.1878): 换行习惯的差异。人类解答通常分步较多，而大模型尤其是 Kimi 和 Deepseek 对段落长度的控制有自己的内置策略。
-3. `length` (0.1300): 整体文本长度的差异。LLM 的回答往往比人类长很多。
-4. `avg_line_length` (0.1099): 平均行长的差异。LLM 在一段内连写的字数远超人类。
-5. `logical_words_density` (0.0967) 与 `logical_words_count` (0.0952): **逻辑连接词特征在三分类中重要性激增！** 这说明人类、Deepseek 和 Kimi 在使用“因为”、“所以”、“显然”等推理词的频率和密度上有着非常独特的行文签名。
+## 4. 模型设计与实验分析
 
-**运行与使用模型**：
-执行以下命令即可触发特征提取、模型训练与评估，并把表现最好的组合 SVM 模型固化保存为 `models/best_classifier_model.pkl`：
-```bash
-python3 scripts/train_classifier.py
-```
+### 4.1 领域特异性特征工程
+除了传统的 **TF-IDF** (词袋特征)，我们发现基于数学文本排版的**自定义结构特征**具有极其强大的区分度：
+1. **基础排版特征**：回答总长度 (`length`)、行数 (`num_lines`)、平均每行长度 (`avg_line_length`)。
+2. **公式特征**：行内和块级公式的总数 (`math_blocks`)、公式密度 (`math_density`)。
+3. **特定 LaTeX 宏**：`\textbf`、`\frac`、`\sum` 等的使用频率。
+4. **逻辑词频**：推理连词（如：因为、所以、显然、同理、从而、故等）的出现次数 (`logical_words_count`) 和密度 (`logical_words_density`)。
 
-## 5. 后续工作 (TODO)
-- 进行跨学科（如：常微分方程、概率论等）的泛化性测试，检验这些结构特征是否依然稳健。
-- 研究对抗判别器的潜在方法，即如何通过 prompt 工程让大模型伪装人类的排版和逻辑词频。
+### 4.2 实验结果 (三分类：Human vs Deepseek vs Kimi)
+在彻底排除了人工标记的干扰后，我们在三分类场景下使用 5-fold 交叉验证评估了模型：
+- **最佳模型**：组合特征 (TF-IDF + 自定义排版/逻辑特征) + SVM 分类器。
+- **整体准确率**：稳定达到 **98%** 的超高水准。
+- **各类别 F1-score**：
+  - Human：1.00 (几乎能完美识别出人类手写解答)
+  - Deepseek：0.97
+  - Kimi：0.97
+
+### 4.3 核心特征洞察
+通过随机森林提取的特征重要性，我们得出了以下关键结论：
+1. **换行与长度控制差异 (`num_lines`, `length`, `avg_line_length`)**：人类解答通常分步较多、结构零散；而大模型往往倾向于大段输出，且在一行内连写的字数远超人类。
+2. **逻辑词的行文签名 (`logical_words_density`)**：随着 Kimi 的加入，逻辑连接词特征在三分类中重要性激增！这说明人类、Deepseek 和 Kimi 在使用“因为”、“所以”、“显然”等词汇进行数学推理时，频率和密度有着非常独特的“行文指纹”。
+3. **公式包裹习惯 (`math_blocks`)**：LLM 在输出中会比人类更频繁、更细致地使用 `$` 包裹哪怕是非常短小的数学符号。
+
+*(更多关于模型迭代、踩坑经历与数据清洗的细节，请参阅 [experience.md](experience.md))*
+
+---
+
+## 5. 后续规划 (TODO)
+- **泛化性验证**：引入其他理科领域（如：常微分方程、概率论等）的数据，检验这些提取出的排版与逻辑特征是否依然稳健。
+- **对抗生成网络 (GAN) 测试**：研究对抗判别器的潜在方法，即尝试通过高级的 Prompt 工程，强制要求大模型去刻意模仿人类的排版习惯和逻辑词频，观察当前分类器是否会被欺骗。
