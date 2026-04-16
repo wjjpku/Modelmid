@@ -1,8 +1,8 @@
-# 项目：基于文本与逻辑特征的数学作业来源判别 (Human vs Deepseek vs Kimi)
+# 项目：基于文本与逻辑特征的纯英文数学作业来源判别 (Human vs Deepseek vs Kimi vs GLM)
 
 ## 1. 项目背景与目标
-随着大语言模型（LLM）的普及，利用 ChatGPT、Kimi、Deepseek 等工具辅助完成数学理论推导作业已成为常见现象。
-本项目的核心目标是：**通过采集人类真实的数学作业解答，并利用不同大语言模型生成相同题目的解答，提取其风格、排版与逻辑特征，构建一个高精度的机器学习分类器，实现对解答来源（人类还是某种特定 AI）的精准判别。**
+随着大语言模型（LLM）的普及，利用 ChatGPT、Kimi、Deepseek、GLM 等工具辅助完成数学理论推导作业已成为常见现象。
+本项目的核心目标是：**通过采集纯英文环境中人类真实的数学作业解答，并利用不同大语言模型生成相同题目的解答，提取其风格、排版与逻辑特征，构建一个高精度的机器学习分类器，实现对解答来源（人类还是某种特定 AI）的精准判别。**
 
 ---
 
@@ -10,21 +10,18 @@
 
 ```text
 Modelmid/
-├── data/                   # 原始数据目录
-│   ├── 近世代数群论部分题目及解答latex代码...  # 包含题目与人类标准解答的原始 LaTeX 文件
-│   └── 数学分析习题.tex        # 《数学分析》微积分相关题目及解答
 ├── dataset/                # 处理后的结构化数据目录
-│   └── full_dataset.csv    # 核心数据集 (id, course, content, human, deepseek, kimi)
-├── docs/                   # 项目文档
-│   └── data_standard.md    # 数据集字段定义与规范说明
+│   └── full_dataset.json   # 核心数据集 (id, problem, human, deepseek, kimi, glm)
+├── docs/                   # 项目文档与特征可视化图表
 ├── models/                 # 训练好的机器学习模型
 │   └── best_classifier_model.pkl  # 表现最好的组合特征 SVM 模型
 ├── scripts/                # 自动化处理与模型训练脚本
-│   ├── process_data.py               # 提取原始数据、清洗并生成 CSV
-│   ├── generate_deepseek_answers.py  # 并发调用 Deepseek API 补充解答
-│   ├── generate_kimi_answers.py      # 并发调用 Kimi API 补充解答
-│   ├── train_classifier.py           # 特征工程、模型训练与交叉验证
-│   └── check_dist.py                 # 检查数据集标签分布
+│   ├── migrate_to_json.py            # 从 HuggingFace 下载 StackMathQA 数据并构建 JSON
+│   ├── generate_deepseek_answers.py  # 并发调用 Deepseek API 补充解答 (实时安全保存)
+│   ├── generate_kimi_answers.py      # 并发调用 Kimi API 补充解答 (实时安全保存)
+│   ├── generate_glm_answers.py       # 并发调用 ZhipuAI (GLM-4) API 补充解答 (实时安全保存)
+│   ├── train_classifier.py           # 提取英文逻辑特征、模型训练与交叉验证
+│   └── visualize_features.py         # 绘制特征分布的箱线图、散点图与雷达图
 ├── .env                    # 环境变量配置文件 (存放 API Keys)
 ├── experience.md           # 记录项目探索过程、踩坑经验与反思
 └── README.md               # 项目主说明文档 (本文档)
@@ -34,37 +31,39 @@ Modelmid/
 
 ## 3. 核心工作流与运行方式
 
-整个项目分为三个主要阶段：数据处理、LLM 数据生成、特征工程与模型训练。所有脚本均放置在 `scripts/` 目录下，并在项目根目录下运行。
+整个项目分为三个主要阶段：纯英文数据拉取、LLM 数据生成、特征工程与模型训练。
 
-### 阶段一：数据清洗与结构化提取
-我们编写了 `scripts/process_data.py` 脚本，从原始的 LaTeX 文件中智能提取题目和对应的人类解答。
-**关键处理**：为了防止数据泄露（Data Leakage），脚本专门使用正则表达式剔除了人类解答中强烈的个人习惯排版前缀（如 `\textbf{证}`、`\textbf{解}`）。
+### 阶段一：高质量纯英文数据集构建
+我们废弃了之前的小规模中文数据，转而接入 HuggingFace 上的高质量数学推理数据集 `math-ai/StackMathQA`。
+脚本会从中提取 1000 条纯英文的数学题目（`problem`）以及真实人类专家给出的标准解答（`human`），并构建为统一的 JSON 格式。
 - **运行命令**：
   ```bash
-  python3 scripts/process_data.py
+  python3 scripts/migrate_to_json.py
   ```
-- **输出结果**：生成规范的 `dataset/full_dataset.csv` 文件，目前共提取了 219 道（174道代数 + 45道数分）题目及其纯净的人类解答。
 
-### 阶段二：大语言模型数据生成 (多线程并发)
-为了构建用于对比的负样本，我们编写了自动化生成脚本。脚本会读取 CSV 文件中空缺的 LLM 字段，将题干配合鲁棒的提示词，**通过多线程并发方式 (默认 5 个 worker)** 发送给对应的 API 进行批量解答，并将结果覆写回 CSV。
+### 阶段二：大语言模型数据生成 (多线程并发 + 实时安全保存)
+为了构建用于对比的负样本，脚本会读取 JSON 文件中空缺的 LLM 字段，将题干配合严格的纯英文提示词（禁止寒暄，纯粹 LaTeX 格式输出），**通过多线程并发方式** 发送给对应的 API。
+*注：脚本内置了严格的线程锁与原子级文件替换机制，哪怕遇到断电或强制中断，已生成的数据也不会丢失且 JSON 文件不会损坏。*
 - **环境配置**：在根目录创建或编辑 `.env` 文件，填入你的 API 密钥：
   ```env
   DEEPSEEK_API_KEY="your_deepseek_key_here"
   MOONSHOT_API_KEY="your_kimi_key_here"
+  GLM_API_KEY="your_glm_key_here"
   ```
 - **运行命令**：
   ```bash
   python3 scripts/generate_deepseek_answers.py
   python3 scripts/generate_kimi_answers.py
+  python3 scripts/generate_glm_answers.py
   ```
 
 ### 阶段三：模型训练与特征工程
-在凑齐 Human (219条)、Deepseek (219条)、Kimi (219条) 的跨学科均衡三分类数据集（共657条）后，我们执行了多层次的特征提取和模型训练。
+在凑齐 Human, Deepseek, Kimi, GLM 四个维度的均衡纯英文四分类数据集后，我们执行了多层次的特征提取和模型训练。
 - **运行命令**：
   ```bash
   python3 scripts/train_classifier.py
   ```
-- **输出结果**：在终端打印 5-fold 交叉验证的准确率、详细的分类报告以及随机森林分析出的特征重要性，并将最优模型固化保存至 `models/best_classifier_model.pkl`。
+- **输出结果**：在终端打印 5-fold 交叉验证的准确率、详细的分类报告，并将最优模型固化保存至 `models/best_classifier_model.pkl`。
 
 ---
 

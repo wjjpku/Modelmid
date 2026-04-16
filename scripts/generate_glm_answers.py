@@ -19,10 +19,11 @@ def load_env():
 
 load_env()
 
-KIMI_API_KEY = os.environ.get("MOONSHOT_API_KEY", "YOUR_API_KEY_HERE")
-API_URL = "https://api.moonshot.cn/v1/chat/completions"
+GLM_API_KEY = os.environ.get("GLM_API_KEY", "YOUR_API_KEY_HERE")
+# ZhipuAI v4 API url is OpenAI compatible
+API_URL = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
 
-def generate_answer_with_kimi(problem_content: str, current_id: int) -> dict:
+def generate_answer_with_glm(problem_content: str, current_id: int) -> dict:
     system_prompt = (
         "You are a professional mathematics professor. Please provide a detailed and rigorous mathematical derivation and proof using standard LaTeX format.\n"
         "Requirements:\n"
@@ -35,11 +36,11 @@ def generate_answer_with_kimi(problem_content: str, current_id: int) -> dict:
     
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {KIMI_API_KEY}"
+        "Authorization": f"Bearer {GLM_API_KEY}"
     }
     
     data = {
-        "model": "moonshot-v1-8k",
+        "model": "glm-4",  # 使用 glm-4 模型，您可以根据需要调整为 glm-4-flash 等版本
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -56,10 +57,10 @@ def generate_answer_with_kimi(problem_content: str, current_id: int) -> dict:
         print(f"Successfully generated for ID {current_id}.")
         return {"id": current_id, "answer": answer, "error": None}
     except Exception as e:
-        print(f"Error calling Kimi API for ID {current_id}: {e}")
+        print(f"Error calling GLM API for ID {current_id}: {e}")
         return {"id": current_id, "answer": "", "error": str(e)}
 
-def process_dataset(file_path: str, max_workers: int = 3):
+def process_dataset(file_path: str, max_workers: int = 5):
     if not os.path.exists(file_path):
         print(f"Error: {file_path} not found.")
         return
@@ -71,17 +72,18 @@ def process_dataset(file_path: str, max_workers: int = 3):
     
     tasks = []
     for row in data:
-        if not row.get('kimi'):
+        # 如果不存在 glm 字段，或者为空，就加入生成队列
+        if not row.get('glm'):
             tasks.append({
                 'id': row.get('id'),
                 'problem': row.get('problem', '')
             })
             
     if not tasks:
-        print("All problems already have Kimi answers.")
+        print("All problems already have GLM answers.")
         return
         
-    print(f"Found {len(tasks)} problems needing Kimi answers. Starting {max_workers} concurrent workers...")
+    print(f"Found {len(tasks)} problems needing GLM answers. Starting {max_workers} concurrent workers...")
     
     results_map = {}
     completed_count = 0
@@ -92,7 +94,7 @@ def process_dataset(file_path: str, max_workers: int = 3):
         with lock:
             for r in data:
                 if r.get('id') == res_id:
-                    r['kimi'] = res_answer
+                    r['glm'] = res_answer
                     break
                     
             with open(file_path, 'w', encoding='utf-8') as f:
@@ -100,7 +102,7 @@ def process_dataset(file_path: str, max_workers: int = 3):
     
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_id = {
-            executor.submit(generate_answer_with_kimi, task['problem'], task['id']): task['id'] 
+            executor.submit(generate_answer_with_glm, task['problem'], task['id']): task['id'] 
             for task in tasks
         }
         
@@ -116,12 +118,12 @@ def process_dataset(file_path: str, max_workers: int = 3):
             except Exception as exc:
                 print(f"Task ID {task_id} generated an exception: {exc}")
                 
-    print(f"\nAll tasks completed! Added {len(results_map)} new Kimi answers.")
+    print(f"\nAll tasks completed! Added {len(results_map)} new GLM answers.")
 
 if __name__ == '__main__':
     dataset_path = '/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.json'
-    if KIMI_API_KEY == "YOUR_API_KEY_HERE" or not KIMI_API_KEY:
-        print("WARNING: API KEY not set.")
+    if GLM_API_KEY == "YOUR_API_KEY_HERE" or not GLM_API_KEY:
+        print("WARNING: API KEY not set. Please set GLM_API_KEY in .env")
     else:
-        # Kimi API rate limit is strict, so keep max_workers low
-        process_dataset(dataset_path, max_workers=50)
+        # 并发数可根据智谱 API 额度调整
+        process_dataset(dataset_path, max_workers=20)

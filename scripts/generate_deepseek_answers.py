@@ -95,11 +95,8 @@ def process_dataset(file_path: str, max_workers: int = 5):
                     r['deepseek'] = res_answer
                     break
                     
-            # 写入临时文件，然后重命名，防止写入过程中断导致文件损坏
-            temp_path = file_path + '.tmp'
-            with open(temp_path, 'w', encoding='utf-8') as f:
+            with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
-            os.replace(temp_path, file_path)
     
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_id = {
@@ -126,4 +123,4 @@ if __name__ == '__main__':
     if DEEPSEEK_API_KEY == "YOUR_API_KEY_HERE" or not DEEPSEEK_API_KEY:
         print("WARNING: API KEY not set.")
     else:
-        process_dataset(dataset_path, max_workers=200)
+        process_dataset(dataset_path, max_workers=50)
