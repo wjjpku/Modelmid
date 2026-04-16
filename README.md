@@ -10,19 +10,26 @@
 
 ```text
 Modelmid/
+├── archive/                # 归档的旧版中文数据与旧脚本
 ├── dataset/                # 处理后的结构化数据目录
 │   └── full_dataset.json   # 核心数据集 (id, problem, human, deepseek, kimi, glm, qwen)
 ├── docs/                   # 项目文档与特征可视化图表
 ├── models/                 # 训练好的机器学习模型
 │   └── best_classifier_model.pkl  # 表现最好的组合特征 SVM 模型
 ├── scripts/                # 自动化处理与模型训练脚本
-│   ├── migrate_to_json.py            # 从 HuggingFace 下载 StackMathQA 数据并构建 JSON
-│   ├── generate_deepseek_answers.py  # 并发调用 Deepseek API 补充解答 (实时安全保存)
-│   ├── generate_kimi_answers.py      # 并发调用 Kimi API 补充解答 (实时安全保存)
-│   ├── generate_glm_answers.py       # 并发调用 ZhipuAI (GLM-4) API 补充解答 (实时安全保存)
-│   ├── generate_qwen_answers.py      # 并发调用 Aliyun (Qwen-Plus) API 补充解答 (实时安全保存)
-│   ├── train_classifier.py           # 提取英文逻辑特征、模型训练与交叉验证
-│   └── visualize_features.py         # 绘制特征分布的箱线图、散点图与雷达图
+│   ├── data_generation/    # 数据获取与 LLM 并发生成脚本
+│   │   ├── migrate_to_json.py
+│   │   ├── generate_deepseek_answers.py
+│   │   ├── generate_kimi_answers.py
+│   │   ├── generate_glm_answers.py
+│   │   └── generate_qwen_answers.py
+│   ├── model_training/     # 特征工程与模型训练脚本
+│   │   ├── train_classifier.py
+│   │   └── analyze_tfidf.py
+│   ├── visualization/      # 数据与特征可视化脚本
+│   │   ├── visualize_features.py
+│   │   └── check_dist.py
+│   └── legacy_utils/       # 历史遗留工具脚本
 ├── .env                    # 环境变量配置文件 (存放 API Keys)
 ├── experience.md           # 记录项目探索过程、踩坑经验与反思
 └── README.md               # 项目主说明文档 (本文档)
@@ -39,7 +46,7 @@ Modelmid/
 脚本会从中提取 1000 条纯英文的数学题目（`problem`）以及真实人类专家给出的标准解答（`human`），并构建为统一的 JSON 格式。
 - **运行命令**：
   ```bash
-  python3 scripts/migrate_to_json.py
+  python3 scripts/data_generation/migrate_to_json.py
   ```
 
 ### 阶段二：大语言模型数据生成 (多线程并发 + 实时安全保存)
@@ -54,17 +61,17 @@ Modelmid/
   ```
 - **运行命令**：
   ```bash
-  python3 scripts/generate_deepseek_answers.py
-  python3 scripts/generate_kimi_answers.py
-  python3 scripts/generate_glm_answers.py
-  python3 scripts/generate_qwen_answers.py
+  python3 scripts/data_generation/generate_deepseek_answers.py
+  python3 scripts/data_generation/generate_kimi_answers.py
+  python3 scripts/data_generation/generate_glm_answers.py
+  python3 scripts/data_generation/generate_qwen_answers.py
   ```
 
 ### 阶段三：模型训练与特征工程
 在凑齐 Human, Deepseek, Kimi, GLM, Qwen 五个维度的均衡纯英文数据集（共 5000 条）后，我们执行了多层次的特征提取和模型训练。
 - **运行命令**：
   ```bash
-  python3 scripts/train_classifier.py
+  python3 scripts/model_training/train_classifier.py
   ```
 - **输出结果**：在终端打印 5-fold 交叉验证的准确率、详细的分类报告，并将最优模型固化保存至 `models/best_classifier_model.pkl`。
 
@@ -75,7 +82,7 @@ Modelmid/
 
 您可以运行以下命令生成特征的可视化图表，结果将保存在 `docs/figures/` 中：
 ```bash
-python3 scripts/visualize_features.py
+python3 scripts/visualization/visualize_features.py
 ```
 
 ### 4.1 领域特异性与防数据泄露特征工程
