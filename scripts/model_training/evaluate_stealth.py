@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 from train_classifier import TextFeatureExtractor, DenseTransformer
 
 def evaluate_stealth_data():
-    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')'
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
     model_path = os.path.join(base_dir, 'models/best_classifier_model.pkl')
     stealth_data_path = os.path.join(base_dir, 'dataset/stealth_dataset.json')
     

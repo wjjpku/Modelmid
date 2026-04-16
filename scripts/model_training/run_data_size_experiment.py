@@ -58,7 +58,7 @@ def get_pipeline(clf, use_dense_transformer=False):
         ])
 
 def run_data_size_experiment():
-    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')'
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
     dataset_path = os.path.join(base_dir, 'dataset/full_dataset.json')
     output_dir = os.path.join(base_dir, 'latex_report/figures')
     os.makedirs(output_dir, exist_ok=True)

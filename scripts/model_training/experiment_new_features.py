@@ -131,7 +131,7 @@ class EnhancedFeatureExtractor(BaseEstimator, TransformerMixin):
 
 def run_experiment():
     print("Loading dataset...")
-    df = load_data(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')/dataset/full_dataset.json')
+    df = load_data(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'dataset/full_dataset.json'))
     X_df = pd.DataFrame({'text': df['text']})
     y = df['label']
     print(f"Total samples: {len(df)}")

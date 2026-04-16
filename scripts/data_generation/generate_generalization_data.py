@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datasets import load_dataset
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')/.env')
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.env'))
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY")
 KIMI_API_KEY = os.environ.get("MOONSHOT_API_KEY")
 GLM_API_KEY = os.environ.get("GLM_API_KEY")
@@ -58,7 +58,7 @@ def call_qwen(prompt):
     return res.json()["choices"][0]["message"]["content"].strip()
 
 def generate_generalization_data():
-    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')'
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
     output_path = os.path.join(base_dir, 'dataset/generalization_dataset.json')
     
     print("Loading Hendrycks MATH dataset...")

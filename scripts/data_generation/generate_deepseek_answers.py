@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 
 def load_env():
-    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')/.env'
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.env')
     if os.path.exists(env_path):
         with open(env_path, 'r', encoding='utf-8') as f:
             for line in f:
@@ -119,7 +119,7 @@ def process_dataset(file_path: str, max_workers: int = 5):
     print(f"\nAll tasks completed! Added {len(results_map)} new Deepseek answers.")
 
 if __name__ == '__main__':
-    dataset_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')/dataset/full_dataset.json'
+    dataset_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'dataset/full_dataset.json')
     if DEEPSEEK_API_KEY == "YOUR_API_KEY_HERE" or not DEEPSEEK_API_KEY:
         print("WARNING: API KEY not set.")
     else:

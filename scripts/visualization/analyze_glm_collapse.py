@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '
 from train_classifier import TextFeatureExtractor
 
 def analyze_glm_collapse():
-    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')'
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
     predictions_path = os.path.join(base_dir, 'dataset/generalization_predictions.csv')
     
     print("Loading Generalization Predictions...")

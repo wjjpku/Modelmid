@@ -171,7 +171,7 @@ def process_math_analysis(file_path):
     return data
 
 def main():
-    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')'
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
     data_dir = os.path.join(base_dir, 'data')
     output_dir = os.path.join(base_dir, 'dataset')
     
