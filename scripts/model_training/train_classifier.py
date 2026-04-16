@@ -160,15 +160,11 @@ def train_and_save_best_model(df):
     
     X_df = pd.DataFrame({'text': X})
     
-    # 增加自定义的停用词，过滤掉可能导致数据泄露的“大模型独有”或“人类独有”的格式/套话词汇
-    custom_stop_words = [
-        'boxed', 'quad', 'therefore', 'hence', 'proof', 'solution', 'conclusion', 'finally', 'we', 'have', 'thus', 'step', 'now', 'let'
-    ]
-    
+    # 移除自定义停用词，允许模型利用作弊词（Trick Words）来进行分类，以便对比最终结果
     combined_features = ColumnTransformer([
         ('tfidf', TfidfVectorizer(max_features=1000, ngram_range=(1, 2), 
                                   token_pattern=r'(?u)\b\w+\b|\\\[a-zA-Z]+',
-                                  stop_words=custom_stop_words), 'text'),
+                                  stop_words='english'), 'text'),
         ('custom', Pipeline([
             ('extractor', TextFeatureExtractor()),
             ('scaler', StandardScaler())
