@@ -172,7 +172,7 @@ def analyze_features_and_interpretability(df):
     plt.title("Feature Importances for Differentiating Math Answer Sources", fontsize=16)
     plt.xlabel("Random Forest Feature Importance", fontsize=14)
     plt.tight_layout()
-    plt.savefig('/Users/jiaju/Documents/github/Modelmid/docs/figures/feature_importances.png', dpi=300)
+    plt.savefig(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')/docs/figures/feature_importances.png', dpi=300)
     plt.close()
     print("Feature importance plot saved.")
 
@@ -228,7 +228,7 @@ def train_and_save_best_model(df):
     # print(f"\n5-Fold CV Mean Accuracy: {scores.mean():.4f} (+/- {scores.std():.4f})")
 
 if __name__ == '__main__':
-    df = load_data('/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.json')
+    df = load_data(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')/dataset/full_dataset.json')
     if len(df) > 0:
         analyze_features_and_interpretability(df)
         train_and_save_best_model(df)

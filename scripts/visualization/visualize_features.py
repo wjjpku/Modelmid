@@ -19,7 +19,7 @@ plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
 plt.rcParams['axes.unicode_minus'] = False
 
 def generate_report_and_plots():
-    base_dir = '/Users/jiaju/Documents/github/Modelmid'
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')'
     dataset_path = os.path.join(base_dir, 'dataset/full_dataset.json')
     output_dir = os.path.join(base_dir, 'docs/figures')
     report_path = os.path.join(base_dir, 'docs/experiment_report.md')

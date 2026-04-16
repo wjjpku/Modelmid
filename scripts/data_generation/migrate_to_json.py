@@ -3,7 +3,7 @@ import json
 from datasets import load_dataset
 
 def main():
-    base_dir = '/Users/jiaju/Documents/github/Modelmid'
+    base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')'
     json_path = os.path.join(base_dir, 'dataset', 'full_dataset.json')
     
     all_data = []

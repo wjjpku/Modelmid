@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 
@@ -15,7 +16,8 @@ def load_data(csv_path):
             records.append({'text': str(row['kimi']).strip(), 'label': 'Kimi'})
     return pd.DataFrame(records)
 
-df = load_data('/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.csv')
+base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+df = load_data(os.path.join(base_dir, 'dataset/full_dataset.csv'))
 X = df['text']
 y = df['label']
 

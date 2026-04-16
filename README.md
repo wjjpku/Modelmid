@@ -1,143 +1,498 @@
-# 项目：基于文本与逻辑特征的纯英文数学作业来源判别 (Human vs Deepseek vs Kimi vs GLM vs Qwen)
-
-## 1. 项目背景与目标
-随着大语言模型（LLM）的普及，利用 ChatGPT、Kimi、Deepseek、GLM、Qwen 等工具辅助完成数学理论推导作业已成为常见现象。
-本项目的核心目标是：**通过采集纯英文环境中人类真实的数学作业解答，并利用不同大语言模型生成相同题目的解答，提取其风格、排版与逻辑特征，构建一个高精度的机器学习分类器，实现对解答来源（人类还是某种特定 AI）的精准判别。**
+<div align="center">
+  <h1>🧠 数学推导文本溯源分类器 (Mathematical Proof Origin Classifier)</h1>
+  <p><b>Human vs. Deepseek vs. Kimi vs. GLM vs. Qwen</b></p>
+  <p><i>基于“宏观排版与微观语义特征工程”的大语言模型文本检测与反制研究</i></p>
+</div>
 
 ---
 
-## 2. 项目目录结构
+## 📖 项目简介 (Introduction)
+
+随着大语言模型（LLM）的普及，如何准确判断一段严谨的数学推导或证明是由**人类手写**还是由**某个特定 AI 模型**生成，已成为维护学术诚信的关键难题。
+
+本项目摒弃了传统的“黑盒”深度学习文本分类模型，采用 **专家经验驱动的特征工程 + 传统树集成机器学习 (Hist Gradient Boosting)** 架构，实现了极高的可解释性与鲁棒性。我们的研究表明，顶级大模型在生成数学解答时，会留下深刻的“结构与物理指纹”（如不可控的换段频率、极端的公式包裹欲望、以及模板化的起手式）。基于此，我们的分类器在 **5 分类任务**中取得了高达 **95.5%** 的准确率，并在全新的数学交叉学科泛化实验中保持了极佳的稳定性。
+
+进一步地，本项目还探索了**“防检测与反制干预”**（Counter-Intervention）：通过提炼出的可解释特征，我们编写了零样本（Zero-shot）系统提示词指导大模型进行特征伪装，成功使 Qwen 以 98% 的成功率骗过了高精度分类器，为未来的 AI 文本检测系统提出了深远挑战。
+
+## 📁 目录结构 (Repository Structure)
+- 采集同一批数学题的人类解答与多个大语言模型解答，构建严格配对的数据集。
+- 提取能反映“证明写作风格”的结构、公式和语义特征，而不是只依赖词汇主题。
+- 训练并比较多种机器学习分类器，识别解答来源。
+- 通过 PCA、小提琴图、特征重要性等方式解释模型到底在利用什么特征。
+- 进一步设计“防检测与反制干预实验”，检验大语言模型能否通过提示词规避现有检测器。
+
+## 2. 项目思路
+
+本项目的核心思想可以概括为三句话：
+
+- **同题不同来源**：让同一道数学题分别对应人类与多个模型的解答，尽量压缩“题目内容差异”，放大“表达风格差异”。
+- **双轨特征建模**：同时使用 `TF-IDF` 词汇特征和手工设计的结构化特征，既保留文本局部模式，又显式建模证明排版、LaTeX 使用和推理习惯。
+- **分类 + 解释 + 对抗**：不仅训练分类器，还要解释为什么它有效，并进一步测试它在对抗提示词下是否会失效。
+
+从研究路线看，这个项目经历了以下几步：
+
+1. 从早期中文材料转向更稳定的纯英文数学数据。
+2. 统一构建 `Human + 4 个 LLM` 的五分类数据集。
+3. 从简单词袋分类，逐步发展到“结构特征 + 词汇特征”的混合建模。
+4. 从标准分类实验，扩展到数据规模实验和防检测反制实验。
+
+## 3. 当前目录结构
 
 ```text
 Modelmid/
-├── archive/                # 归档的旧版中文数据与旧脚本
-├── dataset/                # 处理后的结构化数据目录
-│   └── full_dataset.json   # 核心数据集 (id, problem, human, deepseek, kimi, glm, qwen)
-├── docs/                   # 项目文档与特征可视化图表
-├── models/                 # 训练好的机器学习模型
-│   └── best_classifier_model.pkl  # 表现最好的组合特征 SVM 模型
-├── scripts/                # 自动化处理与模型训练脚本
-│   ├── data_generation/    # 数据获取与 LLM 并发生成脚本
-│   │   ├── migrate_to_json.py
-│   │   ├── generate_deepseek_answers.py
-│   │   ├── generate_kimi_answers.py
-│   │   ├── generate_glm_answers.py
-│   │   └── generate_qwen_answers.py
-│   ├── model_training/     # 特征工程与模型训练脚本
-│   │   ├── train_classifier.py
-│   │   └── analyze_tfidf.py
-│   ├── visualization/      # 数据与特征可视化脚本
-│   │   ├── visualize_features.py
-│   │   └── check_dist.py
-│   └── legacy_utils/       # 历史遗留工具脚本
-├── .env                    # 环境变量配置文件 (存放 API Keys)
-├── experience.md           # 记录项目探索过程、踩坑经验与反思
+├── archive/                # 归档的旧版中文数据与废弃脚本
+├── dataset/                # 数据集与预测结果输出
+│   ├── full_dataset.json            # 主训练集 (1000 题 × 5 来源 = 5000 条记录)
+│   ├── generalization_dataset.json  # 泛化实验跨域测试集 (40 题 × 5 来源)
+│   └── stealth_dataset.json         # 防检测反制对抗测试集 (50 题 × 5 来源)
+├── docs/                   # 项目报告与分析文档
+│   ├── experiment_report.md         # 自动化特征分布报告
+│   ├── technical_report.md          # 特征工程技术原理解析
+│   └── generalization_report.md     # 泛化性研究与 GLM 风格坍缩分析
+├── latex_report/           # 最终排版的学术论文级 LaTeX 报告
+│   ├── main.tex                     # 论文源文件
+│   └── figures/                     # 论文插图 (PCA, Violin Plot, 学习曲线)
+├── models/                 # 已训练好的模型文件
+│   └── best_classifier_model.pkl    # Hist Gradient Boosting 最佳分类器
+├── scripts/                # Python 源码目录
+│   ├── data_generation/             # 并发调用 LLM API 获取解答
+│   ├── model_training/              # 特征工程、流水线搭建与模型训练评估
+│   ├── visualization/               # 数据统计、图表绘制与案例分析
+│   └── legacy_utils/                # 旧版工具
+├── .env                    # 环境变量 (存储 Deepseek/Kimi/GLM/Qwen API Key)
 └── README.md               # 项目主说明文档 (本文档)
 ```
 
----
+## 4. 数据设计
 
-## 3. 核心工作流与运行方式
+### 4.1 主数据集
 
-整个项目分为三个主要阶段：纯英文数据拉取、LLM 数据生成、特征工程与模型训练。
+核心数据文件是 [full_dataset.json](file:///Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.json)。
 
-### 阶段一：高质量纯英文数据集构建
-我们废弃了之前的小规模中文数据，转而接入 HuggingFace 上的高质量数学推理数据集 `math-ai/StackMathQA`。
-脚本会从中提取 1000 条纯英文的数学题目（`problem`）以及真实人类专家给出的标准解答（`human`），并构建为统一的 JSON 格式。
-- **运行命令**：
-  ```bash
-  python3 scripts/data_generation/migrate_to_json.py
-  ```
+每道题包含以下信息：
 
-### 阶段二：大语言模型数据生成 (多线程并发 + 实时安全保存)
-为了构建用于对比的负样本，脚本会读取 JSON 文件中空缺的 LLM 字段，将题干配合严格的纯英文提示词（禁止寒暄，纯粹 LaTeX 格式输出），**通过多线程并发方式** 发送给对应的 API。
-*注：脚本内置了严格的线程锁与原子级文件替换机制，哪怕遇到断电或强制中断，已生成的数据也不会丢失且 JSON 文件不会损坏。*
-- **环境配置**：在根目录创建或编辑 `.env` 文件，填入你的 API 密钥：
-  ```env
-  DEEPSEEK_API_KEY="your_deepseek_key_here"
-  MOONSHOT_API_KEY="your_kimi_key_here"
-  GLM_API_KEY="your_glm_key_here"
-  QWEN_API_KEY="your_qwen_key_here"
-  ```
-- **运行命令**：
-  ```bash
-  python3 scripts/data_generation/generate_deepseek_answers.py
-  python3 scripts/data_generation/generate_kimi_answers.py
-  python3 scripts/data_generation/generate_glm_answers.py
-  python3 scripts/data_generation/generate_qwen_answers.py
-  ```
+- `id`：题目编号
+- `problem`：题干
+- `human`：人类答案
+- `deepseek`：Deepseek 生成答案
+- `kimi`：Kimi 生成答案
+- `glm`：GLM 生成答案
+- `qwen`：Qwen 生成答案
 
-### 阶段三：模型训练与特征工程
-在凑齐 Human, Deepseek, Kimi, GLM, Qwen 五个维度的均衡纯英文数据集（共 5000 条）后，我们执行了多层次的特征提取和模型训练。
-- **运行命令**：
-  ```bash
-  python3 scripts/model_training/train_classifier.py
-  ```
-- **输出结果**：在终端打印 5-fold 交叉验证的准确率、详细的分类报告，并将最优模型固化保存至 `models/best_classifier_model.pkl`。
+数据组织方式是：
 
----
-
-## 4. 模型设计与实验分析
-在凑齐 Human (219条)、Deepseek (219条)、Kimi (219条) 的均衡三分类数据集后，我们执行了多层次的特征提取和模型训练。
-
-您可以运行以下命令生成特征的可视化图表，结果将保存在 `docs/figures/` 中：
-```bash
-python3 scripts/visualization/visualize_features.py
+```text
+1 道题  ->  5 份答案  ->  5 个来源标签
+1000 题 -> 5000 条记录
 ```
 
-### 4.1 领域特异性与防数据泄露特征工程
-除了传统的 **TF-IDF** (词袋特征)，我们发现基于数学文本排版的**自定义结构特征**具有极其强大的区分度：
-1. **基础排版特征**：回答总长度 (`length`)、行数 (`num_lines`)、平均每行长度 (`avg_line_length`)。
-2. **公式特征**：行内和块级公式的总数 (`math_blocks`)、公式密度 (`math_density`)。
-3. **特定 LaTeX 宏**：`\textbf`、`\frac`、`\sum` 等的使用频率。
-4. **逻辑词频**：推理连词（如：因为、所以、显然、同理、从而、故等）的出现次数 (`logical_words_count`) 和密度 (`logical_words_density`)。
+这种设计的好处是：
 
-**TF-IDF 深度清洗与防作弊（Data Leakage Prevention）**：
-我们在对 TF-IDF 的特征重要性进行深入排查时，发现了一些能让模型“走捷径”的作弊词（Tricky Features）。例如：
-- LLMs 极度喜欢在最后加上 `\boxed{}` 来框住答案，或在推导中使用 `\quad` 空格。
-- LLMs 喜欢用“综上所述”、“接下来”、“我们需要证明”等固定的机器套话。
-为了逼迫模型去学习**真正底层的排版逻辑与数学思维差异**，而不是依赖这些表面的格式套话，我们在最终的模型流水线中（`train_classifier.py`）将这些特征作为 `stop_words` 进行了强行屏蔽。
+- 同一道题在五个来源之间天然配对，便于研究“同题不同风格”。
+- 可以按题号切分训练集和测试集，避免同一道题的不同来源同时落入训练和测试造成数据泄漏。
 
-### 4.2 实验结果 (五分类：Human vs Deepseek vs Kimi vs GLM vs Qwen)
-在引入了全新的 **段落切分频率**、**大写字母/数字密度**、**深度 LaTeX 环境频率 (`\begin{...}`)** 以及 **严谨的大括号使用倾向** 后，我们完全放开了停用词限制，让模型以最高性能运行，并在全英文数据集（5000 条记录）下进行了 5-fold 交叉验证：
-- **最佳模型**：组合特征 (TF-IDF MAX + 增强版结构自定义特征) + SVM 分类器。
-- **交叉验证准确率**：达到了 **89.88%** （逼近 90% 级别！）。
-- **训练集 F1-score 详情**：
-  - Human：0.98 (段落和数字特征使人类的指纹更加清晰)
-  - Qwen：0.99 (极其突出的个体风格，几乎不可能认错)
-  - Deepseek：0.96
-  - Kimi：0.91
-  - GLM：0.90
+### 4.2 防检测数据集
 
-*(注：Kimi 和 GLM 之间的准确率有所下降，是因为这两种模型在输出全英文数学推导时的特征空间高度重合。而 Qwen 则表现出了极强的行文辨识度！)*
+防检测实验使用 [stealth_dataset.json](file:///Users/jiaju/Documents/github/Modelmid/dataset/stealth_dataset.json)。
 
-### 4.3 核心特征洞察与可解释性
-为了增强模型的可解释性，我们提取了随机森林对新特征的基尼重要性（Gini Importance）。新增的深度特征成功取代了原有的浅层特征霸榜：
-1. **段落数量 (`num_paragraphs`, 15.0%)**：全新加入的特征空降第一！大模型在换段落时的底层逻辑（双换行）与人类存在巨大鸿沟。
-2. **行内公式数量 (`inline_math_count`, 9.2%)**：Qwen 的加入使得模型开始极度关注公式包裹频率。
-3. **平均段落长度 (`avg_paragraph_length`, 8.4%)**：反映了连续推导而不中断的能力。
-4. **行数 (`num_lines`, 8.3%)**：依然非常重要。
-5. **数学公式总密度 (`math_density`, 7.8%)**：衡量整篇文章中数学字符的比例。
-6. **大模型祈使句密度 (`declarative_density`, 5.8%)**：大模型在推导时比人类更喜欢频繁使用 `we, let, suppose` 等起手式。
+其中包含：
 
-*(更多关于特征重要性排序，请查看 `docs/figures/feature_importances.png`)*
+- 原始题目与人类答案
+- 使用“反制提示词”重新生成的：
+  - `deepseek_stealth`
+  - `kimi_stealth`
+  - `glm_stealth`
+  - `qwen_stealth`
 
-### 4.4 全新可视化展示 (可解释性视角)
-为了进一步探索模型是如何分类的，我们生成了全新的图表视角（位于 `docs/figures/`）：
+其对应的分类结果保存在 [stealth_predictions.csv](file:///Users/jiaju/Documents/github/Modelmid/dataset/stealth_predictions.csv)。
 
-**1. PCA 2D 聚类降维 (特征空间可解释性)**  
-我们对所有自定义特征进行了主成分分析（PCA）。从 `pca_clusters_2d.png` 可以看出，**Human（绿色）** 形成了极其紧密且独立的聚类簇，与机器截然不同；**Deepseek（蓝色）** 也有自己独立的一片区域；而 **Kimi（橙色）** 和 **GLM（红色）** 的特征点相互交织，解释了为什么它们之间的分类存在一定混淆。
+## 5. 代码结构与功能设计
 
-**2. 特征相关性热力图**  
-从 `feature_correlation_heatmap.png` 中，我们可以观察到 `length`、`word_count` 和 `display_math_count` 等特征之间的高度共线性，这为后续的特征降维提供了依据。
+### 5.1 数据生成层
 
-**3. 核心特征小提琴图 (Violin Plots)**  
-相比于箱线图，小提琴图更好地展示了数据分布的密度。例如在 `violin_declarative_density.png` 中，你可以清晰看到人类的“祈使句”密度呈现长尾低频分布，而几个大模型则呈现出高频的纺锤形分布。
+位于 [data_generation](file:///Users/jiaju/Documents/github/Modelmid/scripts/data_generation)。
 
-*(更多关于模型迭代、踩坑经历与数据清洗的细节，请参阅 [experience.md](experience.md))*
+- [migrate_to_json.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/data_generation/migrate_to_json.py)
+  - 从 HuggingFace 的 `StackMathQA` 迁移纯英文数学题和人类答案。
+  - 生成统一 JSON 数据格式。
 
----
+- [generate_deepseek_answers.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/data_generation/generate_deepseek_answers.py)
+- [generate_kimi_answers.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/data_generation/generate_kimi_answers.py)
+- [generate_glm_answers.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/data_generation/generate_glm_answers.py)
+- [generate_qwen_answers.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/data_generation/generate_qwen_answers.py)
+  - 负责调用对应 API，为题目生成标准英文数学解答。
+  - 支持并发生成与实时保存。
 
-## 5. 后续规划 (TODO)
-- **泛化性验证**：引入其他理科领域（如：常微分方程、概率论等）的数据，检验这些提取出的排版与逻辑特征是否依然稳健。
-- **对抗生成网络 (GAN) 测试**：研究对抗判别器的潜在方法，即尝试通过高级的 Prompt 工程，强制要求大模型去刻意模仿人类的排版习惯和逻辑词频，观察当前分类器是否会被欺骗。
+- [generate_stealth_answers.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/data_generation/generate_stealth_answers.py)
+  - 使用防检测提示词，要求模型“写得更像人类”。
+  - 是整个对抗实验的关键入口。
+
+### 5.2 模型训练层
+
+位于 [model_training](file:///Users/jiaju/Documents/github/Modelmid/scripts/model_training)。
+
+- [train_classifier.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/model_training/train_classifier.py)
+  - 项目核心训练脚本。
+  - 加载五类文本。
+  - 提取自定义结构特征。
+  - 拼接 TF-IDF 特征。
+  - 训练最终模型并保存到 [best_classifier_model.pkl](file:///Users/jiaju/Documents/github/Modelmid/models/best_classifier_model.pkl)。
+  - 同时输出特征重要性分析图。
+
+- [compare_classifiers.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/model_training/compare_classifiers.py)
+  - 对比不同机器学习算法。
+  - 重点用于回答“为什么最终模型不是线性模型而是树集成模型”。
+
+- [experiment_new_features.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/model_training/experiment_new_features.py)
+  - 对比旧特征集合和增强特征集合。
+  - 验证新增结构特征是否真的提升效果。
+
+- [run_data_size_experiment.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/model_training/run_data_size_experiment.py)
+  - 比较不同训练题量下的模型表现。
+  - 产出 `5 × 5` 的准确率主表。
+
+- [evaluate_stealth.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/model_training/evaluate_stealth.py)
+  - 加载已训练好的最佳分类器。
+  - 评估防检测样本是否能骗过分类器。
+  - 统计各模型的“伪装成功率”以及误判原因。
+
+### 5.3 可视化层
+
+位于 [visualization](file:///Users/jiaju/Documents/github/Modelmid/scripts/visualization)。
+
+- [visualize_features.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/visualization/visualize_features.py)
+  - 生成实验图表与 Markdown 版本的实验报告。
+  - 核心图包括：
+    - PCA 聚类图
+    - 小提琴图
+    - 统计表
+
+- [plot_stealth.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/visualization/plot_stealth.py)
+  - 专门绘制防检测实验中各模型的伪装成功率柱状图。
+
+- [check_dist.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/visualization/check_dist.py)
+  - 主要用于数据分布检查。
+
+## 6. 算法设计
+
+### 6.1 为什么不是纯深度学习
+
+本项目刻意没有直接使用 BERT、RoBERTa 一类黑盒编码器作为最终方案，原因有三点：
+
+- 需要强可解释性：希望知道“模型为什么说这篇像 Qwen，而不像 Human”。
+- 数据规模相对有限：5000 条记录对于传统机器学习已经足够，但不一定值得引入更重的深度模型。
+- 任务本质偏风格识别：很多关键线索不是语义内容，而是段落、公式、连接词和 LaTeX 习惯。
+
+### 6.2 双轨特征流水线
+
+最终分类器采用双轨输入：
+
+1. `TF-IDF` 词袋特征
+2. 手工结构特征
+
+其核心思想是：
+
+- `TF-IDF` 负责捕捉局部词汇和短语模式；
+- 结构特征负责捕捉证明写作中的“物理风格”。
+
+### 6.3 自定义结构特征
+
+`TextFeatureExtractor` 当前提取约 28 个特征，主要分为三大类。
+
+#### 宏观结构特征
+- `length`
+- `num_lines`
+- `avg_line_length`
+- `num_paragraphs`
+- `avg_paragraph_length`
+
+这些特征反映：
+
+- 是否频繁换行
+- 是否每推进一步就强行分段
+- 人类写作是否更倾向于长段连续推导
+
+#### 数学公式与 LaTeX 特征
+- `inline_math_count`
+- `display_math_count`
+- `math_density`
+- `latex_env_count`
+- `left_right_brackets`
+- `num_frac`
+- `math_cal_bb`
+- `implication_arrows`
+- `qed_symbols`
+
+这些特征反映：
+
+- 模型是否过度使用 `$...$`
+- 是否频繁使用复杂 LaTeX 环境
+- 是否有过度“正规化”的公式包装习惯
+
+#### 语义与论证风格特征
+- `logical_words_density`
+- `declarative_density`
+- `transition_words_density`
+- `conclusion_words_density`
+- `num_list_items`
+
+这些特征反映：
+
+- 是否频繁使用 `we, let, suppose, consider`
+- 是否使用 `firstly, moreover, finally`
+- 是否存在机械的列表式推导习惯
+
+### 6.4 分类器设计
+
+本项目测试了五种模型：
+
+- `Linear SVM`
+- `Logistic Regression`
+- `Random Forest`
+- `Gradient Boosting`
+- `Hist Gradient Boosting`
+
+当前代码中保存为最终模型的是：
+
+- [train_classifier.py](file:///Users/jiaju/Documents/github/Modelmid/scripts/model_training/train_classifier.py) 中训练并保存的 `HistGradientBoostingClassifier`
+
+之所以最终转向树集成模型，是因为：
+
+- 线性模型擅长高维稀疏词袋，但不擅长复杂非线性交互；
+- 本项目中很多关键判别边界本质上是非线性的；
+- 树模型对“段落数 + 行内公式 + 祈使句密度”这类交互更敏感。
+
+## 7. 实验流程
+
+整个项目的实验流程可以概括为：
+
+1. 迁移英文数学数据集。
+2. 生成四种大模型答案。
+3. 统一为五分类 JSON 数据集。
+4. 提取词汇特征与结构特征。
+5. 比较多种分类器。
+6. 做不同训练题量的规模实验。
+7. 可视化特征空间。
+8. 设计防检测提示词并做对抗评估。
+9. 汇总为 Markdown 与 LaTeX 报告。
+
+对应脚本入口如下：
+
+```bash
+# 1. 构建主数据集
+python3 scripts/data_generation/migrate_to_json.py
+
+# 2. 生成四类模型答案
+python3 scripts/data_generation/generate_deepseek_answers.py
+python3 scripts/data_generation/generate_kimi_answers.py
+python3 scripts/data_generation/generate_glm_answers.py
+python3 scripts/data_generation/generate_qwen_answers.py
+
+# 3. 训练主分类器
+python3 scripts/model_training/train_classifier.py
+
+# 4. 比较分类器
+python3 scripts/model_training/compare_classifiers.py
+
+# 5. 数据规模实验
+python3 scripts/model_training/run_data_size_experiment.py
+
+# 6. 可视化
+python3 scripts/visualization/visualize_features.py
+
+# 7. 防检测样本生成与评估
+python3 scripts/data_generation/generate_stealth_answers.py
+python3 scripts/model_training/evaluate_stealth.py
+python3 scripts/visualization/plot_stealth.py
+```
+
+## 8. 核心实验结果
+
+### 8.1 五分类准确率
+
+项目当前存在两套实验口径，需要区分说明：
+
+- **口径 A：5-fold 交叉验证**
+  - 早期组合特征 + SVM 的交叉验证结果约为 `89.88%`
+  - 主要用于说明双轨特征工程是有效的
+
+- **口径 B：固定 200 题测试集的数据规模实验**
+  - 当前最佳模型为 `Hist Gradient Boosting`
+  - 在 `800` 题训练集规模下达到 `95.5%`
+  - 这是当前代码体系下最重要的最终结果
+
+### 8.2 数据规模实验主表
+
+固定测试集为 200 题时，五种模型在不同训练题量下的准确率如下：
+
+| 模型 | 20题 | 50题 | 100题 | 400题 | 800题 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Hist Gradient Boosting | **0.868** | **0.895** | **0.916** | **0.947** | **0.955** |
+| XGBoost (sklearn GB) | 0.824 | 0.870 | 0.909 | 0.939 | 0.944 |
+| Random Forest | 0.850 | 0.895 | 0.909 | 0.928 | 0.934 |
+| Linear SVM | 0.782 | 0.833 | 0.854 | 0.912 | 0.917 |
+| Logistic Regression | 0.787 | 0.841 | 0.853 | 0.895 | 0.905 |
+
+这说明：
+
+- 树集成模型在本项目中持续优于线性模型；
+- 即使训练集只有 20 题，分类器也已经能学到明显来源差异；
+- 随着训练数据增加，Hist Gradient Boosting 的优势进一步扩大。
+
+### 8.3 最强可解释特征
+
+从随机森林特征重要性分析来看，最关键的信号包括：
+
+1. `num_paragraphs`
+2. `inline_math_count`
+3. `avg_paragraph_length`
+4. `num_lines`
+5. `math_density`
+6. `declarative_density`
+
+这些结果表明，分类器最依赖的不是题目内容本身，而是：
+
+- 模型是否爱分段
+- 模型是否爱过度包公式
+- 模型是否爱用标准化推理起手式
+
+## 9. 可视化设计
+
+### 9.1 PCA 聚类图
+
+图像位置：
+
+- [pca_clusters_2d.png](file:///Users/jiaju/Documents/github/Modelmid/docs/figures/pca_clusters_2d.png)
+- [latex_report/figures/pca_clusters_2d.png](file:///Users/jiaju/Documents/github/Modelmid/latex_report/figures/pca_clusters_2d.png)
+
+作用：
+
+- 将高维结构特征降到二维
+- 观察 Human 与各类模型在特征空间中的分离情况
+
+结论：
+
+- Human 形成更独立、更紧密的簇
+- Kimi 和 GLM 更容易重叠
+- Qwen 有非常鲜明的风格区分度
+
+### 9.2 小提琴图
+
+代表性图像：
+
+- [violin_num_paragraphs.png](file:///Users/jiaju/Documents/github/Modelmid/docs/figures/violin_num_paragraphs.png)
+- [violin_declarative_density.png](file:///Users/jiaju/Documents/github/Modelmid/docs/figures/violin_declarative_density.png)
+- [violin_inline_math_count.png](file:///Users/jiaju/Documents/github/Modelmid/docs/figures/violin_inline_math_count.png)
+
+作用：
+
+- 展示关键特征在不同来源上的分布，而不是只展示平均值
+- 让“人类与模型风格差异”更直观
+
+### 9.3 防检测实验图
+
+图像位置：
+
+- [stealth_success_rate.png](file:///Users/jiaju/Documents/github/Modelmid/latex_report/figures/stealth_success_rate.png)
+
+作用：
+
+- 展示不同模型在“写得更像人类”之后，骗过分类器的成功率
+
+## 10. 防检测与反制干预实验
+
+这是本项目后期最重要的扩展实验之一。
+
+### 10.1 实验思想
+
+既然我们已经知道分类器最依赖哪些特征，那么就可以反过来把这些结论写进提示词中，要求模型：
+
+- 少分段
+- 少用行内公式
+- 不用 `We have / Let / Suppose / Consider`
+- 不用 `Firstly / Moreover / Finally`
+- 写成长段连续推导
+
+也就是说，我们不是给模型“人类答案样例”，而是直接告诉它“如何避开会暴露 AI 身份的结构特征”。
+
+### 10.2 实验结果
+
+在 194 份有效防检测样本中，被误判为 Human 的比例高达：
+
+- **63.40%**
+
+按模型拆分：
+
+- Deepseek：`68.18%`
+- Kimi：`18.00%`
+- GLM：`70.00%`
+- Qwen：`98.00%`
+
+### 10.3 为什么会误判
+
+对比成功骗过分类器的样本和依然被识别的样本后可以看到：
+
+- 成功骗过分类器的文本：
+  - 平均段落数只有 `1.36`
+  - 祈使代词密度只有 `1.29`
+
+- 仍被识别的文本：
+  - 平均段落数高达 `8.68`
+  - 祈使代词密度高达 `4.08`
+
+这说明误判不是随机的，而是因为这些样本确实被提示词推到了“更像人类”的结构分布区域。
+
+## 11. 报告与文档
+
+### Markdown 文档
+
+- [technical_report.md](file:///Users/jiaju/Documents/github/Modelmid/docs/technical_report.md)
+  - 更偏技术解释
+  - 说明分类器原理、特征设计与可解释性
+
+- [experiment_report.md](file:///Users/jiaju/Documents/github/Modelmid/docs/experiment_report.md)
+  - 更偏实验统计与图表解释
+
+### LaTeX 报告
+
+- [main.tex](file:///Users/jiaju/Documents/github/Modelmid/latex_report/main.tex)
+  - 当前主报告
+  - 包含方法、特征工程、规模实验、可解释性分析和反制实验
+
+- [results_table.csv](file:///Users/jiaju/Documents/github/Modelmid/latex_report/results_table.csv)
+  - LaTeX 表格的原始数据来源
+
+## 12. 环境与运行说明
+
+### 12.1 API 密钥
+
+根目录 `.env` 需要包含类似配置：
+
+```env
+DEEPSEEK_API_KEY="..."
+MOONSHOT_API_KEY="..."
+GLM_API_KEY="..."
+QWEN_API_KEY="..."
+```
+
+### 12.2 注意事项
+
+- 当前部分脚本使用了硬编码绝对路径，迁移到其他机器时需要调整。
+- `README` 中如果引用实验结果，需要注意区分“5-fold 交叉验证”和“固定测试集实验”两种协议。
+- 当前保存的最佳模型是 `HistGradientBoostingClassifier`，而不是旧版本文档里曾提到的 `SVM`。
+
+## 13. 当前结论
+
+基于当前项目代码、实验和报告，可以总结为：
+
+- 数学证明来源识别是可行的，而且准确率很高。
+- 真正关键的不是题目内容，而是写作结构、公式包装和推理习惯。
+- 树集成模型比线性模型更适合这个任务。
+- 当前最强模型在固定测试协议下可以达到 `95.5%`。
+- 但高精度检测器并不意味着绝对安全：在提示词驱动下，顶级大模型已经具备明显的“伪装成人类”的能力。
+
+## 14. 后续可以继续做什么
+
+- 引入更多学科或题型，测试跨领域泛化能力。
+- 研究更鲁棒的检测器，例如结合逻辑一致性、推理路径和交互验证。
+- 设计更系统的对抗训练，让分类器在面对“防检测提示词”时更不容易失效。

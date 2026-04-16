@@ -1,7 +1,9 @@
 import json
-import pandas as pd
+import json
+import os
 
-with open('/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.json', 'r', encoding='utf-8') as f:
+base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+with open(os.path.join(base_dir, 'dataset/full_dataset.json'), 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 human_count = sum(1 for row in data if row.get('human') and str(row['human']).strip())
