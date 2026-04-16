@@ -1,7 +1,7 @@
-# 项目：基于文本与逻辑特征的纯英文数学作业来源判别 (Human vs Deepseek vs Kimi vs GLM)
+# 项目：基于文本与逻辑特征的纯英文数学作业来源判别 (Human vs Deepseek vs Kimi vs GLM vs Qwen)
 
 ## 1. 项目背景与目标
-随着大语言模型（LLM）的普及，利用 ChatGPT、Kimi、Deepseek、GLM 等工具辅助完成数学理论推导作业已成为常见现象。
+随着大语言模型（LLM）的普及，利用 ChatGPT、Kimi、Deepseek、GLM、Qwen 等工具辅助完成数学理论推导作业已成为常见现象。
 本项目的核心目标是：**通过采集纯英文环境中人类真实的数学作业解答，并利用不同大语言模型生成相同题目的解答，提取其风格、排版与逻辑特征，构建一个高精度的机器学习分类器，实现对解答来源（人类还是某种特定 AI）的精准判别。**
 
 ---
@@ -11,7 +11,7 @@
 ```text
 Modelmid/
 ├── dataset/                # 处理后的结构化数据目录
-│   └── full_dataset.json   # 核心数据集 (id, problem, human, deepseek, kimi, glm)
+│   └── full_dataset.json   # 核心数据集 (id, problem, human, deepseek, kimi, glm, qwen)
 ├── docs/                   # 项目文档与特征可视化图表
 ├── models/                 # 训练好的机器学习模型
 │   └── best_classifier_model.pkl  # 表现最好的组合特征 SVM 模型
@@ -20,6 +20,7 @@ Modelmid/
 │   ├── generate_deepseek_answers.py  # 并发调用 Deepseek API 补充解答 (实时安全保存)
 │   ├── generate_kimi_answers.py      # 并发调用 Kimi API 补充解答 (实时安全保存)
 │   ├── generate_glm_answers.py       # 并发调用 ZhipuAI (GLM-4) API 补充解答 (实时安全保存)
+│   ├── generate_qwen_answers.py      # 并发调用 Aliyun (Qwen-Plus) API 补充解答 (实时安全保存)
 │   ├── train_classifier.py           # 提取英文逻辑特征、模型训练与交叉验证
 │   └── visualize_features.py         # 绘制特征分布的箱线图、散点图与雷达图
 ├── .env                    # 环境变量配置文件 (存放 API Keys)
@@ -49,16 +50,18 @@ Modelmid/
   DEEPSEEK_API_KEY="your_deepseek_key_here"
   MOONSHOT_API_KEY="your_kimi_key_here"
   GLM_API_KEY="your_glm_key_here"
+  QWEN_API_KEY="your_qwen_key_here"
   ```
 - **运行命令**：
   ```bash
   python3 scripts/generate_deepseek_answers.py
   python3 scripts/generate_kimi_answers.py
   python3 scripts/generate_glm_answers.py
+  python3 scripts/generate_qwen_answers.py
   ```
 
 ### 阶段三：模型训练与特征工程
-在凑齐 Human, Deepseek, Kimi, GLM 四个维度的均衡纯英文四分类数据集后，我们执行了多层次的特征提取和模型训练。
+在凑齐 Human, Deepseek, Kimi, GLM, Qwen 五个维度的均衡纯英文数据集（共 5000 条）后，我们执行了多层次的特征提取和模型训练。
 - **运行命令**：
   ```bash
   python3 scripts/train_classifier.py
@@ -88,25 +91,26 @@ python3 scripts/visualize_features.py
 - LLMs 喜欢用“综上所述”、“接下来”、“我们需要证明”等固定的机器套话。
 为了逼迫模型去学习**真正底层的排版逻辑与数学思维差异**，而不是依赖这些表面的格式套话，我们在最终的模型流水线中（`train_classifier.py`）将这些特征作为 `stop_words` 进行了强行屏蔽。
 
-### 4.2 实验结果 (四分类：Human vs Deepseek vs Kimi vs GLM)
-在引入了全新的 **词汇丰富度**、**公式细分（行内vs块级）**、**标点符号密度**和**大模型祈使句特征**后，我们在全英文数据集（近 4000 条记录）下进行了 5-fold 交叉验证：
+### 4.2 实验结果 (五分类：Human vs Deepseek vs Kimi vs GLM vs Qwen)
+在引入了全新的 **词汇丰富度**、**公式细分（行内vs块级）**、**标点符号密度**和**大模型祈使句特征**后，我们在全英文数据集（5000 条记录）下进行了 5-fold 交叉验证：
 - **最佳模型**：组合特征 (TF-IDF + 深度自定义特征) + SVM 分类器。
-- **交叉验证准确率**：稳定在 **87%**。
+- **交叉验证准确率**：稳定在 **88%**。
 - **训练集 F1-score 详情**：
-  - Human：0.96 (人类和 AI 依然极其容易区分)
-  - Deepseek：0.96
+  - Human：0.97 (人类和 AI 依然极其容易区分)
+  - Qwen：0.98 (极其突出的个体风格)
+  - Deepseek：0.95
   - Kimi：0.89
-  - GLM：0.89
+  - GLM：0.88
 
-*(注：Kimi 和 GLM 之间的准确率有所下降，是因为这两种模型在输出全英文数学推导时的“啰嗦程度”和“公式使用密度”高度重合，属于特征空间上的近邻。)*
+*(注：Kimi 和 GLM 之间的准确率有所下降，是因为这两种模型在输出全英文数学推导时的特征空间高度重合。而 Qwen 则表现出了极强的行文辨识度！)*
 
 ### 4.3 核心特征洞察与可解释性
-为了增强模型的可解释性，我们提取了随机森林对新特征的基尼重要性（Gini Importance）。区分这四个来源最核心的前五大特征如下：
-1. **换行习惯 (`num_lines`, 16.8%)**：依然是最强大的分类器，不同模型和人类分段的底层逻辑差异巨大。
-2. **大模型祈使句密度 (`declarative_density`, 10.6%)**：我们新引入的特征（如 *we, let, suppose, consider, now*）一跃成为第二大核心特征。大模型在推导时比人类更喜欢频繁使用这些起手式！
-3. **句号密度 (`period_density`, 10.5%)**：反映了句子长短的切割频率，GLM 和 Kimi 的句子切割频率有着微妙差异。
-4. **平均行长 (`avg_line_length`, 9.9%)**：大段不换行的特征。
-5. **词汇数量 (`word_count`, 6.2%)**：纯文本字数。
+为了增强模型的可解释性，我们提取了随机森林对新特征的基尼重要性（Gini Importance）。区分这五个来源最核心的前五大特征如下：
+1. **换行习惯 (`num_lines`, 16.5%)**：依然是最强大的分类器，不同模型和人类分段的底层逻辑差异巨大。
+2. **行内公式数量 (`inline_math_count`, 10.5%)**：Qwen 的加入使得模型开始极度关注公式包裹频率。
+3. **大模型祈使句密度 (`declarative_density`, 8.6%)**：我们新引入的特征（如 *we, let, suppose, consider, now*）。大模型在推导时比人类更喜欢频繁使用这些起手式。
+4. **数学公式总密度 (`math_density`, 8.4%)**：衡量整篇文章中数学字符的比例。
+5. **平均行长 (`avg_line_length`, 8.1%)**：大段不换行的特征。
 
 *(更多关于特征重要性排序，请查看 `docs/figures/feature_importances.png`)*
 
