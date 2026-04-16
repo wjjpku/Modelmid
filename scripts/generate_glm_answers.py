@@ -126,4 +126,4 @@ if __name__ == '__main__':
         print("WARNING: API KEY not set. Please set GLM_API_KEY in .env")
     else:
         # 并发数可根据智谱 API 额度调整
-        process_dataset(dataset_path, max_workers=20)
+        process_dataset(dataset_path, max_workers=50)

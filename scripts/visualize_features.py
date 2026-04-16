@@ -29,6 +29,8 @@ def load_data(json_path):
             records.append({'id': row['id'], 'text': str(row['kimi']).strip(), 'label': 'Kimi'})
         if row.get('glm') and str(row['glm']).strip():
             records.append({'id': row['id'], 'text': str(row['glm']).strip(), 'label': 'GLM'})
+        if row.get('qwen') and str(row['qwen']).strip():
+            records.append({'id': row['id'], 'text': str(row['qwen']).strip(), 'label': 'Qwen'})
     return pd.DataFrame(records)
 
 # 2. 与 train_classifier.py 保持一致的特征提取
@@ -76,7 +78,7 @@ def generate_visualizations(df, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
-    palette = {'Human': '#2ca02c', 'Deepseek': '#1f77b4', 'Kimi': '#ff7f0e', 'GLM': '#d62728'}
+    palette = {'Human': '#2ca02c', 'Deepseek': '#1f77b4', 'Kimi': '#ff7f0e', 'GLM': '#d62728', 'Qwen': '#9467bd'}
     
     # 1. Violin Plots (更好的分布视角，替代之前的 Boxplot)
     features_to_plot = [

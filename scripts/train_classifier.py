@@ -55,6 +55,13 @@ def load_data(json_path):
                 'text': str(row['glm']).strip(),
                 'label': 'GLM'
             })
+        # 添加 Qwen
+        if row.get('qwen') and str(row['qwen']).strip():
+            records.append({
+                'id': row['id'],
+                'text': str(row['qwen']).strip(),
+                'label': 'Qwen'
+            })
     return pd.DataFrame(records)
 
 # 2. 深度优化的自定义特征提取器
@@ -174,7 +181,7 @@ def train_and_save_best_model(df):
         ('clf', SVC(kernel='linear', probability=True, random_state=42))
     ])
     
-    print("\n--- Training Final Combined SVM Model (4-Class) ---")
+    print("\n--- Training Final Combined SVM Model (5-Class) ---")
     
     # Cross validation
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
