@@ -83,6 +83,93 @@ def process_algebra(file_path):
         
     return data
 
+def process_math_analysis(file_path):
+    data = []
+    
+    with open(file_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        
+    current_id = 0
+    current_content = []
+    current_answer = []
+    in_answer = False
+    in_enumerate = False
+    
+    # 匹配题号，例如："\item 求极限 ..."
+    item_re = re.compile(r'^\s*\\item\s*(.*)')
+    # 匹配解答开头，例如："\textbf{解：} ..."
+    ans_re = re.compile(r'^\s*\\textbf\{(解|证)(：|:)?\}\s*(.*)')
+    
+    def clean_answer(ans_lines):
+        ans_str = "".join(ans_lines).strip()
+        ans_str = re.sub(r'\\textbf\{(解|证)(：|:)?\}\s*', '', ans_str)
+        return ans_str.strip()
+    
+    for line in lines:
+        stripped = line.strip()
+        
+        if stripped.startswith(r'\begin{enumerate}'):
+            in_enumerate = True
+            continue
+            
+        if not in_enumerate:
+            continue
+            
+        if stripped == r'\end{enumerate}':
+            break
+            
+        # Ignore comments
+        if stripped.startswith('%'):
+            continue
+            
+        match_item = item_re.match(stripped)
+        if match_item:
+            # 当匹配到新题目时，保存上一个题目及它的解答
+            if current_id > 0:
+                ans_str = clean_answer(current_answer)
+                data.append({
+                    'id': f'math_analysis_{current_id}',
+                    'course': '数学分析',
+                    'content': "".join(current_content).strip(),
+                    'human': ans_str,
+                    'deepseek': '',
+                    'kimi': ''
+                })
+            
+            # 开始记录新题目
+            current_id += 1
+            current_content = [match_item.group(1) + "\n"]
+            current_answer = []
+            in_answer = False
+            continue
+            
+        match_ans = ans_re.match(stripped)
+        if match_ans and current_id > 0:
+            in_answer = True
+            if match_ans.group(3):
+                current_answer.append(match_ans.group(3) + "\n")
+            continue
+            
+        if current_id > 0:
+            if in_answer:
+                current_answer.append(line)
+            else:
+                current_content.append(line)
+
+    # 加上最后一题
+    if current_id > 0:
+        ans_str = clean_answer(current_answer)
+        data.append({
+            'id': f'math_analysis_{current_id}',
+            'course': '数学分析',
+            'content': "".join(current_content).strip(),
+            'human': ans_str,
+            'deepseek': '',
+            'kimi': ''
+        })
+        
+    return data
+
 def main():
     base_dir = '/Users/jiaju/Documents/github/Modelmid'
     data_dir = os.path.join(base_dir, 'data')
@@ -92,6 +179,7 @@ def main():
         os.makedirs(output_dir)
         
     algebra_file = os.path.join(data_dir, '近世代数群论部分题目及解答latex代码（前554行为题目）')
+    math_analysis_file = os.path.join(data_dir, '数学分析习题.tex')
     
     all_data = []
     
@@ -100,6 +188,12 @@ def main():
         all_data.extend(process_algebra(algebra_file))
     else:
         print(f"Error: Could not find {algebra_file}")
+        
+    if os.path.exists(math_analysis_file):
+        print(f"Processing {math_analysis_file}...")
+        all_data.extend(process_math_analysis(math_analysis_file))
+    else:
+        print(f"Error: Could not find {math_analysis_file}")
         
     # 如果文件已经存在，我们需要保留之前的 deepseek 答案！
     output_csv = os.path.join(output_dir, 'full_dataset.csv')

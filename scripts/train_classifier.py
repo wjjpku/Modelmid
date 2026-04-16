@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import re
 import pickle
+import json
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
@@ -13,26 +14,28 @@ from sklearn.svm import SVC
 from sklearn.metrics import classification_report
 
 # 1. 加载并整理数据
-def load_data(csv_path):
-    df = pd.read_csv(csv_path)
+def load_data(json_path):
+    with open(json_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        
     records = []
-    for _, row in df.iterrows():
+    for row in data:
         # 添加 human
-        if pd.notna(row.get('human')) and str(row['human']).strip():
+        if row.get('human') and str(row['human']).strip():
             records.append({
                 'id': row['id'],
                 'text': str(row['human']).strip(),
                 'label': 'Human'
             })
         # 添加 deepseek
-        if pd.notna(row.get('deepseek')) and str(row['deepseek']).strip():
+        if row.get('deepseek') and str(row['deepseek']).strip():
             records.append({
                 'id': row['id'],
                 'text': str(row['deepseek']).strip(),
                 'label': 'Deepseek'
             })
         # 添加 kimi (如果已有数据)
-        if pd.notna(row.get('kimi')) and str(row['kimi']).strip():
+        if row.get('kimi') and str(row['kimi']).strip():
             records.append({
                 'id': row['id'],
                 'text': str(row['kimi']).strip(),
@@ -68,12 +71,12 @@ class TextFeatureExtractor(BaseEstimator, TransformerMixin):
             f['num_begin_end'] = text.count('\\begin')
             
             # 连接词/逻辑词频率
-            logical_words = ['因为', '所以', '显然', '同理', '不妨设', '于是', '从而', '故', '可知', '由定义']
-            f['logical_words_count'] = sum(text.count(w) for w in logical_words)
+            logical_words = ['because', 'therefore', 'obviously', 'similarly', 'assume', 'thus', 'hence', 'clearly', 'by definition', 'since', 'then', 'so', 'it follows that']
+            f['logical_words_count'] = sum(text.lower().count(w) for w in logical_words)
             f['logical_words_density'] = f['logical_words_count'] / max(1, f['length'])
             
-            # 结构化列表特征 (如 1., 2., (1), (2), 首先)
-            f['num_list_items'] = len(re.findall(r'(?:^|\n)\s*(?:\d+\.|\(\d+\)|首先|其次|最后|步骤\s*\d+)', text))
+            # 结构化列表特征
+            f['num_list_items'] = len(re.findall(r'(?:^|\n)\s*(?:\d+\.|\(\d+\)|first|second|finally|step\s*\d+)', text, re.IGNORECASE))
             
             features.append(f)
         return pd.DataFrame(features)
@@ -111,8 +114,15 @@ def train_and_save_best_model(df):
     
     X_df = pd.DataFrame({'text': X})
     
+    # 增加自定义的停用词，过滤掉可能导致数据泄露的“大模型独有”或“人类独有”的格式/套话词汇
+    custom_stop_words = [
+        'boxed', 'quad', 'therefore', 'hence', 'proof', 'solution', 'conclusion', 'finally', 'we', 'have', 'thus', 'step', 'now', 'let'
+    ]
+    
     combined_features = ColumnTransformer([
-        ('tfidf', TfidfVectorizer(max_features=1000, ngram_range=(1, 2), token_pattern=r'(?u)\b\w+\b|\\\[a-zA-Z]+'), 'text'),
+        ('tfidf', TfidfVectorizer(max_features=1000, ngram_range=(1, 2), 
+                                  token_pattern=r'(?u)\b\w+\b|\\\[a-zA-Z]+',
+                                  stop_words=custom_stop_words), 'text'),
         ('custom', Pipeline([
             ('extractor', TextFeatureExtractor()),
             ('scaler', StandardScaler())
@@ -139,7 +149,7 @@ def train_and_save_best_model(df):
     print(classification_report(y, y_pred))
 
 if __name__ == '__main__':
-    df = load_data('/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.csv')
+    df = load_data('/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.json')
     if len(df) > 0:
         analyze_features(df)
         train_and_save_best_model(df)

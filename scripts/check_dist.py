@@ -1,10 +1,14 @@
+import json
 import pandas as pd
 
-df = pd.read_csv('/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.csv')
-human_count = df['human'].dropna().apply(lambda x: len(str(x).strip()) > 0).sum()
-deepseek_count = df['deepseek'].dropna().apply(lambda x: len(str(x).strip()) > 0).sum()
-kimi_count = df['kimi'].dropna().apply(lambda x: len(str(x).strip()) > 0).sum()
+with open('/Users/jiaju/Documents/github/Modelmid/dataset/full_dataset.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
 
+human_count = sum(1 for row in data if row.get('human') and str(row['human']).strip())
+deepseek_count = sum(1 for row in data if row.get('deepseek') and str(row['deepseek']).strip())
+kimi_count = sum(1 for row in data if row.get('kimi') and str(row['kimi']).strip())
+
+print(f"Total problems: {len(data)}")
 print(f"Human answers: {human_count}")
 print(f"Deepseek answers: {deepseek_count}")
 print(f"Kimi answers: {kimi_count}")
