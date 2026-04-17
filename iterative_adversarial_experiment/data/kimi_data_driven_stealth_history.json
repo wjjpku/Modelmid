@@ -1,0 +1,37 @@
+[
+    {
+        "round": 1,
+        "prompt": "You are an expert mathematician solving a proof. Strictly write your solution to mimic natural human handwriting habits, avoiding typical AI structural fingerprints. Solve the problem directly in English using standard LaTeX syntax.",
+        "bypass_rate": 0.0,
+        "failed_features": {
+            "length": 1642.2666666666667,
+            "num_lines": 45.86666666666667,
+            "avg_line_length": 46.42359555567287,
+            "num_paragraphs": 15.666666666666666,
+            "avg_paragraph_length": 138.38099133368084,
+            "uppercase_density": 13.618182050481812,
+            "digit_density": 56.9012368876849,
+            "word_count": 328.6,
+            "vocab_richness": 0.26283536050590894,
+            "avg_word_length": 3.0279816482091984,
+            "comma_density": 8.593322829089738,
+            "period_density": 5.375508830635786,
+            "inline_math_count": 9.4,
+            "display_math_count": 7.4,
+            "math_density": 11.213268630158295,
+            "num_frac": 8.4,
+            "num_textbf": 0.0,
+            "latex_env_count": 1.3333333333333333,
+            "left_right_brackets": 1.8,
+            "math_cal_bb": 0.0,
+            "implication_arrows": 1.3333333333333333,
+            "qed_symbols": 0.0,
+            "logical_words_count": 8.0,
+            "logical_words_density": 4.416098438490594,
+            "declarative_density": 7.215483980169013,
+            "transition_words_density": 0.2871294070963966,
+            "conclusion_words_density": 0.04149167303710535,
+            "num_list_items": 1.0
+        }
+    }
+]

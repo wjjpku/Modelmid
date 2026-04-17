@@ -41,25 +41,36 @@
 ```text
 Modelmid/
 ├── archive/                # 归档的旧版中文数据与废弃脚本
-├── dataset/                # 数据集与预测结果输出
+├── dataset/                # 数据集
 │   ├── full_dataset.json            # 主训练集 (1000 题 × 5 来源 = 5000 条记录)
-│   ├── generalization_dataset.json  # 泛化实验跨域测试集 (40 题 × 5 来源)
-│   └── stealth_dataset.json         # 防检测反制对抗测试集 (50 题 × 5 来源)
-├── docs/                   # 项目报告与分析文档
-│   ├── experiment_report.md         # 自动化特征分布报告
-│   ├── technical_report.md          # 特征工程技术原理解析
-│   └── generalization_report.md     # 泛化性研究与 GLM 风格坍缩分析
+│   ├── full_dataset_pro.json        # 扩容泛化数据集 (2000 题 × 5 来源 = 10000 条记录)
+│   ├── test_100_new_questions.json  # 独立英文测试集 (100 题全新数据)
+│   └── test_100_chinese_archive_questions.json # 独立中文归档测试集 (100 题)
+├── docs/                   # 项目综合报告与分析文档
+│   ├── comprehensive_evaluation_report.md # 综合评估与实验报告 (合并了消融、泛化、深度学习对比等)
+│   └── figures/                     # 实验数据统计图表 (PCA, Violin, 混淆矩阵等)
+├── iterative_adversarial_experiment/ # 动态迭代对抗实验专区 (LLM-as-an-Optimizer)
+│   ├── data/                        # 实验迭代历史与反馈日志
+│   ├── scripts/                     # 自动化迭代生成与特征抽取脚本
+│   └── adversarial_experiment_report.md # 实验详细报告与核心发现
 ├── latex_report/           # 最终排版的学术论文级 LaTeX 报告
 │   ├── main.tex                     # 论文源文件
 │   └── figures/                     # 论文插图 (PCA, Violin Plot, 学习曲线)
 ├── models/                 # 已训练好的模型文件
-│   └── best_classifier_model.pkl    # Hist Gradient Boosting 最佳分类器
+│   ├── best_classifier_model.pkl    # Hist Gradient Boosting 最佳 ML 分类器
+│   ├── e2e_transformer_best.pt      # DistilBERT 端到端最佳 DL 分类器
+│   ├── pro_feature_extractor.pkl    # 大规模数据集下的特征提取器
+│   └── pro_ml_model.pkl             # 大规模数据集下的 ML 分类器
+├── results/                # 预测结果与实验打分 (CSV)
+│   ├── clean_test_predictions.csv   # 全新独立测试集的 ML vs DL 预测结果
+│   ├── generalization_predictions.csv # 泛化实验预测结果
+│   └── stealth_predictions.csv      # 防检测对抗实验预测结果
 ├── scripts/                # Python 源码目录
+│   ├── archive/                     # 废弃或一次性探索脚本归档
 │   ├── data_generation/             # 并发调用 LLM API 获取解答
 │   ├── model_training/              # 特征工程、流水线搭建与模型训练评估
-│   ├── visualization/               # 数据统计、图表绘制与案例分析
-│   └── legacy_utils/                # 旧版工具
-├── .env                    # 环境变量 (存储 Deepseek/Kimi/GLM/Qwen API Key)
+│   └── visualization/               # 数据统计、图表绘制与案例分析
+├── .env                    # 环境变量 (存储 API Key)
 └── README.md               # 项目主说明文档 (本文档)
 ```
 
@@ -339,22 +350,23 @@ python3 scripts/visualization/plot_stealth.py
 - 即使训练集只有 20 题，分类器也已经能学到明显来源差异；
 - 随着训练数据增加，Hist Gradient Boosting 的优势进一步扩大。
 
-### 8.3 最强可解释特征
+### 8.4 特征消融实验 (Ablation Study)
 
-从随机森林特征重要性分析来看，最关键的信号包括：
+为了进一步证明我们的双轨特征工程的有效性，我们对 5000 条主数据集进行了 5-Fold 特征消融验证：
 
-1. `num_paragraphs`
-2. `inline_math_count`
-3. `avg_paragraph_length`
-4. `num_lines`
-5. `math_density`
-6. `declarative_density`
+| Configuration | 准确率 (Accuracy) | 相比 Full Model 性能下降 (Drop) |
+| :--- | :---: | :---: |
+| **Full Model (TF-IDF + Custom)** | **95.36%** | - |
+| **Full w/o Macro Structure** | 94.80% | ↓ 0.56% |
+| **Full w/o Math/LaTeX** | 94.58% | ↓ 0.78% |
+| **TF-IDF Only** | 93.64% | ↓ 1.72% |
+| **Custom Features Only** | 90.32% | ↓ 5.04% |
 
-这些结果表明，分类器最依赖的不是题目内容本身，而是：
-
-- 模型是否爱分段
-- 模型是否爱过度包公式
-- 模型是否爱用标准化推理起手式
+**结论**：
+- 仅依靠 `TF-IDF`，准确率停留在 93.64%。加入专家经验构建的自定义特征后，模型性能显著拉高至 **95.36%**。
+- 仅使用 `Custom Features` 也能达到 **90.32%**，这证明即使完全不看具体词汇内容，仅靠计算文本的“物理属性”（如段落长短、逻辑词密度、数学公式特征），也足以在五分类中取得超过 90% 的表现。
+- 在子模块中，消融掉**数学/LaTeX 特征**带来的性能下降最大 (↓ 0.78%)，说明不同模型在处理数学符号的排版习惯上具有极强的指纹特异性。
+- 完整报告请见：[comprehensive_evaluation_report.md](file:///Users/jiaju/Documents/github/Modelmid/docs/comprehensive_evaluation_report.md) 中的“特征消融实验”章节。
 
 ## 9. 可视化设计
 
@@ -401,9 +413,9 @@ python3 scripts/visualization/plot_stealth.py
 
 ## 10. 防检测与反制干预实验
 
-这是本项目后期最重要的扩展实验之一。
+这是本项目后期最重要的扩展实验之一，包括静态零样本实验与动态迭代对抗实验。
 
-### 10.1 实验思想
+### 10.1 静态零样本干预
 
 既然我们已经知道分类器最依赖哪些特征，那么就可以反过来把这些结论写进提示词中，要求模型：
 
@@ -413,22 +425,33 @@ python3 scripts/visualization/plot_stealth.py
 - 不用 `Firstly / Moreover / Finally`
 - 写成长段连续推导
 
-也就是说，我们不是给模型“人类答案样例”，而是直接告诉它“如何避开会暴露 AI 身份的结构特征”。
+也就是说，我们不是给模型“人类答案样例”，而是直接告诉它“如何避开会暴露 AI 身份的结构特征”。在 194 份有效防检测样本中，被误判为 Human 的比例高达 **63.40%**。
 
-### 10.2 实验结果
+### 10.2 动态迭代对抗实验 (Iterative Adversarial Experiment)
 
-在 194 份有效防检测样本中，被误判为 Human 的比例高达：
+为了进一步探索 AI 自我进化的反侦察能力，我们设计了基于 LLM 反馈的迭代对抗实验（LLM-as-an-Optimizer）。
+- **流程**：将分类器（判别器）识别失败样本的详细特征（如平均段落数、行内公式数量、祈使句密度等）作为反馈，输入给另一个大模型（优化器），要求其自主改写生成 Prompt。
+- **专项测试 (针对 Kimi)**：我们挑选了在静态实验中最难被攻陷的 **Kimi** 作为生成器，并由 **DeepSeek** 作为优化器。我们进行了两阶段的对比实验：
+  - **阶段一 (先验主导型 Optimizer)**：当优化器没有被严格限制时，会产生“幻觉叠加”，即盲目引入“口水话/刻意不换行”等非自然要求，导致 Kimi 绕过率止步于 33.33% 并在后期崩溃。
+  - **阶段二 (数据驱动型 Optimizer)**：当我们在提示词中彻底封杀了优化器的先验发散，强制其**仅将特征数值的偏差映射为严格的结构化约束**（如明确禁止特定词汇、精确限定公式数量）后，发生了质变。
+- **最终结果**：在数据驱动型反馈下，Kimi 仅用 2 轮迭代就**瞬间实现了 100% 的检测绕过率**。这一震撼结果说明，即便是最难伪装的模型，只要提示词能够精准且严格地封锁高精度分类器的“特征锚点”，AI 的结构指纹依然可以被完全抹除。
+- **实验数据与报告**：本次动态对抗实验的代码、完整的各阶段 Prompt 进化历史（JSON）以及详细发现，已独立打包至 [iterative_adversarial_experiment](file:///Users/jiaju/Documents/github/Modelmid/iterative_adversarial_experiment) 目录中，以便后续论文写作与引用。详细报告请见 [adversarial_experiment_report.md](file:///Users/jiaju/Documents/github/Modelmid/iterative_adversarial_experiment/adversarial_experiment_report.md)。
 
-- **63.40%**
+### 8.5 大规模跨学科泛化实验 (ML vs DL)
 
-按模型拆分：
+为了测试模型在不同数学子学科上的鲁棒性，我们将题库扩大至 2000 题（共计 10,000 条记录），涵盖了代数 (`algebra`)、概率 (`counting_and_probability`) 等子领域，并构建了深度学习 (Deep Learning) 与传统机器学习 (Machine Learning) 的全面基线对比：
 
-- Deepseek：`68.18%`
-- Kimi：`18.00%`
-- GLM：`70.00%`
-- Qwen：`98.00%`
-
-### 10.3 为什么会误判
+1. **分层抽样**：按题目 ID 分组，1800 题用于训练，200 题用于测试。
+2. **算法对比结果 (带有 Early Stopping)**：
+   - **RandomForest (ML)**：测试集 **97.70%** (耗时 ~0.96秒)
+   - **HistGradientBoosting (ML)**：测试集 **97.40%** (耗时 ~30秒)
+   - **ResNet_DNN (DL)**：测试集 **97.40%** (收敛于 54 轮)
+   - **Simple_MLP (DL)**：测试集 **97.00%** (收敛于 29 轮)
+   - **Conv1D_Net (DL)**：测试集 **96.50%** (收敛于 62 轮)
+3. **结论**：
+   - **风格指纹的跨学科一致性**：不论是在通用数学还是具体的代数/概率题中，大模型的排版和用词习惯依然极其固定。
+   - **树集成依然是结构化特征之王**：在基于我们精心设计的“统计特征+TF-IDF”这种异构拼接数据表上，传统的随机森林（RandomForest）在不到 1 秒内就跑出了最高准确率。深度学习即使上了带 Skip Connection 的 ResNet-like 架构，也仅仅是追平了梯度提升树，且付出了更高的调参和训练成本。这充分证明：**脱离了词向量直接编码，纯靠专家经验特征工程时，树模型是最高效且鲁棒的。**
+   - 详细实验报告请见：[comprehensive_evaluation_report.md](file:///Users/jiaju/Documents/github/Modelmid/docs/comprehensive_evaluation_report.md) 中的“扩容数据集与基线对比”章节。
 
 对比成功骗过分类器的样本和依然被识别的样本后可以看到：
 
@@ -442,16 +465,31 @@ python3 scripts/visualization/plot_stealth.py
 
 这说明误判不是随机的，而是因为这些样本确实被提示词推到了“更像人类”的结构分布区域。
 
+### 8.6 端到端预训练语言模型分类实验 (E2E Transformer)
+
+为了彻底颠覆传统的手工特征提取工程，我们进一步构建了基于预训练语言模型（Pre-trained Language Models）的端到端（End-to-End）深度学习分类器。
+在该实验中，我们抛弃了所有手动设计的结构化特征与 TF-IDF 词袋模型，直接将原始数学解答文本输入到 `distilbert-base-uncased` 中进行微调（Fine-tuning）。
+
+1. **实验设置**：
+   - 使用包含 10,000 条记录的泛化数据集，按照 1800题/200题（训练/验证）进行严格的题号隔离分层抽样。
+   - 限制 `Max Sequence Length = 512`，使用 `Batch Size = 16` 以防止 Mac MPS 显存溢出 (OOM)。
+   - 引入了基于 Validation Accuracy 的 Early Stopping (patience=2) 与 Checkpointing 机制。
+2. **训练结果与同源验证 (Validation)**：
+   - 训练在 Epoch 7 触发了 Early Stopping，而**模型在 Epoch 5 达到了 98.10% 的验证集准确率巅峰**，超越了手工特征提取的机器学习基线 (97.70%)。
+   - 在 1000 条测试记录上，Deepseek、Human、Qwen 的 F1-score 高达 0.99。这证明 Transformer 可以从原始序列中隐式学习到更深的特征。
+3. **全新测试集独立评估 (Zero-Shot Generalization)**：
+   - 为了严谨验证该模型是否存在数据泄露或过拟合，我们额外从 Hendrycks MATH 测试集中抽取了 **100 道全新且未见过的问题**。
+   - 重新调用四大模型 API 生成解答，构建了包含 500 条记录的全新独立测试集。
+   - E2E Transformer 模型在该全新独立测试集上依然达到了 **96.00%** 的泛化准确率。
+4. **跨语言测试挑战 (Zero-Shot Cross-Lingual Evaluation)**：
+   - 我们编写了 [generate_chinese_archive_test.py](scripts/data_generation/generate_chinese_archive_test.py) 从归档文件中抽取了 100 道原生的纯中文独立测试题，并调用 API 补齐了 500 份 AI 与 Human 的中文回答。
+   - 在未经任何中文微调的情况下，**传统 ML 最佳基线 (HistGB) 准确率降至 54.00%**（TF-IDF 英文词汇全部失效，只能盲猜结构特征）；**E2E 深度学习模型 (DistilBERT) 准确率降至 57.00%**。
+   - 这充分反映了模型对于跨语言、未见过词表的泛化极限，同时也反映出 AI 在不同语言中依然残留了极少量可以被深度注意力机制捕获的排版物理指纹（例如 Qwen 的中文识别 F1-score 依然高达 0.77）。
+   - 详细评估代码见：[evaluate_cross_lingual.py](scripts/model_training/evaluate_cross_lingual.py)。
+
 ## 11. 报告与文档
-
-### Markdown 文档
-
-- [technical_report.md](file:///Users/jiaju/Documents/github/Modelmid/docs/technical_report.md)
-  - 更偏技术解释
-  - 说明分类器原理、特征设计与可解释性
-
-- [experiment_report.md](file:///Users/jiaju/Documents/github/Modelmid/docs/experiment_report.md)
-  - 更偏实验统计与图表解释
+所有的实验文档已汇总合并至 `docs/comprehensive_evaluation_report.md` 中，内含详细的图表和特征分析，包括：
+- [综合评估与实验报告](file:///Users/jiaju/Documents/github/Modelmid/docs/comprehensive_evaluation_report.md)
 
 ### LaTeX 报告
 
