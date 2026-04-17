@@ -273,48 +273,59 @@ Modelmid/
 - 本项目中很多关键判别边界本质上是非线性的；
 - 树模型对“段落数 + 行内公式 + 祈使句密度”这类交互更敏感。
 
-## 7. 实验流程
+## 7. 实验复现指南 (How to Reproduce)
 
-整个项目的实验流程可以概括为：
+为了准确重现我们在中期报告 (`midreport.pdf`) 中汇报的所有核心实验，您可以按顺序执行以下脚本。所有的中间输出与图表将会保存在 `results/` 和 `docs/figures/` 目录下。
 
-1. 迁移英文数学数据集。
-2. 生成四种大模型答案。
-3. 统一为五分类 JSON 数据集。
-4. 提取词汇特征与结构特征。
-5. 比较多种分类器。
-6. 做不同训练题量的规模实验。
-7. 可视化特征空间。
-8. 设计防检测提示词并做对抗评估。
-9. 汇总为 Markdown 与 LaTeX 报告。
-
-对应脚本入口如下：
-
+### 7.1 基础分类模型训练与特征评估 (ML Baseline & Feature Ablation)
+训练最强机器学习模型（Hist Gradient Boosting）并提取专家特征，输出特征重要性图表，进行 5-Fold 特征消融验证。
 ```bash
-# 1. 构建主数据集
-python3 scripts/data_generation/migrate_to_json.py
+# 训练主分类器 (HistGB)
+python3 scripts/model_training/train_classifier.py
 
-# 2. 生成四类模型答案
+# 运行特征消融实验 (Table 6)
+python3 scripts/model_training/run_ablation_experiment.py
+```
+
+### 7.2 端到端深度学习训练 (E2E Transformer)
+基于 DistilBERT 进行没有任何特征工程的端到端微调，复现 98.1% 的同分布准确率巅峰。
+```bash
+# 训练 E2E DL 模型 (带 Early Stopping)
+python3 scripts/model_training/train_e2e_transformer.py
+```
+
+### 7.3 跨学科跨域泛化实验 (Cross-Domain Generalization)
+在 100 道从未见过的独立跨学科题库上，对比 ML 与 DL 模型的表现，并绘制高清混淆矩阵（Figures 7 & 8）。
+```bash
+# 生成混淆矩阵并评估准确率 (ML 78.60% vs DL 96.00%)
+python3 scripts/model_training/plot_confusion_matrices.py
+```
+
+### 7.4 跨语言零样本泛化实验 (Zero-Shot Cross-Lingual)
+在 100 道纯中文原生的归档习题上，测试纯英文语料训练出来的 ML 和 DL 模型的”特征坍缩“现象（Tables 10 & 11）。
+```bash
+# 评估跨语言泛化表现
+python3 scripts/model_training/evaluate_cross_lingual.py
+```
+
+### 7.5 防检测与反制干预实验 (Adversarial Stealth)
+测试静态与动态零样本干预下的模型伪装成功率（Table 13, 14, 15）。
+```bash
+# 评估静态防检测样本的伪装成功率
+python3 scripts/model_training/evaluate_stealth.py
+
+# 运行基于数据驱动反馈的动态迭代对抗实验 (LLM-as-Optimizer)
+python3 iterative_adversarial_experiment/scripts/run_iterative_stealth.py
+```
+
+### 7.6 (可选) 重新生成各类大模型回答数据
+如果您配置了 `.env` 文件中的 API Key，可以重新运行数据获取脚本。
+```bash
+# 生成各个模型的问答数据
 python3 scripts/data_generation/generate_deepseek_answers.py
 python3 scripts/data_generation/generate_kimi_answers.py
 python3 scripts/data_generation/generate_glm_answers.py
 python3 scripts/data_generation/generate_qwen_answers.py
-
-# 3. 训练主分类器
-python3 scripts/model_training/train_classifier.py
-
-# 4. 比较分类器
-python3 scripts/model_training/compare_classifiers.py
-
-# 5. 数据规模实验
-python3 scripts/model_training/run_data_size_experiment.py
-
-# 6. 可视化
-python3 scripts/visualization/visualize_features.py
-
-# 7. 防检测样本生成与评估
-python3 scripts/data_generation/generate_stealth_answers.py
-python3 scripts/model_training/evaluate_stealth.py
-python3 scripts/visualization/plot_stealth.py
 ```
 
 ## 8. 核心实验结果
@@ -437,55 +448,25 @@ python3 scripts/visualization/plot_stealth.py
 - **最终结果**：在数据驱动型反馈下，Kimi 仅用 2 轮迭代就**瞬间实现了 100% 的检测绕过率**。这一震撼结果说明，即便是最难伪装的模型，只要提示词能够精准且严格地封锁高精度分类器的“特征锚点”，AI 的结构指纹依然可以被完全抹除。
 - **实验数据与报告**：本次动态对抗实验的代码、完整的各阶段 Prompt 进化历史（JSON）以及详细发现，已独立打包至 [iterative_adversarial_experiment](file:///Users/jiaju/Documents/github/Modelmid/iterative_adversarial_experiment) 目录中，以便后续论文写作与引用。详细报告请见 [adversarial_experiment_report.md](file:///Users/jiaju/Documents/github/Modelmid/iterative_adversarial_experiment/adversarial_experiment_report.md)。
 
-### 8.5 大规模跨学科泛化实验 (ML vs DL)
+### 8.5 端到端预训练语言模型分类实验 (E2E Transformer)
 
-为了测试模型在不同数学子学科上的鲁棒性，我们将题库扩大至 2000 题（共计 10,000 条记录），涵盖了代数 (`algebra`)、概率 (`counting_and_probability`) 等子领域，并构建了深度学习 (Deep Learning) 与传统机器学习 (Machine Learning) 的全面基线对比：
-
-1. **分层抽样**：按题目 ID 分组，1800 题用于训练，200 题用于测试。
-2. **算法对比结果 (带有 Early Stopping)**：
-   - **RandomForest (ML)**：测试集 **97.70%** (耗时 ~0.96秒)
-   - **HistGradientBoosting (ML)**：测试集 **97.40%** (耗时 ~30秒)
-   - **ResNet_DNN (DL)**：测试集 **97.40%** (收敛于 54 轮)
-   - **Simple_MLP (DL)**：测试集 **97.00%** (收敛于 29 轮)
-   - **Conv1D_Net (DL)**：测试集 **96.50%** (收敛于 62 轮)
-3. **结论**：
-   - **风格指纹的跨学科一致性**：不论是在通用数学还是具体的代数/概率题中，大模型的排版和用词习惯依然极其固定。
-   - **树集成依然是结构化特征之王**：在基于我们精心设计的“统计特征+TF-IDF”这种异构拼接数据表上，传统的随机森林（RandomForest）在不到 1 秒内就跑出了最高准确率。深度学习即使上了带 Skip Connection 的 ResNet-like 架构，也仅仅是追平了梯度提升树，且付出了更高的调参和训练成本。这充分证明：**脱离了词向量直接编码，纯靠专家经验特征工程时，树模型是最高效且鲁棒的。**
-   - 详细实验报告请见：[comprehensive_evaluation_report.md](file:///Users/jiaju/Documents/github/Modelmid/docs/comprehensive_evaluation_report.md) 中的“扩容数据集与基线对比”章节。
-
-对比成功骗过分类器的样本和依然被识别的样本后可以看到：
-
-- 成功骗过分类器的文本：
-  - 平均段落数只有 `1.36`
-  - 祈使代词密度只有 `1.29`
-
-- 仍被识别的文本：
-  - 平均段落数高达 `8.68`
-  - 祈使代词密度高达 `4.08`
-
-这说明误判不是随机的，而是因为这些样本确实被提示词推到了“更像人类”的结构分布区域。
-
-### 8.6 端到端预训练语言模型分类实验 (E2E Transformer)
-
-为了彻底颠覆传统的手工特征提取工程，我们进一步构建了基于预训练语言模型（Pre-trained Language Models）的端到端（End-to-End）深度学习分类器。
-在该实验中，我们抛弃了所有手动设计的结构化特征与 TF-IDF 词袋模型，直接将原始数学解答文本输入到 `distilbert-base-uncased` 中进行微调（Fine-tuning）。
+为了探索深度学习模型在抛弃所有手工特征工程后的表现，我们构建了基于预训练语言模型（Pre-trained Language Models）的端到端（End-to-End）深度学习分类器。
+在该实验中，我们直接将原始数学解答文本输入到 `distilbert-base-uncased` 中进行微调（Fine-tuning）。
 
 1. **实验设置**：
-   - 使用包含 10,000 条记录的泛化数据集，按照 1800题/200题（训练/验证）进行严格的题号隔离分层抽样。
-   - 限制 `Max Sequence Length = 512`，使用 `Batch Size = 16` 以防止 Mac MPS 显存溢出 (OOM)。
+   - 使用包含 10,000 条记录的扩容数据集 (`full_dataset_pro.json`)，按照 1800题/200题（训练/验证）进行严格的题号隔离分层抽样。
+   - 限制 `Max Sequence Length = 512`，使用 `Batch Size = 16`。
    - 引入了基于 Validation Accuracy 的 Early Stopping (patience=2) 与 Checkpointing 机制。
 2. **训练结果与同源验证 (Validation)**：
-   - 训练在 Epoch 7 触发了 Early Stopping，而**模型在 Epoch 5 达到了 98.10% 的验证集准确率巅峰**，超越了手工特征提取的机器学习基线 (97.70%)。
-   - 在 1000 条测试记录上，Deepseek、Human、Qwen 的 F1-score 高达 0.99。这证明 Transformer 可以从原始序列中隐式学习到更深的特征。
-3. **全新测试集独立评估 (Zero-Shot Generalization)**：
+   - 训练在 Epoch 7 触发了 Early Stopping，而**模型在 Epoch 5 达到了 98.10% 的验证集准确率巅峰**，超越了手工特征提取的机器学习基线 (95.5%)。
+3. **跨学科跨域泛化实验 (Cross-Domain Generalization)**：
    - 为了严谨验证该模型是否存在数据泄露或过拟合，我们额外从 Hendrycks MATH 测试集中抽取了 **100 道全新且未见过的问题**。
-   - 重新调用四大模型 API 生成解答，构建了包含 500 条记录的全新独立测试集。
-   - E2E Transformer 模型在该全新独立测试集上依然达到了 **96.00%** 的泛化准确率。
+   - 在该全新跨学科测试集上：**HistGB综合准确率为 78.60%，DistilBERT综合准确率为 96.00%**。这证明现代预训练 Transformer 模型凭借其强大的语义注意力机制，能够隐式地捕捉到极高维的”指纹“。
+   - 值得注意的是，泛化实验中发现了 GLM 风格”坍缩”现象（当题目难度剧增时，GLM 倾向于使用类似于 Kimi 的回退策略）。
 4. **跨语言测试挑战 (Zero-Shot Cross-Lingual Evaluation)**：
-   - 我们编写了 [generate_chinese_archive_test.py](scripts/data_generation/generate_chinese_archive_test.py) 从归档文件中抽取了 100 道原生的纯中文独立测试题，并调用 API 补齐了 500 份 AI 与 Human 的中文回答。
-   - 在未经任何中文微调的情况下，**传统 ML 最佳基线 (HistGB) 准确率降至 54.00%**（TF-IDF 英文词汇全部失效，只能盲猜结构特征）；**E2E 深度学习模型 (DistilBERT) 准确率降至 57.00%**。
-   - 这充分反映了模型对于跨语言、未见过词表的泛化极限，同时也反映出 AI 在不同语言中依然残留了极少量可以被深度注意力机制捕获的排版物理指纹（例如 Qwen 的中文识别 F1-score 依然高达 0.77）。
-   - 详细评估代码见：[evaluate_cross_lingual.py](scripts/model_training/evaluate_cross_lingual.py)。
+   - 我们从北京大学课程题库抽取了 100 道原生的纯中文独立测试题。
+   - 在未经任何中文微调的情况下，**ML 最佳基线 (HistGB) 准确率降至 54.00%**（TF-IDF 英文词汇失效）；**E2E 深度学习模型 (DistilBERT) 准确率降至 57.00%**。
+   - 这充分反映了模型对于跨语言、未见过词表的泛化极限。
 
 ## 11. 报告与文档
 所有的实验文档已汇总合并至 `docs/comprehensive_evaluation_report.md` 中，内含详细的图表和特征分析，包括：
