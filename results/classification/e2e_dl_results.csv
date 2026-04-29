@@ -1,0 +1,2 @@
+Model,Type,Accuracy,Time(s),Epochs
+End-to-End DistilBERT,E2E Deep Learning (Transformers),0.981,4713.798344135284,7

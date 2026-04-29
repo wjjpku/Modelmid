@@ -25,7 +25,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 
 def run_classifier_comparison():
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
-    dataset_path = os.path.join(base_dir, 'dataset/full_dataset.json')
+    dataset_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset.json')
     
     print("Loading data...")
     df = load_data(dataset_path)

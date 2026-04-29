@@ -8,7 +8,7 @@ plt.rcParams['axes.unicode_minus'] = False
 
 def plot_stealth_results():
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
-    output_path = os.path.join(base_dir, 'latex_report/figures/stealth_success_rate.png')
+    output_path = os.path.join(base_dir, 'docs', 'figures', 'stealth_success_rate.png')
     
     models = ['Deepseek', 'Kimi', 'GLM', 'Qwen']
     success_rates = [68.18, 18.00, 70.00, 98.00]

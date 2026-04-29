@@ -1,0 +1,637 @@
+\documentclass[11pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+\title{《常微分方程》习题集\\（柳彬 编著）}
+\author{第二章 — 第七章}
+\date{}
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{第二章 初等积分法}
+
+\subsection*{习题 2.1}
+判别下列方程是否为恰当方程，并对恰当方程进行求解：
+\begin{enumerate}
+    \item $(4x^{2}y - y)\mathrm{d}x + (3x + y)\mathrm{d}y = 0$.
+    \item $(x + 2y)\mathrm{d}x + (2x - y)\mathrm{d}y = 0$.
+    \item $(a x - b y)\mathrm{d}x + (b x - c y)\mathrm{d}y = 0$ \quad ($a,b,c$为常数).
+    \item $x^{2}y(y\mathrm{d}x + x\mathrm{d}y) - (2y\mathrm{d}x + x\mathrm{d}y) = 0$.
+    \item $3x^{2}(1 + \ln y)\mathrm{d}x - \left(2y - \frac{x^{3}}{y}\right)\mathrm{d}y = 0$.
+    \item $(2 - 9xy^{2})x\mathrm{d}x + (4y^{2} - 6x^{3})y\mathrm{d}y = 0$.
+    \item $2x(1 + \sqrt{x^{2} - y})\mathrm{d}x - \sqrt{x^{2} - y}\mathrm{d}y = 0$.
+    \item $\mathrm{e}^{-y}\mathrm{d}x - (2y + x\mathrm{e}^{-y})\mathrm{d}y = 0$.
+    \item $\frac{y}{x}\mathrm{d}x + (y^{3} + \ln x)\mathrm{d}y = 0$.
+\end{enumerate}
+
+\subsection*{习题 2.2}
+\begin{enumerate}
+    \item 求下列微分方程满足所给条件的特解：
+    \begin{enumerate}
+        \item $x y\mathrm{d}x + (x + 1)\mathrm{d}y = 0,\ y(1) = 2$;
+        \item $(x^{2} - 1)y^{\prime} + 2x y^{2} = 0,\ y(0) = 1$;
+        \item $x y^{\prime} + y = y^{2},\ y(1) = \frac{1}{2}$;
+        \item $y^{\prime} = \sqrt{4x + 2y - 1},\ y(0) = 1$;
+        \item $(x + 2y)y^{\prime} = 1,\ y(0) = -1$;
+        \item $x^{2}y^{\prime} - \cos 2y = 1,\ y(+\infty) = \frac{9\pi}{4}$;
+        \item $3y^{2}y^{\prime} + 16x = 2xy^{3}$，当 $x \rightarrow +\infty$ 时，$y(x)$ 有界.
+    \end{enumerate}
+    \item 求解下列微分方程，并作出积分曲线的草图：
+    \begin{enumerate}
+        \item $y^{\prime} = a y$，其中 $a$ 是不为零的常数；
+        \item $y^{\prime} = y^{a}$，其中 $a = \frac{1}{5},1,2$.
+    \end{enumerate}
+    \item 设有微分方程 $y^{\prime} = f(y)$，其中 $f(y)$ 在 $y = a$ 的某个邻域内连续，且 $f(y) = 0$ 当且仅当 $y = a$。证明：对于直线 $y = a$ 上任一点 $(x_{0},a)$，该方程满足条件 $y(x_{0}) = a$ 的解存在且唯一的充要条件为
+    \[
+    \left|\int_{a}^{a\pm \epsilon}\frac{1}{f(y)}\mathrm{d}y\right| = +\infty,
+    \]
+    其中 $\epsilon$ 为任意正数。
+    \item 称函数 $f(x,y)$ 是 $d$ 次拟齐次函数，如果
+    \[
+    f(t^{\alpha s}x,t^{\beta s}y) = t^{d s}f(x,y),
+    \]
+    其中 $t > 0,\alpha$ 和 $\beta$ 为正常数，且 $\alpha +\beta = 1,s\in \mathbb{R}$。这时 $\alpha$ 和 $\beta$ 分别称为 $x$ 和 $y$ 的权。考虑微分方程
+    \[
+    P(x,y)\mathrm{d}x + Q(x,y)\mathrm{d}y = 0,
+    \]
+    其中 $P(x,y)$ 和 $Q(x,y)$ 分别是 $d_{0}$ 次和 $d_{1}$ 次拟齐次函数，$x$ 和 $y$ 的权分别是 $\alpha$ 和 $\beta$。证明：当
+    \[
+    d_{0} = d_{1} + \beta -\alpha
+    \]
+    时，该方程可以用初等积分法求解。
+    \item 证明：方程
+    \[
+    y^{\prime} = \sqrt[3]{\frac{y^{2} + 1}{x^{4} + 1}}
+    \]
+    的每一条积分曲线都有两条水平渐近线。
+    \item 设函数 $f(x)$ 在区间 $[1, + \infty)$ 上连续，且为正的。证明：如果
+    \[
+    \int_{1}^{x}f(t)\mathrm{d}t\leqslant (f(x))^{3},
+    \]
+    则
+    \[
+    f(x)\geqslant \sqrt{\frac{2}{3} (x - 1)}.
+    \]
+\end{enumerate}
+
+\subsection*{习题 2.3}
+\begin{enumerate}
+    \item 求解下列微分方程：
+    \begin{enumerate}
+        \item $x y^{\prime} - 2y = 2x^{4}$;
+        \item $(2x + 1)y^{\prime} = 4x + 2y$;
+        \item $(x y + \mathrm{e}^{x})\mathrm{d}x - x\mathrm{d}y = 0$;
+        \item $2x(x^{2} + y)\mathrm{d}x = \mathrm{d}y$;
+        \item $(1 - 2x y)y^{\prime} = y(y - 1)$.
+    \end{enumerate}
+    \item 求出微分方程
+    \[
+    y^{\prime}\sin 2x = 2(y + \cos x)
+    \]
+    的当 $x \to \frac{\pi}{2}$ 时仍有界的解。
+    \item 设在微分方程 $xy' + ay = f(x)$ 中，常数 $a > 0$，$\lim_{x \to 0} f(x) = b$。证明：当 $x \to 0$ 时，该方程只有一个有界的解；并求出这个解当 $x \to 0$ 时的极限。
+    \item 求出微分方程 $y' = 2y \cos^2 x - \sin x$ 的周期解。
+    \item 假设连续函数 $f(t)$ 满足 $|f(t)| \le M, t \in \mathbb{R}$。证明：微分方程
+    \[
+    \frac{\mathrm{d}x}{\mathrm{d}t} +x = f(t)
+    \]
+    在 $- \infty < t < +\infty$ 上只有一个有界解；进一步，如果 $f(t)$ 是周期函数，那么这个有界解也是周期的。
+    \item 证明：微分方程 $xy' - (2x^2 + 1)y = x^2$ 只有一个解，满足当 $x \to +\infty$ 时有极限；求出这个极限，并用积分表示这个解。
+    \item 证明：若在 $(- \infty , +\infty)$ 上连续可微且有界的函数 $f(x)$ 满足
+    \[
+    |f(x) + f'(x)| \le 1,
+    \]
+    则 $|f(x)| \le 1$。
+\end{enumerate}
+
+\subsection*{习题 2.4}
+\begin{enumerate}
+    \item 求下列微分方程的解：
+    \begin{enumerate}
+        \item $(x^{2} + y^{2} + x)\mathrm{d}x + y\mathrm{d}y = 0$;
+        \item $(x^{2} + y^{2} + y)\mathrm{d}x - x\mathrm{d}y = 0$;
+        \item $y\mathrm{d}y = (x\mathrm{d}y + y\mathrm{d}x)\sqrt{1 + y^{2}}$;
+        \item $y^{2}\mathrm{d}x - (xy + x^{3})\mathrm{d}y = 0$;
+        \item $y\mathrm{d}x - x\mathrm{d}y = 2x^{3}\tan {\frac{y}{x}}\mathrm{d}x$;
+        \item $x y\mathrm{d}x = (y^{3} + x^{2}y + x^{2})\mathrm{d}y$;
+        \item $(x^{2} - y^{2} + y)\mathrm{d}x + x(2y - 1)\mathrm{d}y = 0$;
+        \item $y^{2}(y\mathrm{d}x - 2x\mathrm{d}y) = x^{3}(x\mathrm{d}y - 2y\mathrm{d}x)$.
+    \end{enumerate}
+    \item 证明：方程(2.18)有形如 $\mu = \mu (\phi (x,y))$ 的积分因子的充要条件是
+    \[
+    \frac{\frac{\partial P}{\partial y} - \frac{\partial Q}{\partial x}}{Q\frac{\partial\phi}{\partial x} - P\frac{\partial\phi}{\partial y}} = f(\phi (x,y)),
+    \]
+    其中 $f$ 为某个一元函数。应用这一结果，给出存在下列类型的积分因子的充要条件：
+    \begin{enumerate}
+        \item $\mu = \mu (x \pm y)$;
+        \item $\mu = \mu (x^{2} + y^{2})$;
+        \item $\mu = \mu (xy)$;
+        \item $\mu = \mu (x^{\alpha} y^{\beta})$ ($\alpha, \beta$ 为常数).
+    \end{enumerate}
+\end{enumerate}
+
+\subsection*{习题 2.5}
+\begin{enumerate}
+    \item 求解下列微分方程：
+    \begin{enumerate}
+        \item $8y^{\prime 3}=27y$;
+        \item $y^{\prime 2}+x y=y^{2}+x y^{\prime}$;
+        \item $y+x y^{\prime}=4\sqrt{y^{\prime}}$.
+    \end{enumerate}
+    \item 利用参数法求解下列微分方程：
+    \begin{enumerate}
+        \item $2x y^{\prime}-y=y^{\prime}\ln(y y^{\prime})$;
+        \item $y^{\prime 2}-2x y^{\prime}=x^{2}-4y$.
+    \end{enumerate}
+    \item 求一曲线，使其在任一点处的切线与两条坐标轴所构成三角形的面积为 $2a^{2}$。
+\end{enumerate}
+
+\subsection*{习题 2.6}
+\begin{enumerate}
+    \item 求曲线族 $x^{2} + y^{2} = cx$ 的正交轨线族，其中 $c$ 为任意常数。
+    \item 求一曲线，使其任一点处的切线与横轴的交点到切点的距离等于该交点到原点的距离。
+    \item 设 $y = \phi (x)$ 满足 $y^{\prime} + a(x)y\leqslant 0,\ x\geqslant 0$。证明：
+    \[
+    \phi (x)\leqslant \phi (0)\mathrm{e}^{- \int_{0}^{x}a(s)\mathrm{d}s},\quad x\geqslant 0.
+    \]
+    \item 求解方程 $y = \int_{0}^{x}y(t)\mathrm{d}t + x + 1$。
+    \item 证明：单摆方程 $y^{\prime \prime} + \sin y = 0$ 有当 $x \rightarrow +\infty$ 时趋向于 $\pi$ 的解。
+    \item 设函数 $f(x)$ 在区间 $(0, + \infty)$ 上可导，且
+    \[
+    \int_{1}^{x y}f(t)\mathrm{d}t = x\int_{1}^{y}f(t)\mathrm{d}t + y\int_{1}^{x}f(t)\mathrm{d}t,\quad x,y > 0.
+    \]
+    如果 $f(1) = 3$，求 $f(x)$。
+    \item 设当 $x > - 1$ 时，可微函数 $f(x)$ 满足
+    \[
+    f^{\prime}(x) + f(x) - \frac{1}{x + 1}\int_{0}^{x}f(t)\mathrm{d}t = 0,
+    \]
+    且 $f(0) = 1$。证明：当 $x \geqslant 0$ 时，$\mathrm{e}^{- x} \leqslant f(x) \leqslant 1$。
+    \item (追线) 在 $(x, y)$-平面上，设点 $B$ 的初始位置为 $(x_{1}, y_{1})$，它以常速度 $b$ 沿直线 $y = kx + l$ 做运动；点 $A$ 从 $(x_{0}, y_{0})$ 处出发追赶点 $B$，它的速度为常值 $a$ $(a > b)$。求点 $A$ 追上点 $B$ 的时间以及点 $A$ 的轨迹。
+\end{enumerate}
+
+\newpage
+\section{第三章 解的存在和唯一性}
+
+\subsection*{习题 3.1}
+\begin{enumerate}
+    \item 设 $\phi(t), \psi(t), \chi(t)$ 是区间 $[a, b]$ 上的连续函数，$\chi(t) > 0$。证明：如果
+    \[
+    \phi(t) \le \psi(t) + \int_a^t \chi(s) \phi(s) ds,
+    \]
+    则
+    \[
+    \phi(t) \le \psi(t) + \int_a^t \chi(s) \psi(s) e^{\int_s^t \chi(\tau) d\tau} ds.
+    \]
+    \item 设函数 $f$ 定义在 $(t, x)$-平面中的区域 $D$ 上，称其是 Lip 类的，如果存在可积函数 $k(t)$，使得对于一切的 $(t, x), (t, \bar{x}) \in D$，有
+    \[
+    |f(t, x) - f(t, \bar{x})| \le k(t)|x - \bar{x}|.
+    \]
+    现在假设 $f$ 是 Lip 类的，$\phi_1(t), \phi_2(t)$ 是区间 $I = [a, b]$ 上的连续函数，$f(t, \phi_j(t))$ ($j = 1, 2$) 在 $I$ 上可积，
+    \[
+    \phi_j(t) = \phi_j(\tau) + \int_\tau^t f(s, \phi_j(s)) ds + E_j(t), \quad j = 1, 2,
+    \]
+    并且 $|\phi_1(\tau) - \phi_2(\tau)| \le \delta$，其中 $\tau \in I$，常数 $\delta > 0$，$E_j(t)(j = 1, 2)$ 是定义在 $I$ 上的连续函数。令 $E(t) = |E_1(t)| + |E_2(t)|$。证明：对于 $\tau \le t \le b$，有
+    \[
+    |\phi_1(t) - \phi_2(t)| \le \delta e^{\int_\tau^t k(s) ds} + E(t) + \int_\tau^t E(s) k(s) e^{\int_s^t k(u) du} ds.
+    \]
+    对于 $a \le t \le \tau$，也有类似的结论。
+    \item 证明：若一个函数序列在有界区间 $I$ 上一致有界且等度连续，则在 $I$ 上它至少有一个一致收敛的子序列，该结论在无限区间上成立吗？
+\end{enumerate}
+
+\subsection*{习题 3.2}
+\begin{enumerate}
+    \item 求出下面微分方程的 Picard 序列中的 $y_0, y_1, y_2$：$y^{\prime} = x - y^{2}$。
+    \item 求初值问题
+    \[
+    \frac{\mathrm{d}y}{\mathrm{d}x} = x + y + 1, \quad y(0) = 0
+    \]
+    的 Picard 序列，并由此取极限求解。
+    \item 在定理 3.1 中，将函数 $f(x, y)$ 的条件用下面的条件替代：
+    \[
+    \begin{aligned}
+    & |f(x, y)| \leqslant k(x)(1 + |y|), \\
+    & |f(x, y_1) - f(x, y_2)| \leqslant k(x)|y_1 - y_2|,
+    \end{aligned}
+    \]
+    其中 $k(x)$ 是可积函数。假设 $f(x, y)$ 是连续函数。证明：存在区间 $x_0 \leqslant x \leqslant x_0 + \alpha$，使得 Picard 序列一致收敛到 Cauchy 问题 (3.1), (3.2) 的解。
+    \item 利用 Banach 压缩映像原理证明 Picard 定理。
+    \item 假设函数 $f(x, y)$ 在闭区域 $D = \{(x, y) | 0 \le x \le a, |y| \le b\}$ 上连续。进一步，假设对于任意的 $y_1 \le y_2$，有 $f(x, y_1) \le f(x, y_2)$，且 $f(x, 0) \ge 0$。对于初值问题
+    \[
+    \frac{\mathrm{d}y}{\mathrm{d}x} = f(x, y), \quad y(0) = 0
+    \]
+    构造 Picard 序列
+    \[
+    y_{0}(x) \equiv 0, \quad y_{n}(x) = \int_{0}^{x} f(s, y_{n - 1}(s)) \mathrm{d}s, \quad n = 1, 2, \dots
+    \]
+    证明：该序列在区间 $0 \le x \le h$ 上收敛到上述初值问题的解，其中
+    \[
+    h = \min \left\{a, \frac{b}{M}\right\}, \quad M = \max_{(x, y) \in D} |f(x, y)|.
+    \]
+\end{enumerate}
+
+\subsection*{习题 3.3}
+\begin{enumerate}
+    \item 考虑与 Cauchy 问题 (3.1), (3.2) 等价的积分方程
+    \[
+    y(x) = y_{0} + \int_{x_{0}}^{x}f(s,y(s))\mathrm{d}s.
+    \]
+    在区间 $I = [x_{0},x_{0} + h]$ 上 ($h$ 的意义与 Picard 定理中的相同) 构造序列 $\{y_{n}(x)\}$ 如下：对于每个正整数 $n$，将区间 $I$ 等分，其分点为 $x_{k} = x_{0} + k d_{n}$，其中 $d_{n} = \frac{h}{n}, k = 1,2,\dots ,n - 1$，并记 $x_{n} = x_{0} + h$，进而定义
+    \[
+    y_{n}(x) = y_{0} + \sum_{i=0}^{k-1} f(x_i, y_n(x_i)) d_n + f(x_k, y_n(x_k))(x - x_k), \quad x_k \le x \le x_{k+1}.
+    \]
+    称序列 $y_{1}(x), y_{2}(x), \dots , y_{n}(x), \dots$ 为 Tonelli 序列。
+    \begin{enumerate}
+        \item 用 Tonelli 序列和 Ascoli-Arzelà 引理来证明 Peano 定理。
+        \item 用 Tonelli 序列来证明 Picard 定理，即在 Picard 定理的条件下，Tonelli 序列是一致收敛的。
+    \end{enumerate}
+    \item 令函数
+    \[
+    \alpha(x) = \begin{cases}
+    3x, & 0 \le x \le \frac{1}{3},\\
+    1, & \frac{1}{3} \le x \le \frac{2}{3},\\
+    3(1-x), & \frac{2}{3} \le x \le 1,
+    \end{cases}
+    \]
+    在条形闭区域 $G:0\leqslant x\leqslant 1, - \infty < y< +\infty$ 上定义连续函数
+    \[
+    f(x,y) = \begin{cases}
+    0, & y \ge \alpha(x), \\
+    -\alpha'(x), & -\alpha(x) < y < \alpha(x),\\
+    0, & y \le -\alpha(x).
+    \end{cases}
+    \]
+    考虑初值问题 $y' = f(x,y), y(0)=0$。将区间 $0\leqslant x\leqslant 1$ 分成 $n$ 等份，仿照本节的方法构造一条 Euler 折线 $y = \phi_{n}(x)$ $(0\leqslant x\leqslant 1)$。证明：当 $\frac{1}{n}\leqslant x\leqslant 1$ 时，有
+    \begin{enumerate}
+        \item 若 $n$ 为偶数，则 $\phi_{n}(x)\geqslant \alpha (x)$；
+        \item 若 $n$ 为奇数，则 $\phi_{n}(x)\leqslant - \alpha (x)$。
+    \end{enumerate}
+    由此可知 Euler 序列 $\{\phi_{n}(x)\}$ 是不收敛的。进一步，证明该初值问题的解不是唯一的。
+\end{enumerate}
+
+\subsection*{习题 3.4}
+\begin{enumerate}
+    \item 对于怎样的 $a$，下列微分方程的每个解都能延伸到无穷区间 $(- \infty , + \infty)$ 上？
+    \begin{enumerate}
+        \item $y' = y^a \sin y$;
+        \item $y' = y^2 + a$.
+    \end{enumerate}
+    \item 证明：初值问题 $y' = x + y^2, y(x_0) = y_0$ 的解在区间 $[x_0, + \infty)$ 上存在。
+    \item 考虑初值问题
+    \[
+    y' = f(x,y), \quad y(0) = 0,
+    \]
+    其中函数 $f(x,y)$ 在闭区域 $0\leqslant x\leqslant a, - \infty < y< +\infty$ 上连续，且满足
+    \[
+    |f(x,y) - f(x,z)|\leqslant \frac{q}{x} |y - z|,
+    \]
+    这里 $q$ ($0< q< 1$) 为常数。证明：该初值问题的解在区间 $[0,a]$ 上是存在且唯一的。
+    \item 假设函数 $f(x,y)$ 在闭区域 $0\leqslant x\leqslant a, - \infty < y< +\infty$ 上连续。记 $\phi (x,\xi)$ 是微分方程 $y^{\prime} = f(x,y)$ 满足初始条件 $\phi (0,\xi) = \xi$ 的解。进一步，假设 $\phi (x,\xi)$ 在区间 $[0,\bar{x})$ 上存在，$\bar{x}< a$。证明下列三个结论之一成立：
+    \begin{enumerate}
+        \item $\lim_{x\to \bar{x} - 0}\phi (x,\xi)$ 有限，此时解 $y = \phi (x,\xi)$ 可以延伸至 $x = \bar{x}$；
+        \item $\lim_{x\to \bar{x} - 0}\phi (x,\xi) = +\infty$；
+        \item $\lim_{x\to \bar{x} - 0}\phi (x,\xi) = -\infty$。
+    \end{enumerate}
+    \item 假设函数 $f(x,y)$ 在闭区域 $0\leqslant x\leqslant a, - \infty < y< +\infty$ 上连续，并且存在定义在区间 $[0, + \infty)$ 上的连续函数 $\psi (y)$ 以及常数 $\delta_{0}\geqslant 0$，使得
+    \[
+    |f(x,y)|< \psi (|y|),\quad \int_{\delta_{0}}^{+\infty}{\frac{1}{\psi(y)}}\mathrm{d}y = +\infty .
+    \]
+    证明：微分方程 $y^{\prime} = f(x,y)$ 满足初始条件 $y(0) = \xi$ 的解的存在区间为 $[0,a]$。
+    \item 假设函数 $f(x,y)$ 在有界闭区域 $G$ 上对 $y$ 满足局部 Lipschitz 条件。证明：$f(x,y)$ 在 $G$ 上对 $y$ 满足 Lipschitz 条件，即存在常数 $L > 0$，使得对于任意的 $(x,y_{1}),(x,y_{2})\in G$，有
+    \[
+    |f(x,y_{1}) - f(x,y_{2})|\leqslant L|y_{1} - y_{2}|.
+    \]
+\end{enumerate}
+
+\subsection*{习题 3.5}
+\begin{enumerate}
+    \item 考虑初值问题
+    \[
+    y' = f(x,y), \quad y(x_0) = y_0.
+    \]
+    设函数 $f(x,y)$ 在矩形闭区域 $D = \{(x,y)||x - x_{0}|\leqslant a,|y - y_{0}|\leqslant b\}$ 上连续，令
+    \[
+    M = \max_{(x,y)\in D}|f(x,y)|,\quad h = \min\left\{a,\frac{b}{M}\right\}.
+    \]
+    证明：该初值问题的最大解 $y = Z(x)$ 与最小解 $y = W(x)$ 之间充满了其他解，即对于任一满足
+    \[
+    |x_{1} - x_{0}|\leqslant h,\quad W(x_{1})\leqslant y_{1}\leqslant Z(x_{1})
+    \]
+    的点 $(x_{1},y_{1})$，该初值问题在 $|x - x_{0}|\leqslant h$ 上至少有一个解 $y = \phi (x)$ 满足 $\phi (x_{1}) = y_{1}$。
+    \item 证明引理 3.7。
+\end{enumerate}
+
+\subsection*{习题 3.6}
+\begin{enumerate}
+    \item 设连续函数 $E(y)$ 满足条件 $E(0) = 0,\ E(y)\neq 0,\ 0< y\leqslant 1$。证明：$y \equiv 0$ 是微分方程 $y^{\prime} = E(y)$ 的奇解的充要条件是 $\int_{0}^{1}{\frac{\mathrm{d}y}{E(y)}}$ 收敛。
+    \item 求函数 $f$，使 $y = \sin x$ 是微分方程 $y = x y^{\prime} + f(y^{\prime})$ 的奇解。
+    \item 给定平面上一条连续可微曲线 $\gamma : y = f(x)$，试找出一个以 $y = f(x)$ 为奇解的微分方程。
+\end{enumerate}
+
+\subsection*{习题 3.7}
+\begin{enumerate}
+    \item 求微分方程
+    \[
+    \left(\frac{\mathrm{d}y}{\mathrm{d}x}\right)^{4} - \left(\frac{\mathrm{d}y}{\mathrm{d}x}\right)^{3} - y^{2}\frac{\mathrm{d}y}{\mathrm{d}x} + y^{2} = 0
+    \]
+    的通积分及积分曲线族的包络。
+    \item 已知微分方程的通解如下 ($c$ 为任意常数)，求出微分方程的解：
+    \begin{enumerate}
+        \item $y = c x^{2} - c^{2}$;
+        \item $y = c(x - c)^{2}$;
+        \item $y = c(x + c)^{2}$;
+        \item $y = \frac{1}{2} c(x + c)^{2}$;
+        \item $y = \frac{1}{2} c^{2} + c^{2}$;
+        \item $y = \frac{1}{2} c^{2} + c$;
+    \end{enumerate}
+    \item 求一条曲线，使其任一点处的切线与两条坐标轴所围成三角形的面积为 $a^{2}$。
+\end{enumerate}
+
+\newpage
+\section{第四章 解对初值和参数的依赖性}
+
+\subsection*{习题 4.2}
+\begin{enumerate}
+    \item 举例说明：当微分方程初值问题的解不唯一时，它的积分曲线族在局部范围内不能视作平行直线族。
+    \item 举例说明：当微分方程初值问题的解不唯一时，过某个初值点的最大解对于初值不是连续的。
+    \item 考虑初值问题
+    \[
+    y' = f(x,y), \quad y(x_0) = y_0,
+    \]
+    其中 $f(x,y)$ 是连续函数。设 $y = \phi (x;x_{0},y_{0})$ 是该初值问题的最大解。证明：$\phi (x;x_{0},y_{0})$ 对于 $y_{0}$ 是右连续的，即
+    \[
+    \lim_{y_{1}\to y_{0} + 0}\phi (x;x_{0},y_{1}) = \phi (x;x_{0},y_{0})
+    \]
+    在 $|x - x_{0}|\leqslant \alpha$ 上成立，其中 $\alpha >0$ 是常数。
+\end{enumerate}
+
+\subsection*{习题 4.3}
+\begin{enumerate}
+    \item 设函数 $y = y(x,\eta)$ 是初值问题
+    \[
+    \frac{\mathrm{d}y}{\mathrm{d}x} = \sin(xy) + \eta, \quad y(0) = 0
+    \]
+    的解。证明：$\frac{\partial y}{\partial \eta} (x,\eta) > 0$。
+    \item 设函数 $y(x;x_{0},y_{0})$ 是初值问题
+    \[
+    \frac{\mathrm{d}y}{\mathrm{d}x} = f(x,y), \quad y(x_0) = y_0
+    \]
+    的解，其中函数 $f(x,y)$ 关于 $(x,y)$ 是连续可微的。证明：
+    \[
+    \frac{\partial y}{\partial x_{0}} (x;x_{0},y_{0}) + \frac{\partial y}{\partial y_{0}} (x;x_{0},y_{0})f(x_{0},y_{0}) \equiv 0.
+    \]
+    \item 考虑二阶微分方程
+    \[
+    x^{\prime \prime}(t) + c x^{\prime}(t) + g(x) = p(t),
+    \]
+    其中 $p(t)$ 是 $2\pi$-周期的连续函数，$g(x)$ 是连续可微函数，$c$ 为常数。假设该方程的解是大范围存在的。考虑 $(x, x'(t))$-平面上的变换
+    \[
+    \Phi :(x(0),x^{\prime}(0))\mapsto (x(2\pi),x^{\prime}(2\pi)).
+    \]
+    证明：对于 $(x,x^{\prime}(t))$-平面上的有界区域 $D$，有
+    \[
+    \mathrm{Area}(\Phi (D)) = \mathrm{e}^{-2\pi c}\mathrm{Area}(D).
+    \]
+    \item 求给定微分方程初值问题的解对初值或参数的导数：
+    \begin{enumerate}
+        \item $y' = x + y + \lambda y^2, \ y(0) = 0$，求 $\left.\frac{\partial y}{\partial \lambda}\right|_{\lambda = 0}$；
+        \item $y' = x^2 + \mu y^3, \ y(0) = 1$，求 $\left.\frac{\partial y}{\partial \mu}\right|_{\mu = 0}$。
+    \end{enumerate}
+    \item 证明定理 4.7。
+\end{enumerate}
+
+\newpage
+\section{第五章 线性微分方程组}
+
+\subsection*{习题 5.1}
+\begin{enumerate}
+    \item 设 $\Phi (x)$ 是齐次线性微分方程组(5.2)的一个基本解矩阵，并且函数 $f(x,y)$ 在区域 $E: a < x < b, |y| < +\infty$ 上连续。证明：初值问题
+    \[
+    \frac{\mathrm{d}y}{\mathrm{d}x} = A(x)y + f(x,y), \quad y(x_0) = y_0
+    \]
+    等价于积分方程
+    \[
+    y(x) = \Phi (x)\Phi^{-1}(x_{0})y_{0} + \int_{x_{0}}^{x}\Phi (x)\Phi^{-1}(s)f(s,y(s))\mathrm{d}s,
+    \]
+    其中 $x_{0} \in (a, b)$。
+    \item 设当 $x \in (a, b)$ 时，线性微分方程组(5.1)中的函数 $f(x, y)$ 不恒为零，证明：方程组(5.1)有且至多有 $n + 1$ 个线性无关解。
+    \item 证明：向量组
+    \[
+    \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix},\quad \begin{pmatrix} x \\ 1 \\ 0 \end{pmatrix},\quad \begin{pmatrix} x^2 \\ 2x \\ 2 \end{pmatrix}
+    \]
+    不可能同时满足任何一个三阶齐次线性微分方程组。
+    \item 求解微分方程组
+    \[
+    \frac{\mathrm{d}x}{\mathrm{d}t} = \frac{2}{t} x + 1, \quad \frac{\mathrm{d}y}{\mathrm{d}t} = \frac{1}{t} x + y.
+    \]
+    \item 考虑初值问题
+    \[
+    \frac{\mathrm{d}y}{\mathrm{d}x} = f(x, y), \quad y(x_0) = y_0,
+    \]
+    其中 $f(x, y)$ 关于 $x$ 连续，关于 $y$ 连续可微。设 $y = \phi (x; x_{0}, y_{0})$ 是其唯一解。证明：
+    \[
+    \operatorname{det}\frac{\partial\phi}{\partial y_{0}} (x;x_{0},y_{0}) = \mathrm{e}^{\int_{x_{0}}^{x}\mathrm{tr}\left(\frac{\partial f}{\partial y}(s,\phi (s;x_{0},y_{0}))\right)\mathrm{d}s}.
+    \]
+\end{enumerate}
+
+\subsection*{习题 5.2}
+\begin{enumerate}
+    \item 求解微分方程 $\frac{\mathrm{d}y}{\mathrm{d}x} = A y$，其中矩阵 $A$ 如下：
+    \begin{enumerate}
+        \item $A = \begin{pmatrix} 2 & 1 \\ 3 & 4 \end{pmatrix}$;
+        \item $A = \begin{pmatrix} 1 & -1 \\ -4 & 1 \end{pmatrix}$;
+        \item $A = \begin{pmatrix} 1 & 2 & -1 \\ 2 & 1 & -1 \\ 1 & -1 & 2 \end{pmatrix}$;
+        \item $A = \begin{pmatrix} 1 & -1 & -1 \\ 1 & 1 & 0 \\ 3 & 0 & 1 \end{pmatrix}$;
+        \item $A = \begin{pmatrix} 4 & -1 & -1 \\ 1 & 2 & -1 \\ 1 & -1 & 2 \end{pmatrix}$;
+        \item $A = \begin{pmatrix} 2 & -1 & -1 \\ 3 & -2 & -3 \\ -1 & 1 & 2 \end{pmatrix}$;
+        \item $A = \begin{pmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & -3 & 3 \end{pmatrix}$;
+        \item $A = \begin{pmatrix} 1 & 2 & 2 \\ 2 & 1 & 2 \\ 2 & 2 & 1 \end{pmatrix}$.
+    \end{enumerate}
+    \item 求解下列非齐次线性微分方程组：
+    \begin{enumerate}
+        \item $\frac{\mathrm{d}x}{\mathrm{d}t} = x + 2y + e^t,\ \frac{\mathrm{d}y}{\mathrm{d}t} = 2x + y + e^{2t}$;
+        \item $\frac{\mathrm{d}x}{\mathrm{d}t} = 2x - y + z,\ \frac{\mathrm{d}y}{\mathrm{d}t} = x + z,\ \frac{\mathrm{d}z}{\mathrm{d}t} = -x + y + 2z + e^t$;
+        \item $\frac{\mathrm{d}x}{\mathrm{d}t} = 3x - y + z,\ \frac{\mathrm{d}y}{\mathrm{d}t} = x + y + z,\ \frac{\mathrm{d}z}{\mathrm{d}t} = 4x - y + 4z + 3e^t$.
+    \end{enumerate}
+    \item 利用常数变易法求解下列非齐次线性微分方程组：
+    \begin{enumerate}
+        \item $\frac{\mathrm{d}x}{\mathrm{d}t} = y + \tan^2 t - 1,\ \frac{\mathrm{d}y}{\mathrm{d}t} = -x + \tan t$;
+        \item $\frac{\mathrm{d}x}{\mathrm{d}t} = y - z + \cos t,\ \frac{\mathrm{d}y}{\mathrm{d}t} = -x + \sin t,\ \frac{\mathrm{d}z}{\mathrm{d}t} = 2y - z$.
+    \end{enumerate}
+    \item 若微分方程组 $y' = A y + f(x)$ 对于每个以 $\omega$ 为周期的连续向量函数 $f(x)$ 都具有以 $\omega$ 为周期的解，需要对矩阵 $A$ 的特征值加上什么条件？
+\end{enumerate}
+
+\subsection*{习题 5.3}
+\begin{enumerate}
+    \item 求解下列微分方程：
+    \begin{enumerate}
+        \item $y'' + y' - 2y = 0$;
+        \item $y'' + 4y = 0$;
+        \item $y^{(4)} - 5y'' + 4y = 0$;
+        \item $y'' + y = 4\sin x$;
+        \item $y'' - 4y' + 8y = e^{2x} + \sin 2x$;
+        \item $y'' - 2y' + y = 6x e^x$;
+        \item $y'' - 6y' + 8y = 5x e^{4x} + 2e^{4x} \sin x$.
+    \end{enumerate}
+    \item 利用常数变易法求解下列微分方程：
+    \begin{enumerate}
+        \item $y'' - 2y' + y = x^{-1} e^x$;
+        \item $y'' + 4y = 2\tan x$;
+        \item $y'' - y = x^{-1} - 2x^{-3}$.
+    \end{enumerate}
+    \item 考虑微分方程
+    \[
+    y'' + a y' + b y = f(x),
+    \]
+    其中 $a,b$ 为常数，连续函数 $f(x)$ 满足 $|f(x)| \le m$，而对应的特征方程的根为 $\lambda_1, \lambda_2$，且 $\lambda_2 < \lambda_1 < 0$。求出该方程的有界解，并证明：
+    \begin{enumerate}
+        \item 该方程的其他解当 $x \to +\infty$ 时趋向于有界解；
+        \item 如果 $f(x)$ 是周期函数，则该方程的有界解也是周期的。
+    \end{enumerate}
+    \item 证明微分方程 $y'' - x^2 y = 0$ 以 $y(0) = 1, y'(0) = 0$ 为初始条件的解是一个处处为正的偶函数。
+    \item 考虑微分方程 $y'' + y = 0$。设 $y = c(x)$ 和 $y = s(x)$ 分别是该方程满足初始条件 $c(0) = 1, c'(0) = 0$ 和 $s(0) = 0, s'(0) = 1$ 的解。不求解微分方程请证明：
+    \begin{enumerate}
+        \item $c(x)$ 是偶函数，$s(x)$ 是奇函数；
+        \item $s^2(x) + c^2(x) \equiv 1$；
+        \item $s(\alpha + \beta) = s(\alpha)c(\beta) + s(\beta)c(\alpha)$；
+        \item 如果 $T$ 是 $c(x)$ 在 $x>0$ 上的第一个零点，则 $c(x)$ 和 $s(x)$ 均是以 $4T$ 为周期的。
+    \end{enumerate}
+\end{enumerate}
+
+\newpage
+\section{第六章 幂级数解法}
+
+\subsection*{习题 6.1}
+\begin{enumerate}
+    \item 设有初值问题
+    \[
+    y'' + p(x)y' + q(x)y = 0, \quad y(x_0) = y_0, \ y'(x_0) = y_0',
+    \]
+    其中函数 $p(x)$ 和 $q(x)$ 在区间 $|x - x_0| < r$ 上可以展开成 $x - x_0$ 的收敛幂级数。证明：该初值问题的解 $y = y(x)$ 在区间 $|x - x_0| < r$ 上也可以展开成 $x - x_0$ 的收敛幂级数。
+\end{enumerate}
+
+\subsection*{习题 6.2}
+\begin{enumerate}
+    \item 求解 Airy 方程：$y'' - x y = 0$。
+    \item 求下列微分方程在 $x = x_0$ 处的两个线性无关解：
+    \begin{enumerate}
+        \item $y'' - x y' - y = 0,\ x_0 = 0$;
+        \item $y'' - x y' - y = 0,\ x_0 = 1$.
+    \end{enumerate}
+    \item 求微分方程 $y'' + (\cos x) y = 0$ 在 $x = 0$ 处展开的两个线性无关的幂级数解。
+\end{enumerate}
+
+\subsection*{习题 6.3}
+\begin{enumerate}
+    \item 判别 $x = -1, 0, 1$ 是下列微分方程的什么点（常点、正则奇点或非正则奇点）：
+    \begin{enumerate}
+        \item $x y'' + (1 - x) y' + x y = 0$;
+        \item $2x^2(1 - x^2) y'' + 2x y' + 3x^2 y = 0$;
+        \item $x^2(1 - x^2) y'' + 2x^{-1} y' + 4y = 0$.
+    \end{enumerate}
+    \item 利用广义幂级数求解下列微分方程：
+    \begin{enumerate}
+        \item $2x y'' + y' + x y = 0$;
+        \item $x y'' + y' - y = 0$.
+    \end{enumerate}
+\end{enumerate}
+
+\newpage
+\section{第七章 边值问题}
+
+\subsection*{习题 7.1}
+\begin{enumerate}
+    \item 证明注 7.1 的结论：在定理 7.1 中，如果 $R(x) > Q(x)$，则结论可以加强为“存在 $\bar{x} \in (x_1, x_2)$，使得 $\psi(\bar{x}) = 0$”。
+    \item 考虑微分方程 $y'' + Q(x)y = 0$。假设函数 $Q(x)$ 在 $\mathbb{R}$ 上连续且存在正数 $m, M$，使得 $m < Q(x) < M$。证明该方程的任意非零解 $y = \phi(x)$ 都是无限振动的；如果 $x_1, x_2$ $(x_1 < x_2)$ 是 $\phi(x)$ 的两个相邻零点，则
+    \[
+    \frac{\pi}{\sqrt{M}} < x_2 - x_1 < \frac{\pi}{\sqrt{m}}.
+    \]
+    \item 假设 $y(x)$ 和 $z(x)$ 分别是方程 $y'' + q(x)y = 0$ 和 $z'' + Q(x)z = 0$ 的满足初始条件 $y(x_0) = z(x_0), y'(x_0) = z'(x_0)$ 的解，并假定在区间 $(x_0, x_1)$ 上，$Q(x) > q(x), y(x) > 0, z(x) > 0$。证明：函数 $\frac{z(x)}{y(x)}$ 在此区间上是单调递减的。
+    \item 设 $y = \phi(x)$ 是微分方程 $y'' + q(x)y = 0$ 的非零解，其中连续函数 $q(x) > 0$，又假定 $x_1, x_2, \dots, x_n, \dots$ 是 $\phi(x)$ 的依次增大的零点。证明：如果函数 $q(x)$ 是严格单调递增的，则
+    \[
+    x_{n+1} - x_n < x_n - x_{n-1}.
+    \]
+    \item 假设上一题的所有假设均成立，记
+    \[
+    b_n = \max_{x \in [x_n, x_{n+1}]} |\phi(x)|, \quad n = 1, 2, \dots
+    \]
+    证明：$b_1 > b_2 > b_3 > \cdots$。
+    \item 在第 4 题的假设之下，进一步假设 $\lim_{x \to +\infty} q(x) = C > 0$。证明：$\lim_{n \to +\infty} b_n > 0$。
+    \item 假设函数 $q(x) \le 0$ 是连续的。证明：微分方程
+    \[
+    y'' + q(x)y = 0
+    \]
+    满足 $y(0) = a, y(1) = b$ 的解存在且唯一，进一步，如果 $a \neq 0, b = 0$，则这个解在区间 $[0, 1]$ 上是严格单调的。
+    \item 设 $f(x, y, u)$ 是连续可微函数，$0 \le x \le 1$，又假设 $y = \phi(x)$ 是微分方程
+    \[
+    y'' = f(x, y, y')
+    \]
+    在区间 $[0, 1]$ 上的解，且 $\phi(0) = a, \phi(1) = b, \frac{\partial f}{\partial y} > 0$ 对于一切的 $x \in [0, 1]$ 和 $(y, u)$ 均成立。证明如果 $\beta$ 充分接近 $b$，则该方程存在解 $y = \psi(x)$，使得 $\psi(0) = a, \psi(1) = \beta$。
+\end{enumerate}
+
+\subsection*{习题 7.2}
+\begin{enumerate}
+    \item 求解边值问题：
+    \begin{enumerate}
+        \item $y'' + y = 0, \quad y(0) = 0, \ y(1) = 0$;
+        \item $y'' + y = 0, \quad y'(0) = 0, \ y'(1) = 0$.
+    \end{enumerate}
+    \item 证明：边值问题
+    \[
+    y'' - \lambda x y' + \lambda y = 0, \quad y(1) = 0, \ y(2) = 0
+    \]
+    没有非零解，其中 $\lambda$ 为实参数。
+    \item 对于怎样的 $\lambda$，边值问题
+    \[
+    y'' + \lambda y = 1, \quad y(0) = 0, \ y(1) = 0
+    \]
+    无解？
+    \item 讨论非齐次线性微分方程的 Sturm-Liouville 边值问题
+    \[
+    y'' + (\lambda r(x) + q(x))y = f(x),
+    \]
+    \[
+    y(0) \cos \alpha - y'(0) \sin \alpha = 0, \quad y(1) \cos \beta - y'(1) \sin \beta = 0,
+    \]
+    其中 $r(x), q(x)$ 均为连续函数，$r(x) > 0$。证明当 $\lambda$ 不是对应的齐次线性微分方程的 Sturm-Liouville 边值问题的特征值时，它有且仅有一个解；当 $\lambda = \lambda_m$ 是特征值时，它有解的充要条件是
+    \[
+    \int_0^1 f(x) \phi_m(x) dx = 0,
+    \]
+    其中 $\phi_m(x)$ 是对应于特征值 $\lambda_m$ 的特征函数。
+\end{enumerate}
+
+\subsection*{习题 7.4}
+\begin{enumerate}
+    \item 证明：微分方程
+    \[
+    \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + 2x = 3\sin t + \lambda x^2
+    \]
+    当 $\lambda$ 是小参数时至少有一个 $2\pi$-周期解。
+    \item 证明：微分方程
+    \[
+    \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + 2x = \lambda \sin t + x^3
+    \]
+    当 $\lambda$ 是小参数时至少有一个 $2\pi$-周期解。
+    \item 证明：微分方程
+    \[
+    \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + x + \arctan x = \sin t
+    \]
+    没有 $2\pi$ 周期解。
+    \item 考虑微分方程
+    \[
+    \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} + \omega^2 x = p(t),
+    \]
+    其中 $p$ 是 $2\pi$-周期的连续函数，正数 $\omega \notin \mathbb{Z}$。证明：
+    \begin{enumerate}
+        \item 该方程有唯一的 $2\pi$-周期解；
+        \item 该方程的所有解均是有界的，即对于该方程的任一解 $x(t)$，存在常数 $M > 0$，使得
+        \[
+        \sup_{t \in \mathbb{R}} (|x(t)| + |x'(t)|) < M.
+        \]
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}

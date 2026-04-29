@@ -1,0 +1,1468 @@
+id,text,true_label,predicted_label
+655,"Start by squaring both sides of the inequality to avoid dealing with the square root directly. The inequality is \(a + b > \sqrt{a^2 + b^2 - ab}\) with \(a, b > 0\). Squaring gives \((a + b)^2 > a^2 + b^2 - ab\). Expanding the left side yields \(a^2 + 2ab + b^2 > a^2 + b^2 - ab\). Canceling \(a^2 + b^2\) on both sides leaves \(2ab > -ab\), or equivalently \(3ab > 0\). Since \(a, b > 0\), their product \(ab > 0\), so \(3ab > 0\) holds true. Because the square function is increasing on positive numbers, the original inequality follows.
+
+One subtlety is ensuring that \(a + b > 0\), which is true since both \(a, b\) are positive. Therefore, squaring did not reverse the inequality. This confirms that \(a + b > \sqrt{a^2 + b^2 - ab}\) for all positive \(a, b\).",GPT-4.1-mini-ZeroShot,GLM
+115,"The integral of 1/(x^4 + 1) dx is a classic example where direct trigonometric substitution is not the most straightforward approach. Instead, factor the denominator into quadratics over the reals. Since x^4 + 1 = (x^2 - √2 x + 1)(x^2 + √2 x + 1), partial fractions can be applied.
+
+Start by expressing 1/(x^4 + 1) as A x + B over (x^2 - √2 x + 1) plus C x + D over (x^2 + √2 x + 1). Multiply both sides by the denominator to get 1 = (A x + B)(x^2 + √2 x + 1) + (C x + D)(x^2 - √2 x + 1). Expanding and grouping terms by powers of x gives a system of equations for A, B, C, D.
+
+Expanding, (A x + B)(x^2 + √2 x + 1) = A x^3 + A√2 x^2 + A x + B x^2 + B√2 x + B, and (C x + D)(x^2 - √2 x + 1) = C x^3 - C√2 x^2 + C x + D x^2 - D√2 x + D. Summing, the coefficient of x^3 is A + C, of x^2 is A√2 + B - C√2 + D, of x is A + B√2 + C - D√2, and the constant term is B + D.
+
+Equate these to zero except for the constant term equal to 1, since the left side is 1. So A + C = 0, A√2 + B - C√2 + D = 0, A + B√2 + C - D√2 = 0, and B + D = 1.
+
+From A + C = 0, C = -A. From B + D = 1, D = 1 - B. Substituting these into the other two equations and simplifying leads to a system in A and B. After algebraic manipulation, A = 0, B = 1/2, C = 0, D = 1/2.
+
+Thus, the decomposition is 1/(x^4 + 1) = (1/2) / (x^2 - √2 x + 1) + (1/2) / (x^2 + √2 x + 1).
+
+Each quadratic in the denominator can be completed to square form: x^2 - √2 x + 1 = (x - √2/2)^2 + 1/2, and x^2 + √2 x + 1 = (x + √2/2)^2 + 1/2.
+
+Integrate each term separately: ∫ dx / [(x - a)^2 + b^2] = (1/b) arctan[(x - a)/b] + C. Here b = √(1/2) = 1/√2.
+
+Therefore, the integral becomes (1/2) ∫ dx / [(x - √2/2)^2 + (1/√2)^2] + (1/2) ∫ dx / [(x + √2/2)^2 + (1/√2)^2], which equals (1/2) * (√2) arctan[√2 (x - √2/2)] + (1/2) * (√2) arctan[√2 (x + √2/2)] + C.
+
+Simplify the coefficients to get (√2/2) [arctan(√2 x - 1) + arctan(√2 x + 1)] + C.
+
+This is the antiderivative of 1/(x^4 + 1). No trigonometric substitution was needed; partial fractions and completing the square were sufficient.",GPT-4.1-mini-ZeroShot,Kimi
+760,"Focus on the expression inside the limit: (1 + tan x) / (1 + sin x). As x approaches 0, both tan x and sin x behave like x, so the fraction tends to 1. The limit is of the form 1 raised to an expression that tends to infinity (since 1/x² → ∞), which suggests using the exponential and logarithm trick to handle the indeterminate form.
+
+Rewrite the limit as exp[(1/x²) * ln((1 + tan x)/(1 + sin x))]. The key is to find the expansion of ln((1 + tan x)/(1 + sin x)) up to terms involving x², since the denominator is x² in the exponent. Expand tan x and sin x near zero: tan x = x + x³/3 + O(x⁵), sin x = x - x³/6 + O(x⁵). Then 1 + tan x = 1 + x + x³/3 + O(x⁵), and 1 + sin x = 1 + x - x³/6 + O(x⁵). Their ratio is (1 + x + x³/3) / (1 + x - x³/6) + higher order terms.
+
+Divide numerator and denominator by 1 + x to simplify: numerator becomes 1 + x³/3(1 + x) ≈ 1 + x³/3, denominator becomes 1 - x³/6(1 + x) ≈ 1 - x³/6. So the ratio is approximately (1 + x³/3) / (1 - x³/6) = (1 + x³/3)(1 + x³/6) = 1 + x³/3 + x³/6 + O(x⁶) = 1 + x³/2 + O(x⁶).
+
+Taking the natural logarithm: ln(1 + x³/2 + ...) ≈ x³/2 + O(x⁶). Plugging back into the exponent, (1/x²) * ln(...) ≈ (1/x²) * (x³/2) = x/2, which tends to 0 as x → 0.
+
+Therefore, the entire limit becomes exp(0) = 1. The trick was to use the logarithm and series expansions carefully to identify the leading term in the exponent.",GPT-4.1-mini-ZeroShot,Kimi
+251,"Start by expanding each term on the right side carefully. The sum is (a+b+c)^4 + (a+b−c)^4 + (b+c−a)^4 + (a+c−b)^4. Using the binomial expansion and symmetry, many mixed terms cancel out when you add them all together. Specifically, the odd powers of any variable with a negative sign in some terms vanish after summation because they appear with opposite signs in pairs. What remains after simplification is a symmetric polynomial in a, b, c involving only even powers.
+
+After working through the algebra, the right side simplifies to 4(a^4 + b^4 + c^4) + 12(a^2 b^2 + b^2 c^2 + c^2 a^2). Thus, the inequality becomes:
+
+28(a^4 + b^4 + c^4) ≥ 4(a^4 + b^4 + c^4) + 12(a^2 b^2 + b^2 c^2 + c^2 a^2),
+
+which rearranges to
+
+24(a^4 + b^4 + c^4) ≥ 12(a^2 b^2 + b^2 c^2 + c^2 a^2),
+
+or equivalently,
+
+2(a^4 + b^4 + c^4) ≥ (a^2 b^2 + b^2 c^2 + c^2 a^2).
+
+This inequality is well-known and can be proved by AM-GM or rearrangement: since a^4 + b^4 ≥ 2a^2 b^2 by AM-GM for nonnegative a, b, summing cyclically gives the result.
+
+Therefore, the original inequality holds for all nonnegative a, b, c.
+
+An alternative, more elegant approach avoids heavy expansion by noting the symmetry and homogeneity of the inequality. Because all terms are homogeneous of degree 4 and symmetric, normalize by setting a + b + c = 1 or use known inequalities such as Muirhead or Schur. The inequality reduces to comparing symmetric sums of powers, where the power sum a^4 + b^4 + c^4 dominates the mixed terms a^2 b^2, etc., by known inequalities. This confirms the result without brute force expansion.",GPT-4.1-mini-ZeroShot,GLM
+282,"The integral of x² over 1 + x² + x⁴ from minus infinity to infinity looks tricky at first, but the denominator factors nicely if you think of it as a quadratic in x². The polynomial 1 + x² + x⁴ can be rewritten as (x²)² + x² + 1. Trying to factor this, set y = x², then y² + y + 1 = 0. The roots of this quadratic are complex, but since the denominator never vanishes on the real axis, the integrand is well-defined everywhere. Another way is to rewrite the denominator as (x² + 1/2)² + 3/4, completing the square in x². This gives 1 + x² + x⁴ = (x² + 1/2)² + 3/4, which is always positive. This suggests a substitution u = x² + 1/2, so du = 2x dx, but since the numerator is x², it's easier to consider the integral as even and write it as twice the integral from 0 to infinity. Then substitute t = x², dt = 2x dx, so x dx = dt/2, but since numerator is x², write x² dx = x*(x dx) = x*(dt/2), which is complicated. Instead, consider the integral as an integral over the real line of a rational function with even numerator and denominator, both even functions, so the integral equals twice the integral from 0 to infinity. Then use partial fractions or a trigonometric substitution.
+
+Alternatively, rewrite the integral as ∫_{-∞}^∞ x² / (x⁴ + x² + 1) dx = ∫_{-∞}^∞ (x² + 1 - 1) / (x⁴ + x² + 1) dx = ∫_{-∞}^∞ (x² + 1) / (x⁴ + x² + 1) dx - ∫_{-∞}^∞ 1 / (x⁴ + x² + 1) dx. Notice that x⁴ + x² + 1 = (x² + 1)² - x², so the first integral becomes ∫ (x² + 1) / ((x² + 1)² - x²) dx. This is complicated, but the key idea is to express the integral in terms of simpler rational functions.
+
+For the second integral, ∫₀^π dθ / (a cos θ + b) with 0 < a < b, use the standard substitution t = tan(θ/2), which transforms cos θ = (1 - t²) / (1 + t²), and dθ = 2 dt / (1 + t²). This converts the integral into an integral over t from 0 to ∞ of a rational function in t. After substitution, the integral becomes ∫₀^∞ (2 dt) / [(a (1 - t²) / (1 + t²) + b)(1 + t²)], which simplifies to ∫₀^∞ 2 dt / [a (1 - t²) + b (1 + t²)]. Collecting terms, denominator is (a (1 - t²) + b (1 + t²)) = (a + b) + (b - a) t². The integral is then ∫₀^∞ 2 dt / [(a + b) + (b - a) t²]. This is a standard integral of the form ∫ dt / (α + β t²), which equals (1 / √(α β)) * (π / 2) if α, β > 0. Here, α = a + b and β = b - a, both positive since 0 < a < b. So the integral evaluates to (2 / √((a + b)(b - a))) * (π / 2) = π / √(b² - a²).
+
+Regarding the substitution you mentioned for the sine integral, the use of complex exponentials is a powerful tool, but for rational functions like the first integral, contour integration or residue calculus is more appropriate. The substitution involving e^{ix} - e^{-ix} over x works well for integrals involving sine or cosine, but for polynomials in the denominator, factorization or contour methods are typically used. Since your denominator is quartic and positive definite, the integral converges nicely, and using residues or partial fractions after factorization into quadratics with complex roots is the way to proceed.
+
+Hence, the second integral equals π divided by the square root of b² minus a², and the first integral requires factorization or contour integration methods rather than the sine integral substitution.",GPT-4.1-mini-ZeroShot,GLM
+26,"The confusion arises from the subtlety in the second and third cases of Hensel's Lemma, which deal with the situation when the derivative at the root is zero modulo p. The lemma essentially tells how solutions modulo higher powers of p behave depending on the behavior of the derivative and the value of the polynomial at that root modulo the relevant powers of p.
+
+For your example, the polynomial f(x) and prime p=5, you found that x ≡ 3 mod 5 is a root, and f'(3) ≡ 0 mod 5. This puts you in the second or third case of the lemma. The second case states if f'(r) ≡ 0 mod p and f(r) ≡ 0 mod p^k, then for every integer t, x = r + t p^{k-1} is also a solution modulo p^k. This means the solution ""lifts"" from modulo p^{k-1} to modulo p^k, but instead of having a unique lift, you get a whole block of solutions differing by multiples of p^{k-1}. So yes, if you have a solution modulo 5 (k=1) and the conditions of case 2 hold, then all numbers congruent to that solution modulo 5 form solutions modulo 25 (k=2). In fact, the entire ""coset"" r + p^{k-1}Z/p^kZ consists of solutions.
+
+The third case, however, says if f'(r) ≡ 0 mod p but f(r) is NOT congruent to 0 mod p^k, then no solutions exist modulo p^k lifting from r mod p^{k-1}. Meaning, if the polynomial value at r is not divisible enough times by p, the root cannot be lifted further.
+
+In your example, at k=2 you have f(3) ≡ 0 mod 25 and f'(3) ≡ 0 mod 5, so you are in case 2. This means all x ≡ 3 mod 5^1 lift to solutions mod 25, so x ≡ 3 mod 25 is a solution, and in fact any x ≡ 3 + 5 t mod 25 is a solution for t=0,...,4. But at k=3, since f(3) ≡ 225 mod 125 is NOT zero mod 125, you are in case 3, so no lift to modulo 125 is possible from x ≡ 3 mod 25. Hence, no solutions mod 125 congruent to 3 mod 25 exist, and thus no solutions mod 625 either.
+
+So the ""for all t"" part means the solutions modulo p^k form a whole residue class modulo p^{k-1} when the derivative is zero mod p but the polynomial vanishes modulo p^k. The uniqueness of the lift breaks down, and instead you get multiple solutions ""clustered"" in that residue class. This contrasts with the first case where the derivative is invertible mod p and the lift is unique.
+
+Your understanding is correct: the lemma lets you lift solutions step by step, but when the derivative is zero mod p, either you get many solutions at the next level (case 2) or none (case 3), depending on divisibility of f(r) by p^k. In your example, the lifting stops at k=2 because f(3) fails to vanish mod 125.",GPT-4.1-mini-ZeroShot,Kimi
+755,"Start with the expression inside the floor function: \( \frac{x^2}{\sin x \cdot \tan x} \). For small \( x \), use the Taylor expansions \( \sin x = x - \frac{x^3}{6} + \frac{x^5}{120} - \cdots \) and \( \tan x = x + \frac{x^3}{3} + \frac{2x^5}{15} + \cdots \). Multiplying these gives
+
+\[
+\sin x \cdot \tan x = \left(x - \frac{x^3}{6} + \cdots \right) \left(x + \frac{x^3}{3} + \cdots \right).
+\]
+
+Multiplying out the leading terms,
+
+\[
+x \cdot x = x^2,
+\]
+
+and the next order terms are
+
+\[
+x \cdot \frac{x^3}{3} = \frac{x^4}{3}, \quad -\frac{x^3}{6} \cdot x = -\frac{x^4}{6}.
+\]
+
+Adding these,
+
+\[
+\frac{x^4}{3} - \frac{x^4}{6} = \frac{x^4}{6}.
+\]
+
+Higher order terms are of order \( x^6 \) and beyond, which are negligible near zero. So,
+
+\[
+\sin x \cdot \tan x = x^2 + \frac{x^4}{6} + O(x^6).
+\]
+
+Then,
+
+\[
+\frac{x^2}{\sin x \cdot \tan x} = \frac{x^2}{x^2 + \frac{x^4}{6} + O(x^6)} = \frac{1}{1 + \frac{x^2}{6} + O(x^4)}.
+\]
+
+Using the expansion for \( \frac{1}{1+y} = 1 - y + y^2 - \cdots \),
+
+\[
+\frac{x^2}{\sin x \cdot \tan x} = 1 - \frac{x^2}{6} + O(x^4).
+\]
+
+As \( x \to 0 \), this expression approaches 1 from below because the correction term is negative. Hence, the value inside the floor function is slightly less than 1 for small \( x \neq 0 \), so the floor is 0. At \( x=0 \), the expression is not defined but the limit from both sides is the same.
+
+Therefore,
+
+\[
+\lim_{x \to 0} \left\lfloor \frac{x^2}{\sin x \cdot \tan x} \right\rfloor = 0.
+\]",GPT-4.1-mini-ZeroShot,Deepseek
+229,"Start by factoring the denominator correctly: \(x^3 + 1 = (x+1)(x^2 - x + 1)\). The partial fraction decomposition should be of the form 
+\[
+\frac{4x + 5}{(x+1)(x^2 - x + 1)} = \frac{A}{x+1} + \frac{Bx + C}{x^2 - x + 1}.
+\]
+The numerator on the right must equal \(4x + 5\) when combined over the common denominator. Multiply both sides by \((x+1)(x^2 - x + 1)\) to get 
+\[
+4x + 5 = A(x^2 - x + 1) + (Bx + C)(x + 1).
+\]
+Expanding the right side gives 
+\[
+A x^2 - A x + A + B x^2 + B x + C x + C.
+\]
+Group like terms: 
+\[
+(A + B) x^2 + (-A + B + C) x + (A + C).
+\]
+Set this equal to the left side \(4x + 5\), which can be written as \(0 \cdot x^2 + 4x + 5\). This yields the system of equations:
+\[
+A + B = 0,
+\]
+\[
+- A + B + C = 4,
+\]
+\[
+A + C = 5.
+\]
+From \(A + B = 0\), get \(B = -A\). Substitute into the other two:
+\[
+- A + (-A) + C = 4 \implies -2A + C = 4,
+\]
+\[
+A + C = 5.
+\]
+From \(A + C = 5\), express \(C = 5 - A\). Substitute into \(-2A + C = 4\):
+\[
+-2A + (5 - A) = 4 \implies -3A + 5 = 4 \implies -3A = -1 \implies A = \frac{1}{3}.
+\]
+Then \(B = -\frac{1}{3}\), and \(C = 5 - \frac{1}{3} = \frac{15}{3} - \frac{1}{3} = \frac{14}{3}\).
+
+So the partial fraction decomposition is 
+\[
+\frac{4x + 5}{x^3 + 1} = \frac{1/3}{x+1} + \frac{-\frac{1}{3} x + \frac{14}{3}}{x^2 - x + 1}.
+\]
+This matches the original expression when combined, confirming the correct coefficients. The error in the initial attempt was assuming the numerator over the quadratic factor was just a constant \(B\), rather than a linear polynomial \(Bx + C\).",GPT-4.1-mini-ZeroShot,GLM
+105,"The equation is given by the square root of (x times the square root of x minus x) equals 1 minus x. To solve this analytically, start by rewriting the expression inside the square root. Notice that x times the square root of x can be written as x times x to the power of 1/2, which simplifies to x to the power of 3/2. So the equation becomes the square root of (x^(3/2) - x) equals 1 - x. Since the square root function outputs non-negative values, the right side 1 - x must be greater than or equal to zero, implying x ≤ 1.
+
+Squaring both sides to eliminate the square root yields x^(3/2) - x = (1 - x)^2. Expanding the right side gives x^(3/2) - x = 1 - 2x + x^2. Rearranging all terms to one side results in x^(3/2) - x - 1 + 2x - x^2 = 0, which simplifies to x^(3/2) + x - x^2 - 1 = 0. This is a transcendental equation involving powers of x that are not integers, making it tricky to solve directly. However, substituting y = sqrt(x) transforms x^(3/2) into y^3, x into y^2, and x^2 into y^4. The equation becomes y^3 + y^2 - y^4 - 1 = 0 or rearranged as -y^4 + y^3 + y^2 - 1 = 0.
+
+Multiply both sides by -1 to get y^4 - y^3 - y^2 + 1 = 0. Try to factor this quartic polynomial. Group terms as (y^4 - y^3) - (y^2 - 1) = y^3(y - 1) - (y^2 - 1). The second group factors as (y - 1)(y + 1), so the expression is y^3(y - 1) - (y - 1)(y + 1) = (y - 1)(y^3 - (y + 1)) = (y - 1)(y^3 - y - 1). 
+
+Set each factor equal to zero. The first factor y - 1 = 0 gives y = 1, which corresponds to x = y^2 = 1. The second factor y^3 - y - 1 = 0 is a cubic equation. Check for rational roots using the Rational Root Theorem: possible roots are ±1. Testing y = 1 gives 1 - 1 - 1 = -1 ≠ 0; testing y = -1 gives -1 + 1 - 1 = -1 ≠ 0. So no rational roots. Since the cubic is continuous and y = 1 gives a negative value, try y = 2: 8 - 2 - 1 = 5 > 0, so there is a root between 1 and 2. However, since y = sqrt(x) must be non-negative and from the domain restriction x ≤ 1, y ≤ 1. Thus, the root in (1, 2) is inadmissible.
+
+Checking the initial domain, y = 1 (x = 1) is the only valid candidate. Substitute back into the original equation: sqrt(1 * sqrt(1) - 1) = sqrt(1 - 1) = 0, and 1 - 1 = 0, so equality holds. Check also x = 0 to see if it satisfies the domain and equation: sqrt(0 - 0) = 0 and 1 - 0 = 1, no equality. For x = 1/4, for example, sqrt((1/4)*(1/2) - 1/4) = sqrt(1/8 - 1/4) = sqrt(-1/8), not real. So no other real solutions.
+
+Therefore, the only real solution to the equation is x = 1.",GPT-4.1-mini-ZeroShot,GLM
+693,"Starting from the numerator and denominator expressions you have, the key is to rewrite the sums of sines and cosines in a way that allows factoring. For the numerator, recall the sum formula for sine: sin A + sin B = 2 sin((A+B)/2) cos((A-B)/2). Applying this to sin x + sin 3x gives 2 sin(2x) cos(x), so the numerator becomes 2 sin(2x) cos(x) + sin 2x. Grouping terms as sin 2x (2 cos x + 1) is helpful.
+
+Similarly, for the denominator, cos x + cos 3x = 2 cos(2x) cos(x) by the cosine sum formula cos A + cos B = 2 cos((A+B)/2) cos((A-B)/2). Therefore, the denominator is 2 cos(2x) cos(x) + cos 2x, which factors as cos 2x (2 cos x + 1).
+
+Putting this together, the original expression becomes (2 sin 2x cos x + sin 2x) / (2 cos 2x cos x + cos 2x) = sin 2x (2 cos x + 1) / cos 2x (2 cos x + 1). The factor (2 cos x + 1) cancels out, leaving sin 2x / cos 2x, which is exactly tan 2x.
+
+This completes the proof.",GPT-4.1-mini-ZeroShot,Human
+143,"The given sequence is a sum of sums: the first term is (2¹ - 1), the second term is (2¹ - 1) + (2² - 1), the third term is (2¹ - 1) + (2² - 1) + (2³ - 1), and so on, up to the nth term which is the sum from k=1 to n of (2^k - 1). The entire expression is therefore the sum over i=1 to n of the partial sums S_i = ∑_{k=1}^i (2^k - 1).
+
+Rewrite each S_i as ∑_{k=1}^i 2^k - ∑_{k=1}^i 1 = (2^{i+1} - 2) - i, since the sum of powers of two from 2¹ to 2^i is 2^{i+1} - 2, and the sum of i ones is just i. The sum of all S_i from i=1 to n is thus ∑_{i=1}^n (2^{i+1} - 2 - i) = ∑_{i=1}^n 2^{i+1} - ∑_{i=1}^n 2 - ∑_{i=1}^n i.
+
+The middle sum is simply 2n, and the last sum is n(n+1)/2. The first sum ∑_{i=1}^n 2^{i+1} can be rewritten as 2 ∑_{i=1}^n 2^i = 2 (2^{n+1} - 2) by the geometric series formula. So the entire sum becomes 2(2^{n+1} - 2) - 2n - n(n+1)/2 = 2^{n+2} - 4 - 2n - n(n+1)/2.
+
+Expanding the last term gives n(n+1)/2 = (n^2 + n)/2, so the sum is 2^{n+2} - 4 - 2n - (n^2 + n)/2. Writing all terms with a common denominator 2, it is (2^{n+2} * 2)/2 - (4 * 2)/2 - (2n * 2)/2 - (n^2 + n)/2 = (2^{n+3} - 8 - 4n - n^2 - n)/2 = (2^{n+3} - n^2 - 5n - 8)/2.
+
+Hence, the sum of the entire sequence is (2^{n+3} - n^2 - 5n - 8) divided by 2.",GPT-4.1-mini-ZeroShot,Deepseek
+90,"Start by expanding the right-hand side using the distributive law carefully. Write (a - b)(a² + ab + b²) as (a - b)·a² + (a - b)·ab + (a - b)·b². Applying distributivity again inside each term, this becomes a·a² - b·a² + a·ab - b·ab + a·b² - b·b². Simplify each product: a·a² = a³, b·a² = ba², a·ab = a²b, b·ab = b²a, a·b² = ab², and b·b² = b³. So the expression is a³ - ba² + a²b - b²a + ab² - b³.
+
+Since multiplication in a field is associative and commutative, the terms ba², a²b, and b²a, ab² can be rearranged as needed. Notice that ba² = a²b and b²a = ab². Group the middle terms: (-ba² + a²b) + (-b²a + ab²) = 0 + 0 because each pair cancels out due to commutativity (they are equal with opposite signs). Thus, the entire expression simplifies to a³ - b³.
+
+This shows directly from the axioms of field—associativity, commutativity, and distributivity—that (a - b)(a² + ab + b²) equals a³ - b³. Hence, the identity holds.",GPT-4.1-mini-ZeroShot,Deepseek
+559,"The singularities of the function \( f(z) = \frac{1}{z^4 + 1} \) occur where the denominator is zero, i.e., where \( z^4 = -1 \). The fourth roots of \(-1\) are given by \( z = e^{i\frac{\pi}{4}}, e^{i\frac{3\pi}{4}}, e^{i\frac{5\pi}{4}}, e^{i\frac{7\pi}{4}} \). These correspond to the four poles you mentioned, since \( e^{i\frac{5\pi}{4}} = -e^{i\frac{\pi}{4}} \) and \( e^{i\frac{7\pi}{4}} = -e^{i\frac{3\pi}{4}} \).
+
+Each of these poles is simple because the derivative of the denominator at these points is nonzero. To find the residue at a simple pole \( z_0 \), use the formula:
+
+\[
+\text{Res}(f, z_0) = \lim_{z \to z_0} (z - z_0) f(z) = \frac{1}{(z^4 + 1)'|_{z=z_0}}.
+\]
+
+Since \( (z^4 + 1)' = 4z^3 \), the residue at each pole \( z_0 \) is:
+
+\[
+\text{Res}(f, z_0) = \frac{1}{4 z_0^3}.
+\]
+
+This is not simply the pole divided by 4, but rather the reciprocal of four times the cube of the pole. For example, at \( z_0 = e^{i\pi/4} \), the residue is \( \frac{1}{4 (e^{i\pi/4})^3} = \frac{1}{4 e^{i3\pi/4}} \). Similarly, calculate for the other poles by plugging in their values.
+
+So, the residues are \( \frac{1}{4 z_0^3} \) at each singularity \( z_0 \), where \( z_0 \) runs over the four fourth roots of \(-1\).",GPT-4.1-mini-ZeroShot,GLM
+914,"The recurrence is \( T(n) = T(n-1) + 2T(n-2) + 3 \) with initial conditions \( T(0) = 3 \), \( T(1) = 5 \). The goal is to solve this using substitution method, i.e., find a closed-form expression.
+
+First, rewrite as a nonhomogeneous linear recurrence: the associated homogeneous part is \( T_h(n) = T_h(n-1) + 2 T_h(n-2) \), and the nonhomogeneous term is the constant 3. The characteristic equation for the homogeneous part comes from assuming \( T_h(n) = r^n \), yielding \( r^n = r^{n-1} + 2 r^{n-2} \), or equivalently \( r^2 = r + 2 \), i.e., \( r^2 - r - 2 = 0 \).
+
+Solve this quadratic: \( r = \frac{1 \pm \sqrt{1 + 8}}{2} = \frac{1 \pm 3}{2} \), so roots are \( r = 2 \) and \( r = -1 \). Hence, the homogeneous solution is \( T_h(n) = A \cdot 2^n + B \cdot (-1)^n \).
+
+Next, find a particular solution \( T_p(n) \) for the constant term 3. Since the nonhomogeneous term is constant, try a constant particular solution \( T_p(n) = C \). Substitute into the original recurrence:
+
+\( C = C + 2C + 3 \) implies \( C = 3C + 3 \), or \( 0 = 2C + 3 \), so \( C = -\frac{3}{2} \).
+
+Therefore, the general solution is \( T(n) = A \cdot 2^n + B \cdot (-1)^n - \frac{3}{2} \).
+
+Use the initial conditions to solve for A and B:
+
+At \( n=0 \), \( T(0) = A + B - \frac{3}{2} = 3 \), so \( A + B = \frac{9}{2} \).
+
+At \( n=1 \), \( T(1) = 2A - B - \frac{3}{2} = 5 \), so \( 2A - B = \frac{13}{2} \).
+
+Add the two equations: \( (A + B) + (2A - B) = \frac{9}{2} + \frac{13}{2} \) gives \( 3A = 11 \), so \( A = \frac{11}{3} \).
+
+Substitute back: \( \frac{11}{3} + B = \frac{9}{2} \) so \( B = \frac{9}{2} - \frac{11}{3} = \frac{27}{6} - \frac{22}{6} = \frac{5}{6} \).
+
+Hence, the solution is 
+
+\[
+T(n) = \frac{11}{3} \cdot 2^n + \frac{5}{6} \cdot (-1)^n - \frac{3}{2}.
+\]
+
+This satisfies the recurrence and initial values.",GPT-4.1-mini-ZeroShot,GLM
+605,"Starting from the integral expression for the surface area of the sphere cut by the cylinder, the key step is the limits of integration in polar coordinates and the integrand itself. The sphere is given by $x^2 + y^2 + z^2 = a^2$ and the cylinder by $x^2 + (y - \frac{a}{2})^2 = \left(\frac{a}{2}\right)^2$, which can be rewritten in polar coordinates as $r = a \sin \theta$ for $0 \leq \theta \leq \pi$. The surface area element on the upper hemisphere can be written as $dS = \frac{a}{\sqrt{a^2 - r^2}} r dr d\theta$.
+
+The integral for the surface area is therefore $A = 2a \int_0^\pi \int_0^{a \sin \theta} \frac{r}{\sqrt{a^2 - r^2}} dr d\theta$. The inner integral is $\int_0^{a \sin \theta} \frac{r}{\sqrt{a^2 - r^2}} dr$. Use the substitution $u = a^2 - r^2$, so $du = -2r dr$, or $r dr = -\frac{1}{2} du$. The limits change: when $r=0$, $u = a^2$; when $r = a \sin \theta$, $u = a^2 - a^2 \sin^2 \theta = a^2 \cos^2 \theta$. The integral becomes $\int_{u=a^2}^{a^2 \cos^2 \theta} \frac{-\frac{1}{2} du}{\sqrt{u}} = \frac{1}{2} \int_{a^2 \cos^2 \theta}^{a^2} u^{-1/2} du = \frac{1}{2} \left[ 2 u^{1/2} \right]_{a^2 \cos^2 \theta}^{a^2} = a - a \cos \theta = a(1 - \cos \theta)$.
+
+Plugging this back, the surface area integral reduces to $A = 2a \int_0^\pi a (1 - \cos \theta) d\theta = 2 a^2 \int_0^\pi (1 - \cos \theta) d\theta$. The integral $\int_0^\pi 1 d\theta = \pi$ and $\int_0^\pi \cos \theta d\theta = 0$, so the integral is simply $\pi$. Hence, $A = 2 a^2 \pi$ from this calculation.
+
+This matches your intermediate result but contradicts the known answer $(2 \pi - 4) a^2$. The discrepancy arises because the region defined by $r \leq a \sin \theta$ for $0 \leq \theta \leq \pi$ corresponds to the entire half of the cylinder projection, but the cylinder actually cuts the sphere in a more complex shape. The cylinder $x^2 + (y - \frac{a}{2})^2 = \left(\frac{a}{2}\right)^2$ is tangent to the sphere at a circle, and the region inside the cylinder on the sphere is not simply the set $r \leq a \sin \theta$ for $0 \leq \theta \leq \pi$. 
+
+The error is assuming the projection of the intersection on the xy-plane is exactly $r \leq a \sin \theta$ for all $\theta$ in $[0, \pi]$. The correct region is actually bounded by the intersection curve of the sphere and the cylinder, which when projected onto the xy-plane, is not just $r = a \sin \theta$. The actual boundary curve satisfies both $x^2 + y^2 = a y$ (cylinder) and $x^2 + y^2 + z^2 = a^2$ (sphere), so $z^2 = a^2 - (x^2 + y^2)$. Substituting $x^2 + y^2 = a y$ gives $z^2 = a^2 - a y$. The upper hemisphere corresponds to $z \geq 0$, so $z = \sqrt{a^2 - a y}$. The region inside the cylinder on the sphere corresponds to points $(x,y,z)$ with $x^2 + y^2 \leq a y$ and $z \geq 0$.
+
+In polar coordinates, $x = r \cos \theta$, $y = r \sin \theta$, so the cylinder inequality is $r^2 \leq a r \sin \theta$ or $r \leq a \sin \theta$ for $\sin \theta \geq 0$, i.e., $\theta \in [0, \pi]$. This matches the given limits, but the subtlety lies in the surface element. The sphere's surface area element is $dS = \frac{a}{\sqrt{a^2 - r^2}} r dr d\theta$, but the integrand must consider the Jacobian of the parameterization and the actual shape of the intersection curve on the sphere, not just the projection on the xy-plane.
+
+The known answer $(2 \pi - 4) a^2$ comes from carefully evaluating the integral of the sphere's surface area cut by the cylinder, taking into account the geometry of the intersection. The missing term $-4 a^2$ corresponds to the area of the ""caps"" removed by the cylinder, which your integral does not subtract.
+
+The mistake is treating the projection region as the entire domain for the surface integral without adjusting for the correct surface measure or the shape of the intersection curve on the sphere. To get the correct answer, the integral must be split or transformed to account for the actual geometry of the intersection, or use symmetry and known formulas for the spherical caps cut by the cylinder.
+
+In summary, the integral setup is correct, but the limits or the integrand must be reconsidered to properly represent the spherical surface area inside the cylinder. The naive integration over $r \leq a \sin \theta$ for $\theta \in [0, \pi]$ counts too much area and results in $2 \pi a^2$, missing the subtraction of the caps, hence the discrepancy.",GPT-4.1-mini-ZeroShot,GLM
+759,"The key issue lies in the choice of limits for the triple integral after applying the divergence theorem. The surface \( S \) is a closed surface composed of three parts: the top disk \( x^2 + y^2 \leq 4, z=2 \), the bottom disk \( x^2 + y^2 \leq 16, z=0 \), and the curved side surface \( z = 4 - \sqrt{x^2 + y^2} \). The volume \( V \) enclosed by \( S \) is bounded below by \( z=0 \), above by the plane \( z=2 \) over the smaller disk, and by the slanted surface \( z=4-r \) over the annular region between the two disks.
+
+Your limits \( 0 \leq z \leq 4-r \), \( 2 \leq r \leq 4 \), \( 0 \leq \theta \leq 2\pi \) describe only the volume under the curved surface for \( r \) between 2 and 4, but you are missing the region under the plane \( z=2 \) for \( r \leq 2 \). The volume is actually composed of two parts: the cylinder \( r \leq 2 \) with height \( 0 \leq z \leq 2 \), and the ""cap"" for \( 2 \leq r \leq 4 \) where \( z \) goes from 0 up to \( 4 - r \).
+
+Hence, the correct integral should be split into two parts:
+
+\[
+\iiint_V \text{div} F \, dV = \int_0^{2\pi} \int_0^2 \int_0^2 2z \, r\, dz\, dr\, d\theta + \int_0^{2\pi} \int_2^4 \int_0^{4-r} 2z \, r\, dz\, dr\, d\theta.
+\]
+
+Evaluating the first part:
+
+\[
+\int_0^{2\pi} d\theta \int_0^2 r\, dr \int_0^2 2z\, dz = 2\pi \int_0^2 r\, dr \left[ z^2 \right]_0^2 = 2\pi \int_0^2 r \cdot 4\, dr = 8\pi \int_0^2 r\, dr = 8\pi \cdot \frac{2^2}{2} = 8\pi \cdot 2 = 16\pi.
+\]
+
+For the second part:
+
+\[
+\int_0^{2\pi} d\theta \int_2^4 r\, dr \int_0^{4-r} 2z\, dz = 2\pi \int_2^4 r \left[ z^2 \right]_0^{4-r} dr = 2\pi \int_2^4 r (4 - r)^2 dr.
+\]
+
+Expanding the integrand:
+
+\[
+r (4 - r)^2 = r (16 - 8r + r^2) = 16r - 8r^2 + r^3.
+\]
+
+Integrate termwise:
+
+\[
+\int_2^4 (16r - 8r^2 + r^3) dr = \left[8r^2 - \frac{8}{3}r^3 + \frac{r^4}{4}\right]_2^4.
+\]
+
+Calculate at the bounds:
+
+At \( r=4 \):
+
+\[
+8 \cdot 16 - \frac{8}{3} \cdot 64 + \frac{256}{4} = 128 - \frac{512}{3} + 64 = 192 - \frac{512}{3} = \frac{576 - 512}{3} = \frac{64}{3}.
+\]
+
+At \( r=2 \):
+
+\[
+8 \cdot 4 - \frac{8}{3} \cdot 8 + \frac{16}{4} = 32 - \frac{64}{3} + 4 = 36 - \frac{64}{3} = \frac{108 - 64}{3} = \frac{44}{3}.
+\]
+
+Subtract:
+
+\[
+\frac{64}{3} - \frac{44}{3} = \frac{20}{3}.
+\]
+
+Multiply by \( 2\pi \):
+
+\[
+2\pi \cdot \frac{20}{3} = \frac{40\pi}{3}.
+\]
+
+Adding both parts gives:
+
+\[
+16\pi + \frac{40\pi}{3} = \frac{48\pi}{3} + \frac{40\pi}{3} = \frac{88\pi}{3}.
+\]
+
+The error was neglecting the volume under the plane \( z=2 \) for \( r \leq 2 \). Your limits only covered the annular region under the curved surface, missing the cylindrical portion below the top disk. Including both parts yields the correct answer \( \frac{88\pi}{3} \).",GPT-4.1-mini-ZeroShot,GLM
+433,"Starting with the given equation \(\frac{y^2 - x^2}{x + y + 1} = \pm 1\), multiply both sides by \(x + y + 1\) to clear the denominator, yielding \(y^2 - x^2 = \pm (x + y + 1)\). This can be rewritten as \(y^2 - x^2 \mp x \mp y \mp 1 = 0\), where the signs correspond to the choice of \(\pm 1\).
+
+Focus on the case with the plus sign first: \(y^2 - x^2 - x - y - 1 = 0\). Group terms as \(y^2 - y - x^2 - x = 1\). To bring this into a recognizable conic form, complete the square for both \(x\) and \(y\). For \(y^2 - y\), write it as \(y^2 - y + \frac{1}{4} - \frac{1}{4}\), which is \((y - \frac{1}{2})^2 - \frac{1}{4}\). Similarly, \(x^2 + x = x^2 + x + \frac{1}{4} - \frac{1}{4} = (x + \frac{1}{2})^2 - \frac{1}{4}\). Substituting these back, the equation becomes \((y - \frac{1}{2})^2 - \frac{1}{4} - (x + \frac{1}{2})^2 + \frac{1}{4} = 1\), which simplifies to \((y - \frac{1}{2})^2 - (x + \frac{1}{2})^2 = 1\).
+
+This is exactly the canonical form of a hyperbola \(\frac{(y - k)^2}{a^2} - \frac{(x - h)^2}{b^2} = 1\) with \(a = b = 1\), shifted by \((h, k) = (-\frac{1}{2}, \frac{1}{2})\). The case with the negative sign, \(y^2 - x^2 + x + y + 1 = 0\), follows similarly: group terms as \(y^2 + y - x^2 + x = -1\), complete the squares to get \((y + \frac{1}{2})^2 - (x - \frac{1}{2})^2 = -1\), which can be rewritten as \((x - \frac{1}{2})^2 - (y + \frac{1}{2})^2 = 1\), again a hyperbola in canonical form but with the axes switched.
+
+Thus, the original equation represents a hyperbola because after clearing denominators and completing the square, it matches the standard hyperbola form \(\frac{Y^2}{a^2} - \frac{X^2}{b^2} = \pm 1\) up to translation of coordinates.",GPT-4.1-mini-ZeroShot,GLM
+33,"Starting from the given second derivative, f''(x) = x^(-3/2), integrating once to find f'(x) involves integrating x^(-3/2) with respect to x. The integral of x^(-3/2) is x^(-1/2) divided by (-1/2), which equals -2x^(-1/2) plus a constant C. So, f'(x) = -2x^(-1/2) + C.
+
+Using the initial condition f'(4) = 2, substitute x = 4 into f'(x): -2 * (4)^(-1/2) + C = 2. Since 4^(-1/2) = 1/2, this gives -2 * (1/2) + C = 2, or -1 + C = 2, so C = 3, not 6. This is the key step where the mistake occurred in your work; you calculated -2 * (4)^(-1/2) as -4 instead of -1.
+
+Next, integrate f'(x) = -2x^(-1/2) + 3 to find f(x). The integral of -2x^(-1/2) is -4x^(1/2), and the integral of 3 is 3x, plus a constant D. Hence, f(x) = -4x^(1/2) + 3x + D.
+
+Applying the condition f(0) = 0, substitute x = 0 to get f(0) = -4*0 + 3*0 + D = D = 0, so D = 0. Therefore, the solution is f(x) = -4√x + 3x, matching the book's answer. The error was in evaluating f'(4), where the power of 4 was miscalculated.",GPT-4.1-mini-ZeroShot,Kimi
+239,"The problem is to find the probability that when rolling 5 dice, exactly one number appears 3 times and a different number appears exactly 2 times. This means the dice show a pattern like ""aaabb"" where 'a' and 'b' are distinct numbers from 1 to 6.
+
+Start by counting the number of ways to choose which number appears 3 times and which number appears 2 times. There are 6 choices for the triple number 'a'. After choosing 'a', there are 5 remaining numbers for the double number 'b', since it must be different from 'a'. So total ways to pick the pair of numbers is 6 × 5 = 30.
+
+Next, consider the arrangements of the dice. You want exactly three dice to show 'a' and exactly two dice to show 'b'. The number of ways to arrange this is the number of ways to choose which 3 dice show 'a' out of 5, which is ""5 choose 3"" = 10. The remaining 2 dice naturally show 'b'. So for each pair (a, b), there are 10 distinct outcomes.
+
+The probability that the chosen three dice show the number 'a' is (1/6)^3, and the remaining two dice show 'b' with probability (1/6)^2. Since these are independent, multiply these probabilities: (1/6)^3 × (1/6)^2 = (1/6)^5. No other numbers appear, so no additional factors.
+
+Putting it all together, the total probability is the number of ways to pick the numbers (30) times the number of arrangements (10) times the probability of each specific outcome ((1/6)^5). This gives 30 × 10 × (1/6)^5 = 300 × (1/6)^5.
+
+Since (1/6)^5 = 1/7776, the probability is 300/7776, which simplifies to 25/648.
+
+Hence, the probability that exactly one number appears three times and another distinct number appears twice in five dice rolls is 25/648.",GPT-4.1-mini-ZeroShot,Kimi
+224,"The expression involves a sum of terms that look like differences of two sequences, each involving squares in the denominator. The factor of n outside the sum suggests the sum itself might behave like something on the order of 1/n, so multiplying by n could yield a finite limit. To handle this, one natural approach is to analyze the asymptotic behavior of the summand for large k, then approximate the sum by an integral or use known series expansions.
+
+Start by examining the summand term inside the sum: 1/(2k-1)^2 - 3/(4k^2). For large k, expand 1/(2k-1)^2 as 1/(4k^2 * (1 - 1/(2k))^2). Using the binomial expansion for (1 - x)^{-2} = 1 + 2x + 3x^2 + ..., this becomes approximately 1/(4k^2) * (1 + 1/k + 3/(4k^2) + ...). So the summand is roughly 1/(4k^2) + 1/(4k^3) + ... - 3/(4k^2) = (1 - 3)/(4k^2) + 1/(4k^3) + ... = -1/(2k^2) + 1/(4k^3) + ...
+
+The leading term is thus about -1/(2k^2). Summing -1/(2k^2) from k=1 to n gives approximately -1/2 times the partial sum of 1/k^2, which converges as n grows. Hence, the sum converges to a finite limit as n → ∞, so multiplying by n would send the product to infinity unless the next order terms cancel out the leading behavior.
+
+This suggests refining the expansion to include next terms carefully. Alternatively, rewrite the summand exactly as 1/(2k-1)^2 - 3/(4k^2) = (4k^2 - 3(2k-1)^2) / (4k^2 (2k-1)^2). Expanding numerator: 4k^2 - 3(4k^2 - 4k +1) = 4k^2 - 12k^2 + 12k - 3 = -8k^2 + 12k - 3. So summand = (-8k^2 + 12k - 3) / (4k^2 (2k-1)^2).
+
+This is negative for large k, and the denominator behaves like 16k^4, so summand ~ (-8k^2)/(16k^4) = -1/(2k^2), consistent with above. The correction terms come from the lower order terms in numerator and denominator.
+
+To get the limit of n times the sum, consider the partial sums S_n = sum_{k=1}^n summand(k), and examine n(S_n - S), where S is the limit of S_n as n → ∞. This difference often behaves like a constant over n, so multiplying by n yields that constant.
+
+Another approach is to express the sum in terms of known series: sum_{k=1}^\infty 1/k^2 = π^2/6, sum_{k=1}^\infty 1/(2k-1)^2 = π^2/8, and use these to write the sum as a difference of partial sums plus tail corrections.
+
+Alternatively, use Euler–Maclaurin formula to approximate the sum by an integral plus correction terms. The summand function f(k) = 1/(2k-1)^2 - 3/(4k^2) is smooth and decays like 1/k^2, so the integral test and Euler–Maclaurin expansion will yield asymptotic expansions for the partial sums.
+
+In summary, key ideas are: asymptotic expansion of summand, rewriting numerator and denominator exactly, using known zeta values for series, and Euler–Maclaurin formula for precise asymptotics. These will help find the exact value of the limit.",GPT-4.1-mini-ZeroShot,GLM
+31,"For every integer \( n \geq 170 \), the goal is to express \( n \) as a sum of five positive squares, i.e., \( n = x_1^2 + x_2^2 + x_3^2 + x_4^2 + x_5^2 \) where each \( x_i \geq 1 \). The key insight comes from decomposing \( n \) relative to 169, since \( 169 = 13^2 \) is itself a perfect square and can be written as sums of fewer positive squares in various ways as you noted.
+
+Start by writing \( n = 169 + m \) where \( m = n - 169 \geq 1 \). The classical four-square theorem states every nonnegative integer can be represented as a sum of four squares, but these squares can be zero. To ensure positivity, consider the following: if \( m \geq 4 \), then \( m \) can be represented as the sum of four positive squares. This is because the smallest sum of four positive squares is \( 1^2 + 1^2 + 1^2 + 1^2 = 4 \). Thus, for \( m \geq 4 \), there exist positive integers \( a, b, c, d \geq 1 \) such that \( m = a^2 + b^2 + c^2 + d^2 \).
+
+Since \( n = 169 + m = 13^2 + a^2 + b^2 + c^2 + d^2 \), this expresses \( n \) as a sum of five positive squares. The only cases to check separately are \( m = 1, 2, 3 \), which correspond to \( n = 170, 171, 172 \). These can be written explicitly: for example, \( 170 = 13^2 + 1^2 + 1^2 + 1^2 + 1^2 \) (with four ones), \( 171 = 13^2 + 1^2 + 1^2 + 1^2 + 2^2 \), and \( 172 = 13^2 + 1^2 + 1^2 + 2^2 + 2^2 \). Hence, every integer \( n \geq 170 \) can be represented as the sum of five positive squares by using \( 13^2 \) plus four positive squares summing to \( m = n - 169 \).
+
+This argument depends on the fact that any integer at least 4 can be represented as the sum of four positive squares, which follows from the classical four-square theorem with a small adjustment to exclude zero squares for these small values. Thus, the decomposition of \( n \) into \( 13^2 \) plus four positive squares ensures the desired representation for all \( n \geq 170 \).",GPT-4.1-mini-ZeroShot,GLM
+518,"The problem is to solve the quadratic congruence \(9x^2 + 27x + 27 \equiv 0 \pmod{21}\). Since 21 factors as 3 times 7, the Chinese Remainder Theorem (CRT) suggests solving this modulo 3 and modulo 7 separately, then combining the solutions.
+
+First, reduce the equation modulo 3. Since 9, 27, and 27 are all multiples of 3, the entire left side becomes 0 modulo 3. So the congruence modulo 3 is \(0 \equiv 0\), which holds for every integer \(x\). This means every \(x\) is a solution modulo 3.
+
+Next, consider the equation modulo 7. Reduce coefficients modulo 7: \(9 \equiv 2\), \(27 \equiv 6\), so the equation becomes \(2x^2 + 6x + 6 \equiv 0 \pmod{7}\). Divide through by 2, which is invertible modulo 7 (since 2*4=8 ≡ 1 mod 7), to get \(x^2 + 3x + 3 \equiv 0 \pmod{7}\).
+
+To solve \(x^2 + 3x + 3 \equiv 0 \pmod{7}\), complete the square or use the quadratic formula modulo 7. The discriminant is \(3^2 - 4 \cdot 1 \cdot 3 = 9 - 12 = -3 \equiv 4 \pmod{7}\). Since 4 is a quadratic residue modulo 7 (because \(2^2 = 4\)), solutions exist.
+
+The solutions are \(x \equiv \frac{-3 \pm 2}{2} \pmod{7}\). The inverse of 2 mod 7 is 4, so multiply numerator by 4 to get \(x \equiv 4(-3 \pm 2) \pmod{7}\). Calculate \(4 \cdot (-3) = -12 \equiv 2\), so solutions are \(x \equiv 2 \pm 8 \pmod{7}\). Since \(8 \equiv 1\), the two solutions modulo 7 are \(x \equiv 2 + 1 = 3\) and \(x \equiv 2 - 1 = 1\).
+
+Thus, modulo 7, the solutions are \(x \equiv 1\) or \(x \equiv 3\). Modulo 3, all \(x\) are solutions. By the CRT, for each \(x \equiv 1 \text{ or } 3 \pmod{7}\), \(x\) can be any residue modulo 3. So the full solution modulo 21 consists of all \(x\) such that \(x \equiv 1 \pmod{7}\) or \(x \equiv 3 \pmod{7}\), with no restriction modulo 3.
+
+To explicitly find solutions modulo 21, combine each solution modulo 7 with each residue modulo 3. For \(x \equiv 1 \pmod{7}\), \(x\) can be \(1, 4, 7, 10, 13, 16, 19\) modulo 21, but restricted to those congruent to any residue modulo 3. Since modulo 3 all residues are allowed, the solutions modulo 21 are exactly those \(x\) congruent to 1 or 3 modulo 7, i.e., the set \(\{1, 3, 4, 6, 8, 10, 11, 13, 15, 17, 18, 20\}\) modulo 21.
+
+This approach avoids brute force by solving the simpler congruences modulo prime factors and then recombining using CRT.",GPT-4.1-mini-ZeroShot,GLM
+96,"Start by rewriting the integrand to simplify the expression. The integral is ∫₀^{π/2} (sin(2nx) sin(x)) / cos(x) dx. Notice that sin(x)/cos(x) is just tan(x), so this becomes ∫₀^{π/2} sin(2nx) tan(x) dx. 
+
+Express sin(2nx) as 2 sin(nx) cos(nx) if needed, but it might not help immediately. Instead, write tan(x) as sin(x)/cos(x) and keep the original form to see if a substitution or trigonometric identity can help. Another approach is to use the product-to-sum formula on sin(2nx) sin(x), which states sin A sin B = ½ [cos(A-B) - cos(A+B)]. Applying this, sin(2nx) sin(x) = ½ [cos(2nx - x) - cos(2nx + x)] = ½ [cos((2n - 1)x) - cos((2n + 1)x)]. The integral becomes ½ ∫₀^{π/2} [cos((2n - 1)x) - cos((2n + 1)x)] / cos(x) dx.
+
+Rewrite the integral as ½ [∫₀^{π/2} cos((2n - 1)x)/cos(x) dx - ∫₀^{π/2} cos((2n + 1)x)/cos(x) dx]. Focus on the general integral ∫₀^{π/2} cos(mx)/cos(x) dx for integer m. For m odd, this integral can be evaluated using a known formula or by expanding cos(mx) in terms of cos(x). 
+
+Recall the Chebyshev polynomial relation: cos(mx) can be expressed as a polynomial in cos(x). For odd m = 2k+1, cos((2k+1)x) = cos x U_{2k}(cos x), where U_{2k} is the Chebyshev polynomial of the second kind of degree 2k. Thus, cos(mx)/cos(x) = U_{2k}(cos x). The integral becomes ∫₀^{π/2} U_{2k}(cos x) dx.
+
+Changing variables to t = cos x, dt = -sin x dx, and when x goes from 0 to π/2, t goes from 1 to 0. The integral transforms to ∫₁^0 U_{2k}(t) (-dt / sin x). But sin x = √(1 - t²), so dx = -dt / √(1 - t²). Hence, ∫₀^{π/2} U_{2k}(cos x) dx = ∫₀^1 U_{2k}(t) / √(1 - t²) dt.
+
+This integral is the standard integral of Chebyshev polynomials of the second kind with the weight 1/√(1 - t²) over [0,1]. The full orthogonality interval is [-1,1], but here it's half. The integral ∫₀^1 U_n(t)/√(1 - t²) dt equals π/2 if n = 0 and zero for n ≥ 1 since U_n are orthogonal polynomials.
+
+Since 2k ≥ 0, for k ≥ 1, the integral is zero, but for k=0 (m=1), it equals π/2. Therefore, ∫₀^{π/2} cos(mx)/cos(x) dx = π/2 if m=1, and zero otherwise.
+
+Returning to the original problem, the integral becomes ½ [∫₀^{π/2} cos((2n - 1)x)/cos(x) dx - ∫₀^{π/2} cos((2n + 1)x)/cos(x) dx] = ½ [I(2n-1) - I(2n+1)], where I(m) = π/2 if m=1, else 0. The only time I(m) ≠ 0 is when m=1. So, 2n - 1 = 1 implies n=1, and 2n + 1 = 1 implies n = -0. This second is impossible for positive n.
+
+Hence, the integral is ½ [π/2 - 0] = π/4 if n=1, and zero otherwise.
+
+Therefore, the value of the integral ∫₀^{π/2} (sin(2nx) sin(x))/cos(x) dx equals π/4 when n=1 and zero for all other positive integers n.",GPT-4.1-mini-ZeroShot,GLM
+617,"The key is to avoid calculus and rely on inequalities derived from the series expansions and geometric or algebraic arguments. The problem is to show that for all x in (0, π/2), tan x > x using only algebraic means and series approximations, without derivatives or integrals.
+
+From your partial work, the series expansions for sin x and cos x give good approximations near 0:
+
+sin x > x - x³/6 and cos x < 1 - x²/2 + error terms. You tightened these to sin x > x - x³/6 and cos x < 1 - x²/3 on (0,1]. This yields tan x = sin x / cos x > (x - x³/6) / (1 - x²/3). Since (1 - x²/3) < 1 and the numerator is close to x, this fraction exceeds x for small x.
+
+For x in (1, π/2), one approach is to use the double angle formula and the monotonicity of tan x on (0, π/2), but strictly algebraically. Since π is defined as the smallest positive root of sin x, and you have bounds 2 < π < 4, you can try to get a lower bound for sin x and an upper bound for cos x on (1, π/2) using these bounds and the addition formulas.
+
+Write x = π/2 - y, where y ∈ (0, π/2 - 1). Then tan x = tan(π/2 - y) = cot y = cos y / sin y. So proving tan x > x is equivalent to cot y > π/2 - y, or rearranged, cos y / sin y > π/2 - y.
+
+Since y is small (because x is close to π/2), use the series expansions for sin y and cos y again, but now for small y:
+
+sin y < y, cos y > 1 - y²/2.
+
+Therefore cot y = cos y / sin y > (1 - y²/2) / y = 1/y - y/2.
+
+We want to show 1/y - y/2 > π/2 - y, or equivalently 1/y > π/2 - y + y/2 = π/2 - y/2.
+
+Given y ∈ (0, π/2 - 1), check if 1/y > π/2 - y/2. Since π/2 ≈ 1.57, and y ≤ π/2 - 1 ≈ 0.57, the right side is about 1.57 - 0.57/2 = 1.57 - 0.285 = 1.285. The left side 1/y ≥ 1/0.57 ≈ 1.75, which is greater than 1.285. So the inequality holds.
+
+This shows cot y > π/2 - y, so tan x > x for x near π/2. Combining this with the earlier result for x in (0,1], and noting that tan x and x are continuous and tan x is increasing on (0, π/2), the inequality holds on the entire interval (0, π/2).
+
+Hence, the algebraic proof hinges on bounding sin and cos near 0 and near π/2 via the substitution x = π/2 - y, then using the cotangent form and series bounds to show the inequality. This avoids derivatives and integrals and uses only series expansions and inequalities.",GPT-4.1-mini-ZeroShot,Deepseek
+28,"The key to understanding the introduction of \( w_1 \) and \( w_2 \) lies in the structure of the expression \( w^2 = (u^2 - v^2)(u^2 + v^2) \). Since \( w^2 \) is a perfect square and it factors into the product of \( u^2 - v^2 \) and \( u^2 + v^2 \), both of these factors must themselves be ""square-like"" in a certain sense, given the unique factorization in the integers. The proof exploits this by considering how these two factors relate to each other modulo 2, which leads to two distinct cases.
+
+Either \( u^2 + v^2 \) and \( u^2 - v^2 \) are both twice a square (i.e., equal to \( 2 w_1^2 \) and \( 2 w_2^2 \) respectively), or they are both perfect squares themselves (equal to \( w_1^2 \) and \( w_2^2 \)). Here, \( w_1 \) and \( w_2 \) are integers chosen to represent the square roots (or half square roots) of these expressions, introduced precisely to capture these possibilities in the factorization. They are not initially given but defined implicitly by these relations, as the numbers whose squares or twice their squares equal \( u^2 + v^2 \) and \( u^2 - v^2 \).
+
+In the first case, the factorization looks like \( u^2 + v^2 = 2 w_1^2 \) and \( u^2 - v^2 = 2 w_2^2 \), which immediately produces a smaller solution to the original problem, enabling the descent argument. In the second case, where \( u^2 + v^2 = w_1^2 \) and \( u^2 - v^2 = w_2^2 \), the proof shows that \( w_1^2 + w_2^2 = 2 u^2 \) and \( w_1^2 - w_2^2 = 2 v^2 \), again producing a smaller solution and thus completing the descent.
+
+So the \( w_1 \) and \( w_2 \) are introduced as the integers satisfying these factorization conditions derived from the perfect square \( w^2 \). They are auxiliary variables that allow the descent to proceed by representing the structure of the factors \( u^2 \pm v^2 \) in terms of squares or twice squares, which is critical to the infinite descent argument in Carmichael's proof.",GPT-4.1-mini-ZeroShot,GLM
+204,"The given sequences are \(a_n = b_n = \frac{(-1)^n}{\sqrt{n+1}}\), both convergent by the alternating series test since the terms decrease in magnitude to zero. The question concerns the Cauchy product of these two series and whether it converges or diverges.
+
+First, the ratio test calculation you did has a mistake in algebraic manipulation. The ratio test involves the limit of \(|a_{n+1}/a_n|\), which is \(\left|\frac{(-1)^{n+1}}{\sqrt{n+2}} \cdot \frac{\sqrt{n+1}}{(-1)^n}\right| = \frac{\sqrt{n+1}}{\sqrt{n+2}}\). This tends to 1, not -1, because the absolute value removes the sign. The sign factor \((-1)^{n+1}/(-1)^n = -1\) does not affect the absolute value. So the ratio test is inconclusive here since the limit is 1, which is typical for series like \(\sum (-1)^n/\sqrt{n}\) that converge conditionally but not absolutely.
+
+More importantly, the Cauchy product of two conditionally convergent series need not converge. The Cauchy product of \(\sum a_n\) and \(\sum b_n\) is the series with terms \(c_n = \sum_{k=0}^n a_k b_{n-k}\). Substituting,
+
+\[
+c_n = \sum_{k=0}^n \frac{(-1)^k}{\sqrt{k+1}} \cdot \frac{(-1)^{n-k}}{\sqrt{n-k+1}} = (-1)^n \sum_{k=0}^n \frac{1}{\sqrt{k+1}\sqrt{n-k+1}}.
+\]
+
+The factor \((-1)^n\) can be factored out since it depends only on \(n\). Focus on the sum inside:
+
+\[
+S_n = \sum_{k=0}^n \frac{1}{\sqrt{k+1}\sqrt{n-k+1}}.
+\]
+
+This sum resembles a discrete convolution of sequences \(1/\sqrt{k+1}\). To understand the behavior of \(S_n\), approximate it by an integral. Change variables by setting \(x = \frac{k}{n}\), so \(k \approx nx\), and the sum becomes roughly
+
+\[
+S_n \approx \sum_{k=0}^n \frac{1}{\sqrt{n x + 1} \sqrt{n (1 - x) + 1}} \approx \sum_{k=0}^n \frac{1}{n \sqrt{x(1-x)}} = n \int_0^1 \frac{dx}{\sqrt{n^2 x(1-x)}}.
+\]
+
+More precisely,
+
+\[
+S_n \approx \sum_{k=0}^n \frac{1}{\sqrt{n} \sqrt{x} \sqrt{n} \sqrt{1-x}} = \frac{1}{n} \sum_{k=0}^n \frac{1}{\sqrt{x(1-x)}}.
+\]
+
+But since the sum has \(n+1\) terms, the approximate integral is
+
+\[
+S_n \approx \int_0^1 \frac{dx}{\sqrt{x(1-x)}} = \pi,
+\]
+
+a finite constant. This suggests the terms \(c_n = (-1)^n S_n\) behave roughly like \((-1)^n \pi\) for large \(n\), so they do not tend to zero. Since the terms \(c_n\) of the Cauchy product do not tend to zero, the Cauchy product series diverges.
+
+So the key is that the inner sum \(S_n\) does not vanish as \(n \to \infty\); it converges to a positive constant. Multiplying by \((-1)^n\) produces a sequence that oscillates between \(\pi\) and \(-\pi\), so \(c_n\) does not tend to zero, violating the necessary condition for convergence of the series \(\sum c_n\).
+
+Hence, the Cauchy product of these two conditionally convergent series diverges, even though each series converges individually. This is a classic example showing that the product of two conditionally convergent series need not converge.",GPT-4.1-mini-ZeroShot,GLM
+430,"The expression inside the limit is n times the difference between two square roots: √(n² + 3) and √(n² - 1). Direct substitution as n approaches infinity gives an indeterminate form because both square roots behave like n, so their difference tends to zero, but it is multiplied by n, which tends to infinity. To handle this, rationalize the difference by multiplying and dividing by the conjugate √(n² + 3) + √(n² - 1). This gives
+
+n * (√(n² + 3) - √(n² - 1)) * (√(n² + 3) + √(n² - 1)) / (√(n² + 3) + √(n² - 1)),
+
+which simplifies to
+
+n * ( (n² + 3) - (n² - 1) ) / (√(n² + 3) + √(n² - 1)) = n * (4) / (√(n² + 3) + √(n² - 1)).
+
+The numerator is 4n, and the denominator is the sum of two square roots. For large n, each square root behaves like n times the square root of 1 plus a small fraction. More precisely, √(n² + 3) = n√(1 + 3/n²) ≈ n(1 + 3/(2n²)) = n + 3/(2n), and √(n² - 1) ≈ n(1 - 1/(2n²)) = n - 1/(2n). Adding these approximations yields (n + 3/(2n)) + (n - 1/(2n)) = 2n + 1/n. Substitute this back into the denominator to get approximately 2n + 1/n. Thus, the entire expression is roughly 4n / (2n + 1/n).
+
+Dividing numerator and denominator by n gives 4 / (2 + 1/n²), and as n approaches infinity, 1/n² tends to zero, so the denominator tends to 2. Hence, the limit is 4 / 2 = 2.",GPT-4.1-mini-ZeroShot,Deepseek
+719,"The approach has some mistakes in handling the recurrence and the characteristic equation. The original recurrence is linear but non-homogeneous: a_(n+1) = 6a_n - 9. Writing it as a_(n+1) - 6a_n = -9 shows the non-homogeneous part on the right side.
+
+Trying a solution of the form a_n = r^n applies only to the associated homogeneous recurrence a_(n+1) - 6a_n = 0, which has characteristic equation r - 6 = 0, giving r = 6. So the homogeneous solution is a_n^h = C * 6^n for some constant C.
+
+Because of the constant term (-9), try a particular solution a_n^p = A, a constant. Substituting into the recurrence: A = 6A - 9, so 0 = 5A - 9, yielding A = 9/5 = 1.8.
+
+The general solution is a_n = C * 6^n + 9/5. Use initial conditions to find C. When n=0, a_0 = 0 = C * 6^0 + 9/5 = C + 9/5, so C = -9/5. Check a_1: a_1 = C * 6 + 9/5 = (-9/5)*6 + 9/5 = (-54/5) + (9/5) = -45/5 = -9, which does not match the given a_1 = 3.
+
+This shows a contradiction, so the particular solution cannot be constant. Try a linear particular solution a_n^p = An + B. Substitute into the recurrence:
+
+a_(n+1)^p = A(n+1) + B = An + A + B
+
+The recurrence is a_(n+1)^p = 6a_n^p - 9, so
+
+An + A + B = 6(An + B) - 9 = 6An + 6B - 9
+
+Equate coefficients: coefficients of n: A = 6A ⇒ A - 6A = 0 ⇒ -5A = 0 ⇒ A = 0. Constant terms: A + B = 6B - 9 ⇒ 0 + B = 6B - 9 ⇒ B - 6B = -9 ⇒ -5B = -9 ⇒ B = 9/5.
+
+So the particular solution is a_n^p = 9/5, which contradicts the previous check. The contradiction arises because the initial condition a_1 = 3 does not fit with the constant particular solution.
+
+Re-examine the initial conditions. Given a_0=0 and a_1=3, plug into the general solution a_n = C * 6^n + 9/5:
+
+a_0 = C + 9/5 = 0 ⇒ C = -9/5
+
+a_1 = 6C + 9/5 = 6(-9/5) + 9/5 = -54/5 + 9/5 = -45/5 = -9, but given a_1=3, so this is inconsistent.
+
+Therefore, the assumption of a constant particular solution is invalid. Since the non-homogeneous term is constant, try a polynomial particular solution of degree one: a_n^p = An + B, as tried. But A=0 from the coefficient comparison, so the particular solution reduces to a constant, which conflicts with the initial conditions.
+
+Try solving the recurrence directly by iteration. From the recurrence:
+
+a_(n+1) = 6a_n - 9
+
+Write the first few terms:
+
+a_0 = 0 (given)
+
+a_1 = 6 * 0 - 9 = -9, contradicting the given a_1 = 3.
+
+This shows the initial conditions are inconsistent with the recurrence as stated. The given initial condition a_1=3 is incompatible with the recurrence a_(n+1) = 6a_n - 9 and a_0=0.
+
+If a_0=0, then a_1 must be 6*0 - 9 = -9, not 3.
+
+If a_1=3, then a_0 must satisfy 3 = 6a_0 - 9 ⇒ 6a_0 = 12 ⇒ a_0 = 2, not 0.
+
+Hence, either the recurrence or the initial conditions are misstated.
+
+Assuming the recurrence and a_0=0 are correct, then a_1 = -9.
+
+Then the homogeneous solution is a_n^h = C * 6^n, particular solution a_n^p = 9/5. The general solution is a_n = C * 6^n + 9/5. Using a_0=0:
+
+0 = C + 9/5 ⇒ C = -9/5
+
+Thus a_n = -9/5 * 6^n + 9/5 = 9/5 (1 - 6^n)
+
+This matches the recurrence and initial condition a_0=0, with a_1 = 9/5 (1 - 6) = 9/5 * (-5) = -9.
+
+If the initial condition a_1=3 is to be maintained, then a_0 must be 2.
+
+In summary, the original attempt to find the characteristic roots was incorrect because the recurrence is not homogeneous. The characteristic equation is r - 6 = 0, giving r=6, and the particular solution is constant 9/5, leading to the general solution a_n = C * 6^n + 9/5. The initial conditions must be consistent with the recurrence to solve for C.",GPT-4.1-mini-ZeroShot,Deepseek
+575,"Focus on the series ∑ from n=0 to ∞ of (1/(4n+9) - 1/(4n+7)) and the sum s = 1 + that series, which expands as 1 - 1/7 + 1/9 - 1/15 + 1/17 - ... The approach using complex analysis and residues involves the function f(z) = -2 / ((4z+9)(4z+7)) and the infinite sum over all integers n of 2 / ((4n+9)(4n+7)). The idea is to express this sum in terms of residues of π cot(πz) f(z) at the poles z = -9/4 and z = -7/4, since π cot(πz) has simple poles at integers with residue 1, and the poles of f(z) are rational shifts.
+
+Calculating the residues at these poles, one writes the limit as z approaches -9/4 of (z + 9/4) π cot(πz) / ((4z+9)(4z+7)). Since 4z+9 = 4(z + 9/4), the factor (z + 9/4) cancels one factor in the denominator, leaving π cot(πz) / (4z+7) times 1/4. Evaluating at z = -9/4 gives π cot(-9π/4) / (4(-9/4)+7) * 1/4. Note that cot is periodic with period π, so cot(-9π/4) = cot(-π/4) = -1. The denominator 4(-9/4)+7 = -9 + 7 = -2. So the residue is (1/4) * π * (-1) / (-2) = π/8. Similarly, for z → -7/4, the residue is also π/8. Summing these residues gives π/4.
+
+By the residue theorem, the sum over n from -∞ to ∞ of 2 / ((4n+9)(4n+7)) equals -π/4 (the negative sum of residues times π), consistent with your calculation. Now, this sum over all integers splits into negative and nonnegative parts. The sum from n = 0 to ∞ of (1/(4n+9) - 1/(4n+7)) equals half the sum over all integers of 2 / ((4n+9)(4n+7)) but shifted, plus the initial term at n = -1 or n = 0, depending on indexing.
+
+The discrepancy arises because the infinite sum over n ≥ 0 of (1/(4n+9) - 1/(4n+7)) converges conditionally, and naive rearrangement or partial summation can lead to different values. The sum you found, -1/5, likely comes from a numerical or partial sum approximation, while the residue calculation is exact under the analytic continuation framework. The correct value from residues is s = 1 - π/8 = (7 - π)/8, which is consistent with the analytic continuation of the series.
+
+Hence, the series ∑_{n=0}^∞ (1/(4n+9) - 1/(4n+7)) converges to -π/8, so adding 1 gives s = (7 - π)/8. The value -1/5 is an approximation or partial sum but does not represent the exact infinite sum. The residue method correctly captures the sum's value using complex analysis.",GPT-4.1-mini-ZeroShot,GLM
+734,"The integral to evaluate is ∫₀^∞ 1 / √(x⁴ + x³ + x² + x + 1) dx. The expression inside the root can be written as (x⁵ - 1) / (x - 1) for x ≠ 1, so the integrand becomes √(x - 1) / √(x⁵ - 1). This form is a bit complicated to handle directly, especially near x = 1, so a substitution or symmetry approach might help.
+
+Try the substitution x = 1/t, which often helps with integrals from 0 to ∞ involving rational functions. Then dx = -1/t² dt and the integral limits change: when x → 0⁺, t → ∞, and when x → ∞, t → 0⁺. The integral becomes ∫_∞^0 (1 / √( (1/t)^4 + (1/t)^3 + (1/t)^2 + (1/t) + 1 )) * (-1/t²) dt = ∫₀^∞ 1 / √(t⁴ + t³ + t² + t + 1) dt after simplifying, because the denominator inside the root transforms as (1/t)^4 + (1/t)^3 + ... = (t⁴ + t³ + t² + t + 1) / t⁴, and the factor t² in dx cancels with the powers inside the root after taking the square root.
+
+This shows the integral is symmetric under x ↔ 1/x. Denote the integral by I. Then I = ∫₀^∞ 1 / √(x⁴ + x³ + x² + x + 1) dx = ∫₀^∞ 1 / √(t⁴ + t³ + t² + t + 1) dt, which means I = I, confirming symmetry but not giving its value directly.
+
+Next, split the integral at 1: I = ∫₀¹ 1 / √(x⁴ + x³ + x² + x + 1) dx + ∫₁^∞ 1 / √(x⁴ + x³ + x² + x + 1) dx. Use the substitution x = 1/u in the second integral, transforming it into ∫₀¹ 1 / √(u⁴ + u³ + u² + u + 1) du, the same as the first integral. So the entire integral is twice ∫₀¹ 1 / √(x⁴ + x³ + x² + x + 1) dx.
+
+Now, the problem reduces to evaluating 2 ∫₀¹ 1 / √(x⁴ + x³ + x² + x + 1) dx. Notice that x⁴ + x³ + x² + x + 1 = (x⁵ - 1) / (x - 1), but for 0 < x < 1, this is positive and smooth. This integral can be expressed in terms of the Beta or Gamma functions or elliptic integrals by an appropriate substitution.
+
+Try the substitution x = t, and rewrite the polynomial as (1 - x⁵) / (1 - x). The denominator inside the root is positive on (0,1), so write the integral as 2 ∫₀¹ 1 / √((1 - x⁵)/(1 - x)) dx = 2 ∫₀¹ √(1 - x) / √(1 - x⁵) dx.
+
+Set x = s^(1/5), so that x⁵ = s, and dx = (1/5) s^{-4/5} ds. Then the integral becomes 2 ∫₀¹ √(1 - s^{1/5}) / √(1 - s) * (1/5) s^{-4/5} ds. This is complicated, but the integral is known to be expressible in terms of Beta functions.
+
+Alternatively, use the substitution x = t^(-1), as before, and use the symmetry to conclude I = 2 ∫₀¹ 1 / √(x⁴ + x³ + x² + x + 1) dx. Numerically approximating the integral from 0 to 1 gives approximately 1.31103, so the total integral is about 2.62206.
+
+Actually, the exact value is 2π / √5. This can be verified by more advanced methods involving contour integration or special functions, but the key insight is the symmetry and splitting the integral, reducing it to a Beta-type integral whose value is 2π / √5.
+
+Hence, the value of the integral is 2π / √5.",GPT-4.1-mini-ZeroShot,Deepseek
+226,"Given the conditions, denote P(A) = p and P(A ∩ B) = x. Since P(B) = 2p and P(C) = 3p, and the pairwise intersections are equal, that is, P(A ∩ B) = P(A ∩ C) = P(B ∩ C) = x. Also, denote P(A ∩ B ∩ C) = y. Using the inclusion-exclusion formula for three events:
+
+P(A ∪ B ∪ C) = P(A) + P(B) + P(C) - P(A ∩ B) - P(A ∩ C) - P(B ∩ C) + P(A ∩ B ∩ C).
+
+Substitute the values:
+
+1 = p + 2p + 3p - x - x - x + y = 6p - 3x + y.
+
+Since probabilities are non-negative, y ≤ x (the triple intersection cannot exceed any pairwise intersection). Also, by the nature of intersections, x ≤ p because A ∩ B ⊆ A, so its probability cannot exceed P(A).
+
+Rewrite the equation as y = 1 - 6p + 3x. Since y ≥ 0, this gives 1 - 6p + 3x ≥ 0, or 3x ≥ 6p - 1, hence x ≥ (6p - 1)/3 = 2p - 1/3. Also, x ≤ p, so combining these inequalities:
+
+2p - 1/3 ≤ x ≤ p.
+
+For these to be consistent, 2p - 1/3 ≤ p, which implies p ≤ 1/3.
+
+Now, consider the fact that x ≥ 0, so from x ≥ 2p - 1/3, get 2p - 1/3 ≥ 0, or p ≥ 1/6.
+
+Therefore, p ∈ [1/6, 1/3]. But more constraints come from the fact that the events must be valid probabilities.
+
+Next, examine the pairwise intersections and their constraints. Since P(B) = 2p and P(C) = 3p, the maximum possible intersection P(B ∩ C) ≤ min(P(B), P(C)) = 2p. Since x = P(B ∩ C), x ≤ 2p.
+
+From above, x ≥ 2p - 1/3, so combining with x ≤ 2p gives 2p - 1/3 ≤ 2p, always true.
+
+Now, consider the triple intersection y. Since y ≤ x and y = 1 - 6p + 3x, then y ≤ x implies 1 - 6p + 3x ≤ x, or 1 - 6p + 2x ≤ 0, which implies 2x ≤ 6p - 1, or x ≤ 3p - 1/2.
+
+But from above, x ≥ 2p - 1/3, so 2p - 1/3 ≤ x ≤ 3p - 1/2.
+
+For this to hold, 2p - 1/3 ≤ 3p - 1/2, or -1/3 + 1/2 ≤ 3p - 2p, which is 1/6 ≤ p.
+
+This is consistent with previous bounds.
+
+Finally, to ensure all probabilities are between 0 and 1, and that the union is 1, test the upper bound p = 1/4. Substitute p = 1/4 into the original equation:
+
+1 = 6*(1/4) - 3x + y = 1.5 - 3x + y.
+
+Since y ≤ x, replace y with x to get the minimal value:
+
+1 = 1.5 - 3x + x = 1.5 - 2x, so 2x = 0.5, x = 0.25.
+
+Check if x ≤ p: 0.25 ≤ 0.25 holds.
+
+Check if y ≤ x: y = 1 - 6p + 3x = 1 - 1.5 + 0.75 = 0.25 ≤ x = 0.25, holds.
+
+All inequalities hold at p = 1/4, so p cannot exceed 1/4.
+
+Hence, P(A) ≤ 1/4.",GPT-4.1-mini-ZeroShot,Deepseek
+666,"Start by writing out the first few terms explicitly: $a_0 = 2$, then $a_1 = \frac{6}{2-1} = 6$, $a_2 = \frac{6}{6-1} = \frac{6}{5}$, $a_3 = \frac{6}{\frac{6}{5} - 1} = \frac{6}{\frac{6-5}{5}} = \frac{6}{\frac{1}{5}} = 30$, $a_4 = \frac{6}{30 - 1} = \frac{6}{29}$, and $a_5 = \frac{6}{\frac{6}{29} - 1} = \frac{6}{\frac{6 - 29}{29}} = \frac{6}{-\frac{23}{29}} = -\frac{174}{23}$. The values oscillate and don't simplify nicely, so try rewriting the recurrence by substituting $b_n = a_n - 1$. Then $a_n = b_n + 1$ and the recurrence becomes $b_n + 1 = \frac{6}{b_{n-1}}$, or $b_n = \frac{6}{b_{n-1}} - 1$. Multiply both sides by $b_{n-1}$ to get $b_n b_{n-1} = 6 - b_{n-1}$. Rearranging, $b_n b_{n-1} + b_{n-1} = 6$, so $b_{n-1}(b_n + 1) = 6$. This implies $b_n + 1 = \frac{6}{b_{n-1}}$, but that just restates the recurrence.
+
+Try expressing $b_n$ as a ratio of two sequences, say $b_n = \frac{x_n}{x_{n-1}}$. Plugging into $b_n = \frac{6}{b_{n-1}} - 1$, gives $\frac{x_n}{x_{n-1}} = \frac{6}{\frac{x_{n-1}}{x_{n-2}}} - 1 = \frac{6 x_{n-2}}{x_{n-1}} - 1$. Multiply both sides by $x_{n-1}$ to get $x_n = 6 x_{n-2} - x_{n-1}$. This is a linear recurrence relation for $x_n$ of order 2: $x_n + x_{n-1} - 6 x_{n-2} = 0$. The characteristic polynomial is $r^2 + r - 6 = 0$, which factors as $(r+3)(r-2) = 0$, so $r = 2$ or $r = -3$. The general solution is $x_n = A 2^n + B (-3)^n$.
+
+Since $b_n = \frac{x_n}{x_{n-1}}$, $a_n = b_n + 1 = \frac{x_n}{x_{n-1}} + 1 = \frac{x_n + x_{n-1}}{x_{n-1}}$. Use initial conditions to find $A$ and $B$. At $n=0$, $a_0 = 2$, so $b_0 = a_0 -1 = 1 = \frac{x_0}{x_{-1}}$. To avoid negative indices, set $x_{-1} = 1$ as a convenient starting point and $x_0 = 1$ so that $b_0 = 1$. Then $x_0 = A + B = 1$, and $x_{-1} = A 2^{-1} + B (-3)^{-1}$, but negative powers complicate things. Instead, shift indices to start at $n=1$: $b_1 = \frac{x_1}{x_0} = a_1 - 1 = 6 - 1 = 5$, with $x_0 = 1$ for convenience. Then $x_1 = 5$. Using the general form, $x_0 = A + B = 1$, $x_1 = 2A - 3B = 5$. Solving these, $A + B = 1$, $2A - 3B = 5$. Multiply first by 3: $3A + 3B = 3$, add to second: $2A - 3B = 5$, subtract second from first: $(3A + 3B) - (2A - 3B) = 3 - 5 \Rightarrow A + 6B = -2$. But this conflicts with previous steps, so re-check carefully.
+
+Actually, better to solve $A + B = 1$ and $2A - 3B = 5$ directly. From $A = 1 - B$, substitute into second: $2(1 - B) - 3B = 5 \Rightarrow 2 - 2B - 3B = 5 \Rightarrow 2 - 5B = 5 \Rightarrow -5B = 3 \Rightarrow B = -\frac{3}{5}$. Then $A = 1 - (-\frac{3}{5}) = \frac{8}{5}$. So $x_n = \frac{8}{5} 2^n - \frac{3}{5} (-3)^n$.
+
+Therefore, $b_n = \frac{x_n}{x_{n-1}} = \frac{\frac{8}{5} 2^n - \frac{3}{5} (-3)^n}{\frac{8}{5} 2^{n-1} - \frac{3}{5} (-3)^{n-1}} = \frac{8 \cdot 2^n - 3 (-3)^n}{8 \cdot 2^{n-1} - 3 (-3)^{n-1}}$. Factor numerator and denominator by powers: numerator is $8 \cdot 2^n - 3 (-3)^n$, denominator is $8 \cdot 2^{n-1} - 3 (-3)^{n-1}$. Simplify denominator: $8 \cdot 2^{n-1} = 4 \cdot 2^{n}$, and $-3 (-3)^{n-1} = -3^{n} (-1)^{n-1} \cdot (-3)$; better to keep as is.
+
+Finally, $a_n = b_n + 1 = \frac{8 \cdot 2^n - 3 (-3)^n}{8 \cdot 2^{n-1} - 3 (-3)^{n-1}} + 1 = \frac{8 \cdot 2^n - 3 (-3)^n + 8 \cdot 2^{n-1} - 3 (-3)^{n-1}}{8 \cdot 2^{n-1} - 3 (-3)^{n-1}}$. Combine numerator terms factoring powers: $8 \cdot 2^{n-1} (2 + 1) - 3 (-3)^{n-1}((-3) + 1) = 8 \cdot 2^{n-1} \cdot 3 - 3 (-3)^{n-1}(-2) = 24 \cdot 2^{n-1} + 6 (-3)^{n-1}$. So numerator is $24 \cdot 2^{n-1} + 6 (-3)^{n-1}$, denominator is $8 \cdot 2^{n-1} - 3 (-3)^{n-1}$. Factor numerator by 6 and denominator by 1: numerator $6 (4 \cdot 2^{n-1} + (-3)^{n-1})$, denominator $8 \cdot 2^{n-1} - 3 (-3)^{n-1}$. This is the closed form for $a_n$.
+
+Hence, $a_n = \frac{6 (4 \cdot 2^{n-1} + (-3)^{n-1})}{8 \cdot 2^{n-1} - 3 (-3)^{n-1}}$ for $n \geq 1$, with $a_0 = 2$.",GPT-4.1-mini-ZeroShot,Human
+460,"Start from the given inequality: (ab + bc + ca)(a + b + c)^2 ≥ 12√3 · S · (a² + b² + c²) in triangle ABC with sides a, b, c and area S. Expressing in terms of semiperimeter s, inradius r, and circumradius R, recall the identities: a + b + c = 2s, ab + bc + ca = s² + r² + 4Rr, and S = rs. Also, a² + b² + c² = 2(s² - r² - 4Rr) from the standard relations between sides and radii.
+
+Rewrite the inequality as (s² + r² + 4Rr) * (2s)² ≥ 12√3 * r s * 2(s² - r² - 4Rr), which simplifies to (s² + r² + 4Rr) * 4s² ≥ 24√3 r s (s² - r² - 4Rr). Dividing both sides by s (positive), get 4s (s² + r² + 4Rr) ≥ 24√3 r (s² - r² - 4Rr). Rearranged, this is 4s³ + 4s r² + 16 s R r ≥ 24√3 r s² - 24√3 r³ - 96√3 R r².
+
+The key step is to relate s, R, and r using known inequalities. Gerretsen's inequality states s² lies between r(16R - 5r) and 4R² + 4Rr + 3r², and Euler's inequality gives R ≥ 2r. Using these, approximate or bound terms involving s, R, r. For instance, since s² ≥ r(16R - 5r), s³ ≥ s * r(16R - 5r). Since s ≥ 0, this gives a lower bound for s³ in terms of r and R. Similarly, use the Euler inequality to replace R by at least 2r, simplifying expressions.
+
+Substitute R ≥ 2r into the inequality to get rid of R, yielding terms only in r and s. This reduces the inequality to a form involving s and r only, which can be analyzed for positivity. By careful bounding and rearrangement, the left side grows faster than the right side due to the cubic and quadratic terms in s and r, ensuring the inequality holds strictly stronger than Weitzenböck's inequality.
+
+Hence, the given inequality strengthens Weitzenböck's by incorporating additional geometric parameters and leveraging classical inequalities among s, r, and R, confirming the stated inequality.",GPT-4.1-mini-ZeroShot,Kimi
+285,"Given an integer \( n > 1 \), the problem states that the sum of floors 
+\[
+\left\lfloor \frac{n}{1} \right\rfloor + \left\lfloor \frac{n}{2} \right\rfloor + \cdots + \left\lfloor \frac{n}{n} \right\rfloor
+\]
+equals the sum
+\[
+\left\lfloor \frac{n-1}{1} \right\rfloor + \left\lfloor \frac{n-1}{2} \right\rfloor + \cdots + \left\lfloor \frac{n-1}{n-1} \right\rfloor + 2.
+\]
+This condition is to be used to prove that \( n \) is prime.
+
+First, recall that for any positive integer \( m \),
+\[
+\sum_{k=1}^m \left\lfloor \frac{m}{k} \right\rfloor
+\]
+counts the number of ordered pairs \((a,b)\) with \(1 \leq a,b \leq m\) such that \(a \times b \leq m\). More precisely, it counts the number of integer lattice points under the hyperbola \( xy = m \) in the first quadrant with coordinates bounded by \( m \).
+
+The key observation is to compare the sums for \( n \) and \( n-1 \). The difference between these sums is
+\[
+\sum_{k=1}^n \left\lfloor \frac{n}{k} \right\rfloor - \sum_{k=1}^{n-1} \left\lfloor \frac{n-1}{k} \right\rfloor = 2.
+\]
+Since the upper limit in the first sum is \( n \) and in the second is \( n-1 \), rewrite the difference as
+\[
+\left\lfloor \frac{n}{n} \right\rfloor + \sum_{k=1}^{n-1} \left( \left\lfloor \frac{n}{k} \right\rfloor - \left\lfloor \frac{n-1}{k} \right\rfloor \right) = 2.
+\]
+Note that \(\left\lfloor \frac{n}{n} \right\rfloor = 1\), so this reduces to
+\[
+1 + \sum_{k=1}^{n-1} \left( \left\lfloor \frac{n}{k} \right\rfloor - \left\lfloor \frac{n-1}{k} \right\rfloor \right) = 2,
+\]
+or equivalently,
+\[
+\sum_{k=1}^{n-1} \left( \left\lfloor \frac{n}{k} \right\rfloor - \left\lfloor \frac{n-1}{k} \right\rfloor \right) = 1.
+\]
+
+Each term \(\left\lfloor \frac{n}{k} \right\rfloor - \left\lfloor \frac{n-1}{k} \right\rfloor\) is either 0 or 1 because when \(n\) increases by 1, the floor can increase by at most 1. This increment equals 1 exactly when \( k \mid n \) because the quantity \(\frac{n}{k}\) crosses an integer boundary precisely when \( n \) is divisible by \( k \). For all other \( k \), the floors are equal.
+
+Hence, the sum counts the number of divisors \( k \) of \( n \) with \( 1 \leq k \leq n-1 \). Since the sum equals 1, there is exactly one such divisor \( k \neq n \) dividing \( n \). Since 1 divides every integer, the divisor counted is 1, and no other divisor in the range \( 2 \leq k \leq n-1 \) divides \( n \). This means \( n \) has no divisors other than 1 and itself, so \( n \) is prime.",GPT-4.1-mini-ZeroShot,GLM
+891,"The Maclaurin series for a function f(x) is given by the sum of its derivatives at 0, divided by factorials, times x^n. For the first function, f(x) = ln(3 + x), you already found the derivatives at zero correctly: f(0) = ln(3), f'(0) = 1/3, f''(0) = -1/3^2, f'''(0) = 2/3^3, f''''(0) = -6/3^4, and so on. Notice the pattern in the nth derivative: it alternates sign and involves factorials and powers of 3. The nth derivative at zero looks like (-1)^(n-1) * (n-1)! / 3^n for n ≥ 1. Plugging this into the Maclaurin formula, the nth term is f^(n)(0) * x^n / n! = (-1)^(n-1) * (n-1)! / 3^n * x^n / n! = (-1)^(n-1) * x^n / (n * 3^n). So the series becomes ln(3) + sum from n=1 to ∞ of (-1)^(n-1) * x^n / (n * 3^n). This is a neat closed form for the Maclaurin series of ln(3 + x).
+
+For g(x) = (1 + x) / (1 - x), rewrite it as (1 + x) * (1 - x)^(-1). The geometric series for 1/(1 - x) is sum from n=0 to ∞ of x^n, convergent for |x| < 1. Multiplying by (1 + x), get (1 + x) * sum x^n = sum x^n + sum x^(n+1) = 1 + 2x + 2x^2 + 2x^3 + ... as you observed. More explicitly, g(x) = 1 + 2x + 2x^2 + 2x^3 + ... for |x| < 1. This matches your result and is the Maclaurin series for g(x).
+
+So for ln(3 + x), the Maclaurin series is ln(3) + sum_{n=1}^∞ (-1)^{n-1} x^n / (n * 3^n), and for (1 + x)/(1 - x) the Maclaurin series is 1 + 2x + 2x^2 + 2x^3 + ... with radius of convergence 1.",GPT-4.1-mini-ZeroShot,Human
+826,"For the system x ≡ 3 (mod 7) and x ≡ 2 (mod 4), the goal is to find an integer x satisfying both congruences simultaneously. Since 7 and 4 are coprime (their greatest common divisor is 1), the Chinese Remainder Theorem applies directly. Write x in terms of one modulus, say x = 7a + 3 for some integer a. Substitute this into the second congruence: 7a + 3 ≡ 2 (mod 4), which simplifies to 7a + 3 ≡ 2 (mod 4). Since 7 ≡ 3 (mod 4), rewrite as 3a + 3 ≡ 2 (mod 4), or 3a ≡ -1 ≡ 3 (mod 4), because -1 mod 4 is 3. So 3a ≡ 3 (mod 4). Multiplying both sides by the inverse of 3 modulo 4, note that 3 * 3 = 9 ≡ 1 (mod 4), so the inverse of 3 mod 4 is 3. Multiply both sides by 3: a ≡ 3 * 3 ≡ 9 ≡ 1 (mod 4). This means a ≡ 1 (mod 4), so a = 4k + 1 for some integer k.
+
+Plugging back, x = 7a + 3 = 7(4k + 1) + 3 = 28k + 7 + 3 = 28k + 10. The smallest positive solution corresponds to k = 0, so x = 10. This satisfies x ≡ 3 (mod 7) and x ≡ 2 (mod 4). The general solution is x ≡ 10 (mod 28), since the least common multiple of 7 and 4 is 28. Thus, all solutions are of the form 10 + 28k for integers k.",GPT-4.1-mini-ZeroShot,Human
+7,"The decomposition you've found for 496 is quite insightful and highlights a neat way to express the sum of divisors of a perfect number, especially one generated by the Euclid-Euler formula. To analyze this carefully, recall that for a perfect number of the form \( P_n = 2^{n-1}(2^n - 1) \), where \( 2^n - 1 \) is a Mersenne prime, the divisors come from the combinations of powers of 2 and the Mersenne prime factor.
+
+For 496, which corresponds to \( n = 5 \), the Mersenne prime is \( 2^5 - 1 = 31 \). The divisors are \( 1, 2, 4, 8, 16 \) (powers of two up to \( 2^{n-1} \)) and then multiples of 31 by these powers of two, i.e., \( 31, 62, 124, 248 \), which can be written as \( 31 \times 2^k \) for \( k=0,1,2,3 \). Your observation that each of these multiples can be expressed as \( 2^{n+k} - 2^k \) is clever: for instance, \( 31 = 2^5 - 2^0 \), \( 62 = 2^6 - 2^1 \), and so on. This is essentially rewriting the Mersenne prime factor as a difference of powers of two, which is true by definition (\( 2^n - 1 = 2^n - 2^0 \)) and then distributing it over powers of two.
+
+When you sum these terms, grouping all powers of two from \( 2^0 \) up to \( 2^{2n-1} \) and subtracting the smaller powers \( 2^0 \) to \( 2^{n-1} \), you get exactly the perfect number. This is a nice telescoping insight into the sum of divisors: 
+
+\[
+P_n = \sum_{k=0}^{n-1} 2^k + \sum_{k=0}^{n-1} (2^{n+k} - 2^k) = \sum_{k=0}^{n-1} 2^k + \sum_{k=0}^{n-1} 2^{n+k} - \sum_{k=0}^{n-1} 2^k = \sum_{k=n}^{2n-1} 2^k.
+\]
+
+Since the first and last sums of \( 2^k \) cancel appropriately, what remains is the sum of powers of two from \( 2^n \) up to \( 2^{2n-1} \), which simplifies to \( 2^{2n} - 2^n \). When combined with the initial powers \( 2^0 \) to \( 2^{n-1} \), this yields the perfect number formula.
+
+This perspective is not commonly highlighted in textbooks, which usually focus on the product form \( 2^{n-1}(2^n - 1) \) or the multiplicative properties of divisors. However, your formulation is essentially a restatement of the same fact using the additive structure of powers of two, which is elegant and may not be widely documented in this explicit form. It could be a nice pedagogical tool or a neat observation to share in a mathematical exposition or blog. So, while the underlying mathematics is classical, your particular way of expressing the sum of divisors in terms of differences of powers of two arranged like this is a fresh and interesting viewpoint.",GPT-4.1-mini-ZeroShot,Human
+604,"The region D is described by the annulus 1 ≤ x² + y² ≤ 2 and the inequality 0 ≤ y ≤ x, which restricts us to the sector between the rays y=0 and y=x in the first quadrant. Using polar coordinates simplifies the integral because the region is defined by circles and lines through the origin. Set x = r cos θ, y = r sin θ, where r runs from 1 to √2, and θ runs from 0 to π/4 (since y ≤ x translates to θ ≤ π/4 in the first quadrant).
+
+Rewrite the integrand in terms of r and θ. The numerator xy(x - y) becomes (r cos θ)(r sin θ)(r cos θ - r sin θ) = r³ cos θ sin θ (cos θ - sin θ). The denominator x³ + y³ becomes r³ (cos³ θ + sin³ θ). The integral then becomes
+
+∬_D (xy(x - y))/(x³ + y³) dx dy = ∫₀^{π/4} ∫₁^{√2} [r³ cos θ sin θ (cos θ - sin θ)] / [r³ (cos³ θ + sin³ θ)] r dr dθ.
+
+The r³ terms in numerator and denominator cancel, and the Jacobian r from dx dy = r dr dθ remains, so the integrand simplifies to
+
+∫₀^{π/4} ∫₁^{√2} [cos θ sin θ (cos θ - sin θ)] / (cos³ θ + sin³ θ) * r dr dθ.
+
+Integrating with respect to r from 1 to √2 gives a factor of (√2² - 1²)/2 = (2 - 1)/2 = 1/2, but actually since the integrand is multiplied by r, the integral over r is ∫₁^{√2} r dr = (r²/2) from 1 to √2 = (2/2) - (1/2) = 1/2. So the entire double integral reduces to
+
+(1/2) ∫₀^{π/4} [cos θ sin θ (cos θ - sin θ)] / (cos³ θ + sin³ θ) dθ.
+
+Focus on the angular integral I = ∫₀^{π/4} [cos θ sin θ (cos θ - sin θ)] / (cos³ θ + sin³ θ) dθ.
+
+Rewrite the denominator using the factorization a³ + b³ = (a + b)(a² - ab + b²):
+
+cos³ θ + sin³ θ = (cos θ + sin θ)(cos² θ - cos θ sin θ + sin² θ).
+
+Since cos² θ + sin² θ = 1, the denominator becomes (cos θ + sin θ)(1 - cos θ sin θ).
+
+The numerator is cos θ sin θ (cos θ - sin θ).
+
+Introduce t = tan θ, so that θ ∈ [0, π/4] corresponds to t ∈ [0,1]. Express numerator and denominator in terms of t:
+
+cos θ = 1 / √(1 + t²), sin θ = t / √(1 + t²).
+
+Numerator: cos θ sin θ (cos θ - sin θ) = (1/√(1+t²)) * (t/√(1+t²)) * (1/√(1+t²) - t/√(1+t²)) = (t / (1+t²)) * ((1 - t) / √(1+t²)) = t(1 - t) / (1 + t²)^{3/2}.
+
+Denominator: (cos θ + sin θ)(1 - cos θ sin θ) = (1/√(1+t²) + t/√(1+t²)) * (1 - (1/√(1+t²)) * (t/√(1+t²))) = ((1 + t)/√(1+t²)) * (1 - t/(1+t²)) = (1 + t)/√(1+t²) * ((1 + t² - t) / (1 + t²)).
+
+So the denominator is (1 + t)(1 + t² - t) / ( (1 + t²)^{3/2} ).
+
+Putting numerator over denominator, the integrand becomes:
+
+[t(1 - t) / (1 + t²)^{3/2}] * [ (1 + t²)^{3/2} / (1 + t)(1 + t² - t) ] = t(1 - t) / [ (1 + t)(1 + t² - t) ].
+
+Simplify the denominator: 1 + t² - t = (1 - t + t²), which has no obvious factorization, so leave as is.
+
+Thus, I = ∫₀^1 [t(1 - t)] / [ (1 + t)(1 - t + t²) ] dt.
+
+Rewrite numerator: t(1 - t) = t - t².
+
+Try partial fractions: write (t - t²) / [(1 + t)(1 - t + t²)] = A / (1 + t) + (B t + C) / (1 - t + t²).
+
+Multiply both sides by denominator:
+
+t - t² = A (1 - t + t²) + (B t + C)(1 + t).
+
+Expand:
+
+A (1 - t + t²) = A - A t + A t²,
+
+(B t + C)(1 + t) = B t + B t² + C + C t = (B t + B t²) + (C + C t).
+
+Sum: A - A t + A t² + B t + B t² + C + C t = (A + C) + (-A t + B t + C t) + (A t² + B t²).
+
+Group terms:
+
+Constant: A + C,
+
+t: (-A + B + C),
+
+t²: (A + B).
+
+Set equal to left side: t - t², so coefficients match:
+
+Constant term: 0 = A + C,
+
+t coefficient: 1 = -A + B + C,
+
+t² coefficient: -1 = A + B.
+
+From 0 = A + C, get C = -A.
+
+From 1 = -A + B + C = -A + B - A = B - 2A,
+
+From -1 = A + B.
+
+From last, B = -1 - A.
+
+Plug into previous: 1 = (-1 - A) - 2A = -1 - 3A ⇒ 3A = -2 ⇒ A = -2/3.
+
+Then C = -A = 2/3, B = -1 - (-2/3) = -1 + 2/3 = -1/3.
+
+So partial fractions:
+
+(t - t²)/[(1 + t)(1 - t + t²)] = -2/3 / (1 + t) + (-1/3 t + 2/3) / (1 - t + t²).
+
+Rewrite second term:
+
+(-1/3 t + 2/3) = (1/3)(-t + 2) = (1/3)(2 - t).
+
+Integral becomes:
+
+I = ∫₀^1 [ -2/3 / (1 + t) + (1/3)(2 - t) / (1 - t + t²) ] dt = -2/3 ∫₀^1 1/(1 + t) dt + (1/3) ∫₀^1 (2 - t)/(1 - t + t²) dt.
+
+Integrate first:
+
+∫₀^1 1/(1 + t) dt = ln(1 + t) from 0 to 1 = ln 2.
+
+For second integral, write denominator as t² - t + 1 = (t - 1/2)² + 3/4.
+
+Split numerator: 2 - t = (1 + (1 - t)) = 1 + (1 - t), but better to just integrate directly.
+
+Write numerator as A (derivative of denominator) + B:
+
+Derivative denominator: d/dt (t² - t + 1) = 2t - 1.
+
+Try to write 2 - t = α (2t - 1) + β.
+
+Set 2 - t = α (2t - 1) + β.
+
+Equate coefficients:
+
+Coefficient of t: -1 = 2α ⇒ α = -1/2,
+
+Constant term: 2 = -α + β = -(-1/2) + β = 1/2 + β ⇒ β = 3/2.
+
+So 2 - t = (-1/2)(2t - 1) + 3/2.
+
+Then
+
+∫ (2 - t)/(t² - t + 1) dt = ∫ [(-1/2)(2t - 1) + 3/2] / (t² - t + 1) dt = -1/2 ∫ (2t - 1)/(t² - t + 1) dt + 3/2 ∫ 1/(t² - t + 1) dt.
+
+The first integral is straightforward: ∫ (2t - 1)/(t² - t + 1) dt = ln |t² - t + 1| + C.
+
+For second integral, complete the square denominator: t² - t + 1 = (t - 1",GPT-4.1-mini-ZeroShot,Deepseek
+778,"Three points in 3D space, not collinear, define a unique circle lying in the plane containing those points. The center of this circle lies in that plane and is equidistant from all three points. To find the center coordinates, first identify the plane containing the points. The vectors **v1** = (x2 - x1, y2 - y1, z2 - z1) and **v2** = (x3 - x1, y3 - y1, z3 - z1) span this plane. The normal vector **n** to the plane is their cross product: **n** = **v1** × **v2**. Since the center lies in the plane, the center coordinates (x0, y0, z0) satisfy the plane equation passing through (x1, y1, z1), which can be written as n_x (x0 - x1) + n_y (y0 - y1) + n_z (z0 - z1) = 0.
+
+The center is also equidistant from the three points, so it lies on the perpendicular bisectors of the segments between these points. The midpoint of the segment between (x1, y1, z1) and (x2, y2, z2) is M12 = ((x1 + x2)/2, (y1 + y2)/2, (z1 + z2)/2), and the direction of the perpendicular bisector is along the vector perpendicular to **v1** but lying in the plane. Similarly, the midpoint M13 and perpendicular bisector for segment between points 1 and 3 can be found.
+
+To find the center, solve the system formed by the plane equation and the two perpendicular bisectors. The perpendicular bisector of segment 12 consists of points equidistant from x1 and x2, so the center satisfies (x0 - x1)^2 + (y0 - y1)^2 + (z0 - z1)^2 = (x0 - x2)^2 + (y0 - y2)^2 + (z0 - z2)^2. Simplifying this yields a linear equation in x0, y0, z0: 2(x2 - x1)x0 + 2(y2 - y1)y0 + 2(z2 - z1)z0 = x2^2 + y2^2 + z2^2 - x1^2 - y1^2 - z1^2. Similarly, for points 1 and 3, 2(x3 - x1)x0 + 2(y3 - y1)y0 + 2(z3 - z1)z0 = x3^2 + y3^2 + z3^2 - x1^2 - y1^2 - z1^2.
+
+Together with the plane equation, these three linear equations can be solved for (x0, y0, z0). Writing the system explicitly:
+
+n_x (x0 - x1) + n_y (y0 - y1) + n_z (z0 - z1) = 0,
+
+2(x2 - x1)x0 + 2(y2 - y1)y0 + 2(z2 - z1)z0 = x2^2 + y2^2 + z2^2 - x1^2 - y1^2 - z1^2,
+
+2(x3 - x1)x0 + 2(y3 - y1)y0 + 2(z3 - z1)z0 = x3^2 + y3^2 + z3^2 - x1^2 - y1^2 - z1^2.
+
+Solving this linear system yields the coordinates of the circle center.",GPT-4.1-mini-ZeroShot,Kimi
+715,"The series given is the infinite sum of terms 1/(k(k+1)) for k from 1 to infinity. This is not a geometric series, so it doesn't have a common ratio in the usual sense. Instead, it is a telescoping series. To find the sum, rewrite each term using partial fractions: 
+
+1/(k(k+1)) = 1/k - 1/(k+1).
+
+This decomposition shows that the terms cancel in a telescoping manner when summed. Writing out the partial sums up to n,
+
+S_n = (1/1 - 1/2) + (1/2 - 1/3) + (1/3 - 1/4) + ... + (1/n - 1/(n+1)),
+
+most intermediate terms cancel, leaving only
+
+S_n = 1 - 1/(n+1).
+
+Taking the limit as n approaches infinity, the term 1/(n+1) tends to zero, so the infinite sum converges to 1. 
+
+Hence, the sum of the series is 1, and since it is not geometric, no common ratio exists. The key is recognizing the telescoping structure rather than trying to find a ratio between terms.",GPT-4.1-mini-ZeroShot,Kimi
+829,"The given differential equation is dy/dx = 1 + √(1 - xy). This equation is nonlinear and involves the product xy inside the square root, which suggests a substitution might simplify it. Introduce a new variable v = xy, so that y = v/x. Differentiating y with respect to x using the product rule and quotient rule, dy/dx = (dv/dx * x - v) / x². Substitute this into the original equation:
+
+(dv/dx * x - v) / x² = 1 + √(1 - v).
+
+Multiply both sides by x² to clear the denominator:
+
+x dv/dx - v = x² + x² √(1 - v).
+
+Rearranging gives:
+
+x dv/dx = v + x² + x² √(1 - v).
+
+Rewrite as:
+
+dv/dx = v/x + x + x √(1 - v).
+
+This is still complicated, but notice the presence of √(1 - v). To handle this, set w = √(1 - v), so v = 1 - w². Then dv/dx = -2w dw/dx. Substitute into the equation:
+
+-2w dw/dx = (1 - w²)/x + x + x w.
+
+Multiply both sides by -1:
+
+2w dw/dx = - (1 - w²)/x - x - x w.
+
+Simplify the right side:
+
+2w dw/dx = -1/x + w²/x - x - x w.
+
+Divide both sides by 2w:
+
+dw/dx = [-1/x + w²/x - x - x w] / (2w).
+
+This expression is messy, but can be rearranged to isolate dw/dx in terms of x and w. Another approach is to revert to the original substitution and try to separate variables or find an integrating factor, but the complexity suggests the equation might not have an elementary closed-form solution. However, the substitution v = xy reduces the problem to an equation in v and x, which could be explored numerically or further transformed depending on context.
+
+Thus, the general approach is substitution v = xy, transforming the ODE into a first-order equation in v(x), and then attempting further substitutions or numerical methods to solve for v and hence y.",GPT-4.1-mini-ZeroShot,GLM
+164,"Start by rewriting the function clearly: f(x) = (x² * x^(3/4)) / (x³ + 2). Combining powers in the numerator gives f(x) = x^(2 + 3/4) / (x³ + 2) = x^(11/4) / (x³ + 2). The goal is to find f'(x).
+
+Use the quotient rule: if f = u/v, then f' = (u'v - uv') / v². Here, u = x^(11/4) and v = x³ + 2. Differentiate u: u' = (11/4) * x^(11/4 - 1) = (11/4) * x^(7/4). Differentiate v: v' = 3x².
+
+Plug into the quotient rule: f'(x) = [(11/4) x^(7/4) * (x³ + 2) - x^(11/4) * 3x²] / (x³ + 2)². Simplify the numerator carefully. The first term is (11/4) x^(7/4) * (x³ + 2) = (11/4) x^(7/4 + 3) + (11/4) x^(7/4) * 2 = (11/4) x^(19/4) + (11/2) x^(7/4). The second term is 3 x^(11/4 + 2) = 3 x^(11/4 + 8/4) = 3 x^(19/4).
+
+Combine like terms in the numerator: (11/4) x^(19/4) + (11/2) x^(7/4) - 3 x^(19/4) = [(11/4) - 3] x^(19/4) + (11/2) x^(7/4) = [(11/4) - (12/4)] x^(19/4) + (11/2) x^(7/4) = (-1/4) x^(19/4) + (11/2) x^(7/4).
+
+So f'(x) = [(-1/4) x^(19/4) + (11/2) x^(7/4)] / (x³ + 2)². This is the derivative in simplified form. The strange expression involving fourth roots of constants and powers you wrote does not align with the correct differentiation steps here. The answer sheet might have errors or a different form, but this derivative follows directly from the quotient and power rules.",GPT-4.1-mini-ZeroShot,Kimi
+160,"The problem asks for the volume under the plane given by the equation \( x + 2y - z = 0 \) and above the region bounded by \( y = x \) and \( y = x^4 \) on the interval from 0 to 1. The plane can be rewritten as \( z = x + 2y \). The volume is the double integral of \( z = x + 2y \) over the region where \( y \) ranges between \( x^4 \) and \( x \), and \( x \) ranges from 0 to 1.
+
+The integral set-up is correct:
+\[
+\int_0^1 \int_{x^4}^x (x + 2y) \, dy \, dx.
+\]
+
+Evaluating the inner integral with respect to \( y \):
+\[
+\int_{x^4}^x (x + 2y) \, dy = \int_{x^4}^x x \, dy + \int_{x^4}^x 2y \, dy = x(y) \bigg|_{x^4}^x + y^2 \bigg|_{x^4}^x = x(x - x^4) + (x^2 - x^8).
+\]
+
+Simplifying,
+\[
+x(x - x^4) + (x^2 - x^8) = x^2 - x^5 + x^2 - x^8 = 2x^2 - x^5 - x^8.
+\]
+
+Your step where you wrote the inner integral as \( x^2 - x^8 \) was incorrect because you missed the \( -x^5 \) term. This is the critical misstep.
+
+Now integrate with respect to \( x \) from 0 to 1:
+\[
+\int_0^1 (2x^2 - x^5 - x^8) \, dx = 2 \int_0^1 x^2 dx - \int_0^1 x^5 dx - \int_0^1 x^8 dx = 2 \cdot \frac{1}{3} - \frac{1}{6} - \frac{1}{9} = \frac{2}{3} - \frac{1}{6} - \frac{1}{9}.
+\]
+
+Find a common denominator, 18:
+\[
+\frac{2}{3} = \frac{12}{18}, \quad \frac{1}{6} = \frac{3}{18}, \quad \frac{1}{9} = \frac{2}{18}.
+\]
+
+So,
+\[
+\frac{12}{18} - \frac{3}{18} - \frac{2}{18} = \frac{7}{18}.
+\]
+
+The volume is therefore \( \frac{7}{18} \), not \( \frac{2}{9} \). The mistake was in the inner integral evaluation where the term \( -x^5 \) was omitted.",GPT-4.1-mini-ZeroShot,GLM
+349,"The key to proving that \( \cot 7.5^\circ = \sqrt{2} + \sqrt{3} + \sqrt{4} + \sqrt{6} \) lies in simplifying the surd expression you obtained using half-angle formulas and then manipulating the right-hand side expression to match it. Starting from your half-angle expression is a good approach. Since \( \cos 15^\circ = \frac{\sqrt{3} + 1}{2\sqrt{2}} \), you correctly wrote
+
+\[
+\cot 7.5^\circ = \frac{\cos 7.5^\circ}{\sin 7.5^\circ} = \sqrt{\frac{1 + \cos 15^\circ}{1 - \cos 15^\circ}} = \sqrt{\frac{2\sqrt{2} + \sqrt{3} + 1}{2\sqrt{2} - \sqrt{3} + 1}}.
+\]
+
+This expression looks complicated, but rationalizing the denominator inside the square root helps. Multiply numerator and denominator inside by the conjugate of the denominator \( 2\sqrt{2} + 1 - \sqrt{3} \) to get
+
+\[
+\frac{(2\sqrt{2} + \sqrt{3} + 1)(2\sqrt{2} + 1 - \sqrt{3})}{(2\sqrt{2} - \sqrt{3} + 1)(2\sqrt{2} + 1 - \sqrt{3})}.
+\]
+
+The denominator simplifies because it is of the form \( (a + b)(a - b) = a^2 - b^2 \) where \( a = 2\sqrt{2} + 1 \) and \( b = \sqrt{3} \). Calculate \( a^2 = (2\sqrt{2} + 1)^2 = 8 + 4\sqrt{2} + 1 = 9 + 4\sqrt{2} \) and \( b^2 = 3 \). So denominator is \( 9 + 4\sqrt{2} - 3 = 6 + 4\sqrt{2} \).
+
+Now expand numerator:
+
+\[
+(2\sqrt{2} + \sqrt{3} + 1)(2\sqrt{2} + 1 - \sqrt{3}) = (2\sqrt{2})(2\sqrt{2}) + (2\sqrt{2})(1) - (2\sqrt{2})(\sqrt{3}) + \sqrt{3}(2\sqrt{2}) + \sqrt{3}(1) - \sqrt{3}(\sqrt{3}) + 1(2\sqrt{2}) + 1(1) - 1(\sqrt{3}).
+\]
+
+Calculate each term:
+
+- \( (2\sqrt{2})(2\sqrt{2}) = 8 \),
+- \( (2\sqrt{2})(1) = 2\sqrt{2} \),
+- \( (2\sqrt{2})(\sqrt{3}) = 2\sqrt{6} \),
+- \( \sqrt{3}(2\sqrt{2}) = 2\sqrt{6} \),
+- \( \sqrt{3}(1) = \sqrt{3} \),
+- \( \sqrt{3}(\sqrt{3}) = 3 \),
+- \( 1(2\sqrt{2}) = 2\sqrt{2} \),
+- \( 1(1) = 1 \),
+- \( 1(\sqrt{3}) = \sqrt{3} \).
+
+Putting signs carefully,
+
+\[
+8 + 2\sqrt{2} - 2\sqrt{6} + 2\sqrt{6} + \sqrt{3} - 3 + 2\sqrt{2} + 1 - \sqrt{3}.
+\]
+
+Notice \( -2\sqrt{6} + 2\sqrt{6} = 0 \), \( \sqrt{3} - \sqrt{3} = 0 \). So remaining terms are
+
+\[
+8 + 2\sqrt{2} + 2\sqrt{2} - 3 + 1 = (8 - 3 + 1) + (2\sqrt{2} + 2\sqrt{2}) = 6 + 4\sqrt{2}.
+\]
+
+So numerator simplifies to \( 6 + 4\sqrt{2} \), exactly the same as denominator. Hence the fraction inside the root is
+
+\[
+\frac{6 + 4\sqrt{2}}{6 + 4\sqrt{2}} = 1,
+\]
+
+which would be a contradiction, so check carefully the signs in the numerator expansion again.
+
+Re-examining the signs carefully, note that the original denominator conjugate is \( 2\sqrt{2} + 1 - \sqrt{3} \), so the numerator is
+
+\[
+(2\sqrt{2} + \sqrt{3} + 1)(2\sqrt{2} + 1 - \sqrt{3}) = A \times B,
+\]
+
+expand as
+
+\[
+2\sqrt{2} \times 2\sqrt{2} + 2\sqrt{2} \times 1 - 2\sqrt{2} \times \sqrt{3} + \sqrt{3} \times 2\sqrt{2} + \sqrt{3} \times 1 - \sqrt{3} \times \sqrt{3} + 1 \times 2\sqrt{2} + 1 \times 1 - 1 \times \sqrt{3}.
+\]
+
+Calculate:
+
+- \(2\sqrt{2} \times 2\sqrt{2} = 8\),
+- \(2\sqrt{2} \times 1 = 2\sqrt{2}\),
+- \(-2\sqrt{2} \times \sqrt{3} = -2\sqrt{6}\),
+- \(\sqrt{3} \times 2\sqrt{2} = 2\sqrt{6}\),
+- \(\sqrt{3} \times 1 = \sqrt{3}\),
+- \(-\sqrt{3} \times \sqrt{3} = -3\),
+- \(1 \times 2\sqrt{2} = 2\sqrt{2}\),
+- \(1 \times 1 = 1\),
+- \(-1 \times \sqrt{3} = -\sqrt{3}\).
+
+Sum these:
+
+\[
+8 + 2\sqrt{2} - 2\sqrt{6} + 2\sqrt{6} + \sqrt{3} - 3 + 2\sqrt{2} + 1 - \sqrt{3}.
+\]
+
+The \(-2\sqrt{6} + 2\sqrt{6} = 0\), \(\sqrt{3} - \sqrt{3} = 0\), so left with
+
+\[
+8 + 2\sqrt{2} + 2\sqrt{2} - 3 + 1 = (8 - 3 + 1) + (2\sqrt{2} + 2\sqrt{2}) = 6 + 4\sqrt{2}.
+\]
+
+Thus numerator equals denominator, so inside the square root is 1, meaning
+
+\[
+\cot 7.5^\circ = \sqrt{1} = 1,
+\]
+
+which is clearly false. So the error is that the expression you wrote for the cotangent is not quite right or the conjugate chosen is not the right one.
+
+Instead, try rewriting the original expression carefully. Recall from half-angle formulas:
+
+\[
+\cot \theta = \sqrt{\frac{1 + \cos 2\theta}{1 - \cos 2\theta}}.
+\]
+
+For \( \theta = 7.5^\circ \), \( 2\theta = 15^\circ \), and \( \cos 15^\circ = \frac{\sqrt{3} + 1}{2\sqrt{2}} \).
+
+So
+
+\[
+\cot 7.5^\circ = \sqrt{\frac{1 + \frac{\sqrt{3} + 1}{2\sqrt{2}}}{1 - \frac{\sqrt{3} + 1}{2\sqrt{2}}}} = \sqrt{\frac{\frac{2\sqrt{2} + \sqrt{3} + 1}{2\sqrt{2}}}{\frac{2\sqrt{2} - \sqrt{3} - 1}{2\sqrt{2}}}} = \sqrt{\frac{2\sqrt{2} + \sqrt{3} + 1}{2\sqrt{2} - \sqrt{3} - 1}}.
+\]
+
+Notice the denominator is \( 2\sqrt{2} - \sqrt{3} - 1 \), not \( 2\sqrt{2} - \sqrt{3} + 1 \). This changes the conjugate to \( 2\sqrt{2} + \sqrt{3} + 1 \).
+
+Multiply numerator and denominator inside the root by \( 2\sqrt{2} + \sqrt{3} + 1 \) (the conjugate of the denominator):
+
+\[
+\frac{(2\sqrt{2} + \sqrt{3} + 1)^2}{(2\sqrt{2} - \sqrt{3} - 1)(2\sqrt{2}",GPT-4.1-mini-ZeroShot,Deepseek
+981,"The given limit is 
+
+\[
+\lim_{x \to 0} \left(\frac{1}{x} - \frac{\cos x}{\sin x}\right).
+\]
+
+First, rewriting the expression with a common denominator helps: 
+
+\[
+\frac{1}{x} - \frac{\cos x}{\sin x} = \frac{\sin x - x \cos x}{x \sin x}.
+\]
+
+As \(x \to 0\), both numerator and denominator tend to zero, so it is an indeterminate form \(0/0\). Applying L'Hôpital's rule directly to this ratio leads to complicated derivatives and repeated indeterminate forms, which is cumbersome.
+
+A better approach is to use the series expansions of sine and cosine near zero:
+
+\[
+\sin x = x - \frac{x^3}{6} + \frac{x^5}{120} - \cdots,
+\]
+\[
+\cos x = 1 - \frac{x^2}{2} + \frac{x^4}{24} - \cdots.
+\]
+
+Substitute these into the numerator:
+
+\[
+\sin x - x \cos x = \left(x - \frac{x^3}{6} + \cdots\right) - x\left(1 - \frac{x^2}{2} + \cdots\right) = x - \frac{x^3}{6} - x + \frac{x^3}{2} + \cdots = \left(-\frac{1}{6} + \frac{1}{2}\right) x^3 + \cdots = \frac{x^3}{3} + \cdots.
+\]
+
+For the denominator, 
+
+\[
+x \sin x = x \left(x - \frac{x^3}{6} + \cdots\right) = x^2 - \frac{x^4}{6} + \cdots.
+\]
+
+So the fraction becomes approximately
+
+\[
+\frac{\frac{x^3}{3}}{x^2} = \frac{x}{3}
+\]
+
+as \(x \to 0\). Hence the limit is 
+
+\[
+\lim_{x \to 0} \frac{\sin x - x \cos x}{x \sin x} = \lim_{x \to 0} \frac{x}{3} = 0.
+\]
+
+Therefore,
+
+\[
+\lim_{x \to 0} \left(\frac{1}{x} - \frac{\cos x}{\sin x}\right) = 0.
+\]",GPT-4.1-mini-ZeroShot,GLM
+221,"The given equation is 
+
+\[
+\frac{(b-c)(1+a^2)}{x+a^2} + \frac{(c-a)(1+b^2)}{x+b^2} + \frac{(a-b)(1+c^2)}{x+c^2} = 0.
+\]
+
+A direct brute force approach would be quite complicated, but a clever insight comes from the structure of the terms and symmetry in a, b, c. Each term has a factor like (b-c), (c-a), (a-b) which are antisymmetric in the variables, and denominators involving \(x + a^2\), etc. The numerators also include \(1 + a^2\), \(1 + b^2\), \(1 + c^2\).
+
+Try rewriting the equation in a form that suggests a common denominator or consider the function
+
+\[
+F(x) = \sum_{\text{cyclic}} \frac{(b-c)(1+a^2)}{x + a^2}.
+\]
+
+Since the factors (b-c), (c-a), (a-b) sum to zero cyclically, the entire sum is reminiscent of a determinant or a difference expression.
+
+One way is to check for values of \(x\) that simplify the denominators. For instance, try \(x=1\):
+
+\[
+\frac{(b-c)(1+a^2)}{1 + a^2} + \frac{(c-a)(1+b^2)}{1 + b^2} + \frac{(a-b)(1+c^2)}{1 + c^2}.
+\]
+
+Each fraction simplifies to (b-c), (c-a), (a-b) respectively, so the sum becomes
+
+\[
+(b-c) + (c-a) + (a-b) = 0.
+\]
+
+Hence, \(x=1\) is a root.
+
+For the other root, consider the expression \(x = ab + bc + ca\). This is a symmetric function of \(a, b, c\) and often appears in symmetric polynomial identities. Substituting \(x = ab + bc + ca\) into the denominators, the expression becomes more complicated, but Maple or symbolic tools confirm this is a root.
+
+To see why this works without heavy computation, rewrite the sum as a single rational function with denominator \((x + a^2)(x + b^2)(x + c^2)\). The numerator will be a polynomial in \(x\) of degree 2, whose roots correspond to the values of \(x\) satisfying the original equation. Since we found \(x=1\) is a root, the other root can be found by polynomial division or direct substitution, yielding \(x = ab + bc + ca\).
+
+Thus, the solutions for \(x\) are exactly \(1\) and \(ab + bc + ca\). This approach leverages symmetry and the antisymmetric nature of the coefficients to avoid complicated algebraic manipulation.",GPT-4.1-mini-ZeroShot,GLM
+782,"Start by rewriting the function as \(\frac{(1+x)^3}{(1-x)^3}\). Expanding the numerator gives \(1 + 3x + 3x^2 + x^3\), so the function is \(\frac{1 + 3x + 3x^2 + x^3}{(1-x)^3}\). The key is to express this as a power series in \(x\). Recall the standard binomial series expansion \(\frac{1}{(1-x)^3} = \sum_{n=0}^\infty \binom{n+2}{2} x^n = \sum_{n=0}^\infty \frac{(n+1)(n+2)}{2} x^n\).
+
+Multiply this series by the numerator polynomial termwise:
+\[
+(1 + 3x + 3x^2 + x^3) \sum_{n=0}^\infty \frac{(n+1)(n+2)}{2} x^n = \sum_{n=0}^\infty \frac{(n+1)(n+2)}{2} x^n + 3 \sum_{n=0}^\infty \frac{(n+1)(n+2)}{2} x^{n+1} + 3 \sum_{n=0}^\infty \frac{(n+1)(n+2)}{2} x^{n+2} + \sum_{n=0}^\infty \frac{(n+1)(n+2)}{2} x^{n+3}.
+\]
+
+Shift indices to write all sums as powers of \(x^n\) starting at \(n=0\):
+\[
+\sum_{n=0}^\infty \frac{(n+1)(n+2)}{2} x^n + 3 \sum_{n=1}^\infty \frac{n (n+1)}{2} x^n + 3 \sum_{n=2}^\infty \frac{(n-1) n}{2} x^n + \sum_{n=3}^\infty \frac{(n-2)(n-1)}{2} x^n.
+\]
+
+Combine all these sums for \(n \geq 1\), and note the constant term at \(n=0\) is \(\frac{1 \cdot 2}{2} = 1\). For \(n \geq 1\), the coefficient of \(x^n\) is
+\[
+\frac{(n+1)(n+2)}{2} + \frac{3 n (n+1)}{2} + \frac{3 (n-1) n}{2} + \frac{(n-2)(n-1)}{2}.
+\]
+
+Expand each term:
+\[
+\frac{n^2 + 3n + 2}{2} + \frac{3n^2 + 3n}{2} + \frac{3n^2 - 3n}{2} + \frac{n^2 - 3n + 2}{2}.
+\]
+
+Sum the numerators:
+\[
+(n^2 + 3n + 2) + (3n^2 + 3n) + (3n^2 - 3n) + (n^2 - 3n + 2) = n^2 + 3n + 2 + 3n^2 + 3n + 3n^2 - 3n + n^2 - 3n + 2.
+\]
+
+Combine like terms:
+- \(n^2\) terms: \(1 + 3 + 3 + 1 = 8n^2\),
+- \(n\) terms: \(3n + 3n - 3n - 3n = 0\),
+- constants: \(2 + 2 = 4\).
+
+So the numerator is \(8n^2 + 4\), and dividing by 2 gives \(4n^2 + 2\). Therefore, the power series expansion is
+\[
+\frac{(1+x)^3}{(1-x)^3} = 1 + \sum_{n=1}^\infty (4n^2 + 2) x^n,
+\]
+which matches the desired result.
+
+Regarding your partial fraction decomposition, since the denominator is \((1-x)^3\), the standard binomial series approach is more straightforward here than partial fractions, especially because the repeated root causes higher powers in the denominator, making the series expansion via binomial coefficients simpler and more natural.",GPT-4.1-mini-ZeroShot,GLM
+95,"The function is \( f(z) = \frac{(z^6 + 1)^2}{a z^6 (z - a)(z - \frac{1}{a})} \). The point \( z = 0 \) is a pole of order 6 because of the \( z^6 \) in the denominator. To find the residue at a pole of order 6, recall the formula for the residue at a pole of order \( m \) at \( z = 0 \):
+
+\[
+\operatorname{Res}(f, 0) = \frac{1}{(m-1)!} \lim_{z \to 0} \frac{d^{m-1}}{dz^{m-1}} \left[ z^m f(z) \right].
+\]
+
+Here, \( m = 6 \), so
+
+\[
+\operatorname{Res}(f, 0) = \frac{1}{5!} \lim_{z \to 0} \frac{d^5}{dz^5} \left[ z^6 \cdot \frac{(z^6 + 1)^2}{a z^6 (z - a)(z - \frac{1}{a})} \right].
+\]
+
+The factor \( z^6 \) cancels with the denominator \( z^6 \), leaving
+
+\[
+\operatorname{Res}(f, 0) = \frac{1}{120 a} \lim_{z \to 0} \frac{d^5}{dz^5} \left[ \frac{(z^6 + 1)^2}{(z - a)(z - \frac{1}{a})} \right].
+\]
+
+Expand the numerator:
+
+\[
+(z^6 + 1)^2 = z^{12} + 2 z^6 + 1.
+\]
+
+Thus,
+
+\[
+g(z) := \frac{(z^{12} + 2 z^6 + 1)}{(z - a)(z - \frac{1}{a})}.
+\]
+
+The residue is \( \frac{1}{120 a} \) times the 5th derivative of \( g(z) \) at zero.
+
+To proceed, write the denominator as
+
+\[
+(z - a)(z - \frac{1}{a}) = z^2 - \left(a + \frac{1}{a}\right) z + 1.
+\]
+
+Define \( h(z) := \frac{1}{(z - a)(z - \frac{1}{a})} = \frac{1}{z^2 - (a + \frac{1}{a}) z + 1} \).
+
+Since \( |a| < 1 \), the roots \( a \) and \( 1/a \) are distinct and nonzero, so \( h(z) \) is analytic near zero (which is neither root). We can expand \( h(z) \) into a power series around zero:
+
+\[
+h(z) = \frac{1}{1 - (a + \frac{1}{a}) z + z^2} = \frac{1}{1 - c z + z^2}, \quad c = a + \frac{1}{a}.
+\]
+
+Write \( h(z) = \sum_{n=0}^\infty h_n z^n \). The coefficients satisfy the recurrence from
+
+\[
+(1 - c z + z^2) h(z) = 1,
+\]
+
+which gives
+
+\[
+h_0 = 1, \quad h_1 = c, \quad h_n = c h_{n-1} - h_{n-2} \text{ for } n \geq 2.
+\]
+
+Now, \( g(z) = (z^{12} + 2 z^6 + 1) h(z) = h(z) + 2 z^6 h(z) + z^{12} h(z) \).
+
+To find the 5th derivative at zero, only terms up to \( z^5 \) matter because derivatives of order 5 or less of terms with degree higher than 5 vanish at zero. The terms \( 2 z^6 h(z) \) and \( z^{12} h(z) \) contribute only powers \( \geq 6 \), so their derivatives of order 5 or less vanish at zero.
+
+Hence,
+
+\[
+g^{(5)}(0) = \frac{d^5}{dz^5} h(z) \bigg|_{z=0}.
+\]
+
+Since \( h(z) = \sum_{n=0}^\infty h_n z^n \), its 5th derivative at 0 is
+
+\[
+h^{(5)}(0) = 5! \cdot h_5 = 120 \cdot h_5.
+\]
+
+Compute \( h_5 \) using the recurrence:
+
+\[
+h_0 = 1, \quad h_1 = c, \quad h_2 = c^2 - 1, \quad h_3 = c h_2 - h_1 = c(c^2 - 1) - c = c^3 - 2 c,
+\]
+\[
+h_4 = c h_3 - h_2 = c(c^3 - 2 c) - (c^2 - 1) = c^4 - 2 c^2 - c^2 + 1 = c^4 - 3 c^2 + 1,
+\]
+\[
+h_5 = c h_4 - h_3 = c(c^4 - 3 c^2 + 1) - (c^3 - 2 c) = c^5 - 3 c^3 + c - c^3 + 2 c = c^5 - 4 c^3 + 3 c.
+\]
+
+Therefore,
+
+\[
+g^{(5)}(0) = 120 (c^5 - 4 c^3 + 3 c).
+\]
+
+Recall the residue formula:
+
+\[
+\operatorname{Res}(f, 0) = \frac{1}{120 a} \cdot g^{(5)}(0) = \frac{1}{120 a} \cdot 120 (c^5 - 4 c^3 + 3 c) = \frac{c^5 - 4 c^3 + 3 c}{a}.
+\]
+
+Substitute back \( c = a + \frac{1}{a} \) to get
+
+\[
+\boxed{
+\operatorname{Res}(f, 0) = \frac{(a + \frac{1}{a})^5 - 4 (a + \frac{1}{a})^3 + 3 (a + \frac{1}{a})}{a}.
+}
+\]
+
+This expression can be left as is or expanded further if desired.",GPT-4.1-mini-ZeroShot,Qwen
+390,"For part (a), start with the base case n=6. Calculate 6! = 720 and 6³ = 216. Since 720 > 216, the base case holds. Assume for some k ≥ 6 that k! > k³. Then consider (k+1)! = (k+1)k!. Using the induction hypothesis, (k+1)! > (k+1)k³. It suffices to show (k+1)k³ > (k+1)³, or equivalently k³ > (k+1)². Since k ≥ 6, k³ = k·k² and (k+1)² = k² + 2k + 1. For k=6, 6³=216 and (7)²=49, so 216 > 49. For larger k, k³ grows much faster than (k+1)², so the inequality holds. Hence, (k+1)! > (k+1)³, completing the induction step.
+
+For part (b), define the expression A_n = (2n)! / (n! 2^n). The goal is to prove A_n is an integer for all n ≥ 1. Base case n=1 gives A_1 = 2! / (1! 2^1) = 2 / 2 = 1, an integer. Assume A_k is an integer for some k ≥ 1. Then A_{k+1} = (2(k+1))! / ((k+1)! 2^{k+1}) = (2k+2)(2k+1)(2k)! / ((k+1) k! 2^{k} 2) = (2k+2)(2k+1) / (2(k+1)) × (2k)! / (k! 2^{k}) = (2k+1) × A_k. Since A_k is an integer by induction hypothesis, and 2k+1 is an integer, their product A_{k+1} is an integer. This completes the induction step, so A_n is an integer for all n ≥ 1.",GPT-4.1-mini-ZeroShot,Human
+345,"Expression is a sum of weighted distances from the point (x, y) to four fixed points: A = (0,0), B = (1,1), C = (1,0), and D = (0,1). Specifically, it is 3 times the distance to A, plus 5 times the distance to B, plus √5 times the sum of distances to C and D. The goal is to minimize this sum.
+
+The expression is 
+3·|PA| + 5·|PB| + √5(|PC| + |PD|), where P = (x,y).
+
+Because all terms are distances multiplied by positive weights, the function is continuous and convex, so a minimum exists.
+
+Try to find conditions for critical points by differentiating. The gradient of the function f(x,y) is:
+
+∇f = 3·(x,y)/√(x² + y²) + 5·((x-1),(y-1))/√((x-1)² + (y-1)²) + √5·((x-1,y)/√((x-1)² + y²) + (x,y-1)/√(x² + (y-1)²)).
+
+Set ∇f = 0 for minimum.
+
+This is complicated, but the symmetry of points C=(1,0) and D=(0,1) suggests looking along the line y = x.
+
+Put y = x and rewrite:
+
+Distances become:
+
+|PA| = √(2x²) = x√2,
+
+|PB| = √((x-1)² + (x-1)²) = √(2(x-1)²) = √2|x-1|,
+
+|PC| = |x-1|,
+
+|PD| = |x|.
+
+So the function along y=x is
+
+f(x) = 3·x√2 + 5·√2·|x-1| + √5(|x-1| + |x|).
+
+Assume x in [0,1] to avoid absolute value complications:
+
+Then |x| = x, |x-1| = 1 - x.
+
+So
+
+f(x) = 3√2·x + 5√2·(1 - x) + √5((1 - x) + x) = 3√2 x + 5√2 (1 - x) + √5.
+
+Simplify:
+
+= 3√2 x + 5√2 - 5√2 x + √5 = (3√2 - 5√2) x + 5√2 + √5 = -2√2 x + 5√2 + √5.
+
+This is linear decreasing in x on [0,1], so minimum at x=1:
+
+f(1) = -2√2·1 + 5√2 + √5 = 3√2 + √5 ≈ 4.242 + 2.236 = 6.478.
+
+Try x > 1:
+
+For x > 1, |x-1| = x-1, |x| = x, so
+
+f(x) = 3√2 x + 5√2 (x - 1) + √5 (x - 1 + x) = 3√2 x + 5√2 x - 5√2 + √5 (2x - 1)
+
+= (8√2 + 2√5) x - 5√2 - √5.
+
+Derivative positive, function increasing for x > 1, so minimum not there.
+
+For x < 0:
+
+|x| = -x, |x-1| = 1 - x, so
+
+f(x) = 3√2 (-x) + 5√2 (1 - x) + √5 (1 - x - x) = -3√2 x + 5√2 - 5√2 x + √5 (1 - 2x)
+
+= (-8√2 - 2√5) x + 5√2 + √5.
+
+Derivative negative, so function decreases as x → -∞, no minimum there.
+
+Hence minimum on y = x is at x=1, value ~6.478.
+
+Try the point (0.5, 0.5):
+
+Compute distances:
+
+|PA| = √(0.5² + 0.5²) = √0.5 ≈ 0.707,
+
+|PB| = √((0.5 -1)² + (0.5 -1)²) = √(0.5) ≈ 0.707,
+
+|PC| = √((0.5 -1)² + 0.5²) = √(0.25 + 0.25) = √0.5 ≈ 0.707,
+
+|PD| = √(0.5² + (0.5 -1)²) = √(0.25 + 0.25) = √0.5 ≈ 0.707.
+
+Sum is 3·0.707 + 5·0.707 + √5(0.707 + 0.707) = (3+5)·0.707 + √5·1.414 = 8·0.707 + √5·1.414 ≈ 5.656 + 3.162·1.414 ≈ 5.656 + 4.472 = 10.128, larger than 6.478.
+
+Try the point (1,1):
+
+Distances are:
+
+|PA| = √2 ≈ 1.414,
+
+|PB| = 0,
+
+|PC| = 1,
+
+|PD| = 1.
+
+Sum:
+
+3·1.414 + 5·0 + √5(1 + 1) = 4.242 + 0 + √5·2 ≈ 4.242 + 4.472 = 8.714, larger than 6.478.
+
+Try (1,0):
+
+|PA|=1,
+
+|PB|=√((1-1)² + (0-1)²) =1,
+
+|PC|=0,
+
+|PD|=√(1² + (0-1)²) = √2 ≈1.414,
+
+Sum:
+
+3·1 + 5·1 + √5(0 + 1.414) = 3 + 5 + √5·1.414 ≈ 8 + 3.162·1.414 ≈ 8 + 4.472 = 12.472, larger.
+
+Try (0,1):
+
+Symmetric to above, also large.
+
+Try (0,0):
+
+Sum is 0 + 5·√2 + √5(1 + 1) = 0 + 7.071 + 4.472 = 11.543, large.
+
+Try (1, 0.5):
+
+|PA|=√(1 + 0.25)=√1.25≈1.118,
+
+|PB|=√((1-1)² + (0.5 -1)²)=0.5,
+
+|PC|=0,
+
+|PD|=√(1² + (0.5 -1)²)=√(1 + 0.25)=1.118,
+
+Sum=3·1.118 + 5·0.5 + √5(0 + 1.118) = 3.354 + 2.5 + 3.162·1.118 ≈ 5.854 + 3.535 = 9.389, larger.
+
+Try (0.5,1):
+
+Symmetric, also larger.
+
+Try (0.5,0):
+
+|PA|=0.5,
+
+|PB|=√((0.5-1)² + (0-1)²)=√(0.25 +1)=√1.25=1.118,
+
+|PC|=√((0.5-1)² + 0)=0.5,
+
+|PD|=√(0.5² + (0-1)²)=√(0.25 +1)=1.118,
+
+Sum=3·0.5 + 5·1.118 + √5(0.5 + 1.118) = 1.5 + 5.59 + 3.162·1.618 ≈ 7.09 + 5.12 = 12.21, large.
+
+Try (1,0.75):
+
+|PA|=√(1 + 0.75²)=√(1 + 0.5625)=√1.5625=1.25,
+
+|PB|=√((1-1)² + (0.75-1)²)=0.25,
+
+|PC|=0,
+
+|PD|=√(1² + (0.75 -1)²)=√(1 + 0.0625)=1.03,
+
+Sum=3·1.25 + 5·0.25 + √5(0 + 1.03) = 3.75 + 1.25 + 3.162·1.03 ≈ 5 + 3.25 = 8.25, larger.
+
+Try (1,1):
+
+Already checked, 8.7.
+
+Try (0.75, 0.75):
+
+|PA|=√(0.75² + 0.75²)=√(1.125)=1.06,
+
+|PB|=√((0.75-1)² + (0.75-1)²)=√(0.125)=0.353,
+
+|PC|",GPT-4.1-mini-ZeroShot,Deepseek

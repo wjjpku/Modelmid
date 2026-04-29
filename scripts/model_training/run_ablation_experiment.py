@@ -25,7 +25,7 @@ def run_ablation_study():
     
     # 1. Load Data
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
-    data_path = os.path.join(base_dir, 'dataset', 'full_dataset.json')
+    data_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset.json')
     
     print("Loading dataset...")
     df = load_data(data_path)
@@ -152,7 +152,7 @@ def run_ablation_study():
             print(f"- Removing [{row['Configuration']}]: Drop of {drop*100:.2f}%")
             
     # Save to CSV
-    output_dir = os.path.join(base_dir, 'docs')
+    output_dir = os.path.join(base_dir, 'results', 'classification')
     os.makedirs(output_dir, exist_ok=True)
     csv_path = os.path.join(output_dir, 'ablation_results.csv')
     results_df.to_csv(csv_path, index=False)

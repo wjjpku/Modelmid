@@ -77,8 +77,8 @@ def call_qwen(prompt, max_retries=3):
     return ""
 
 def generate_pro_dataset():
-    output_path = os.path.join(base_dir, 'dataset', 'full_dataset_pro.json')
-    original_dataset_path = os.path.join(base_dir, 'dataset', 'full_dataset.json')
+    output_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset_pro.json')
+    original_dataset_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset.json')
     
     # 1. Load original 1000 items
     print(f"Loading original 1000 items from {original_dataset_path}...")

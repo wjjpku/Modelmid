@@ -119,7 +119,14 @@ def process_dataset(file_path: str, max_workers: int = 5):
     print(f"\nAll tasks completed! Added {len(results_map)} new Deepseek answers.")
 
 if __name__ == '__main__':
-    dataset_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'dataset/full_dataset.json')
+    dataset_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        '..',
+        '..',
+        'dataset',
+        'training',
+        'full_dataset.json',
+    )
     if DEEPSEEK_API_KEY == "YOUR_API_KEY_HERE" or not DEEPSEEK_API_KEY:
         print("WARNING: API KEY not set.")
     else:

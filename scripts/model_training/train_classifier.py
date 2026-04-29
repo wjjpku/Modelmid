@@ -20,6 +20,15 @@ plt.style.use('seaborn-v0_8-whitegrid')
 plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
 plt.rcParams['axes.unicode_minus'] = False
 
+SOURCE_FIELDS = [
+    ('human', 'Human'),
+    ('deepseek', 'Deepseek'),
+    ('kimi', 'Kimi'),
+    ('glm', 'GLM'),
+    ('qwen', 'Qwen'),
+    ('gpt_4_1_mini', 'GPT-4.1-mini'),
+]
+
 # 1. 加载并整理数据
 def load_data(json_path):
     with open(json_path, 'r', encoding='utf-8') as f:
@@ -27,41 +36,13 @@ def load_data(json_path):
         
     records = []
     for row in data:
-        # 添加 human
-        if row.get('human') and str(row['human']).strip():
-            records.append({
-                'id': row['id'],
-                'text': str(row['human']).strip(),
-                'label': 'Human'
-            })
-        # 添加 deepseek
-        if row.get('deepseek') and str(row['deepseek']).strip():
-            records.append({
-                'id': row['id'],
-                'text': str(row['deepseek']).strip(),
-                'label': 'Deepseek'
-            })
-        # 添加 kimi 
-        if row.get('kimi') and str(row['kimi']).strip():
-            records.append({
-                'id': row['id'],
-                'text': str(row['kimi']).strip(),
-                'label': 'Kimi'
-            })
-        # 添加 GLM
-        if row.get('glm') and str(row['glm']).strip():
-            records.append({
-                'id': row['id'],
-                'text': str(row['glm']).strip(),
-                'label': 'GLM'
-            })
-        # 添加 Qwen
-        if row.get('qwen') and str(row['qwen']).strip():
-            records.append({
-                'id': row['id'],
-                'text': str(row['qwen']).strip(),
-                'label': 'Qwen'
-            })
+        for field_name, label in SOURCE_FIELDS:
+            if row.get(field_name) and str(row[field_name]).strip():
+                records.append({
+                    'id': row['id'],
+                    'text': str(row[field_name]).strip(),
+                    'label': label
+                })
     return pd.DataFrame(records)
 
 # 2. 深度优化的自定义特征提取器
@@ -207,7 +188,7 @@ def train_and_save_best_model(df):
         ('clf', HistGradientBoostingClassifier(max_iter=100, random_state=42))
     ])
     
-    print("\n--- Training Final Combined Gradient Boosting Model (5-Class) ---")
+    print(f"\n--- Training Final Combined Gradient Boosting Model ({y.nunique()}-Class) ---")
     
     best_pipeline.fit(X_df, y)
     
@@ -228,7 +209,7 @@ def train_and_save_best_model(df):
     # print(f"\n5-Fold CV Mean Accuracy: {scores.mean():.4f} (+/- {scores.std():.4f})")
 
 if __name__ == '__main__':
-    df = load_data(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'dataset', 'full_dataset.json'))
+    df = load_data(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'dataset', 'training', 'full_dataset.json'))
     if len(df) > 0:
         analyze_features_and_interpretability(df)
         train_and_save_best_model(df)

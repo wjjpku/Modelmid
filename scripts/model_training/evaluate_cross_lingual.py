@@ -44,7 +44,7 @@ class MathTextDataset(Dataset):
         }
 
 def load_chinese_data():
-    json_path = os.path.join(base_dir, 'dataset', 'test_100_chinese_archive_questions.json')
+    json_path = os.path.join(base_dir, 'dataset', 'generalization', 'test_100_chinese_archive_questions.json')
     if not os.path.exists(json_path):
         print(f"File not found: {json_path}")
         return None
