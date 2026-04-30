@@ -15,10 +15,11 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import classification_report
 
-# 设置绘图样式
-plt.style.use('seaborn-v0_8-whitegrid')
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
-plt.rcParams['axes.unicode_minus'] = False
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from plotting_utils import configure_matplotlib_fonts
+
+configure_matplotlib_fonts()
 
 SOURCE_FIELDS = [
     ('human', 'Human'),
@@ -153,7 +154,18 @@ def analyze_features_and_interpretability(df):
     plt.title("Feature Importances for Differentiating Math Answer Sources", fontsize=16)
     plt.xlabel("Random Forest Feature Importance", fontsize=14)
     plt.tight_layout()
-    plt.savefig(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'docs', 'figures', 'feature_importances.png'), dpi=300)
+    plt.savefig(
+        os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '..',
+            '..',
+            'docs',
+            'figures',
+            'gpt_augmented',
+            'feature_importances.png',
+        ),
+        dpi=300,
+    )
     plt.close()
     print("Feature importance plot saved.")
 

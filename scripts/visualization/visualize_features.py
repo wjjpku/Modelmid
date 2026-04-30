@@ -11,12 +11,11 @@ from sklearn.preprocessing import StandardScaler
 # Import the exact feature extractor used in our final model
 import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'model_training'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from train_classifier import load_data, TextFeatureExtractor
+from plotting_utils import configure_matplotlib_fonts
 
-# 设置绘图样式
-plt.style.use('seaborn-v0_8-whitegrid')
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
-plt.rcParams['axes.unicode_minus'] = False
+configure_matplotlib_fonts()
 
 
 def build_palette(labels):
@@ -26,7 +25,7 @@ def build_palette(labels):
 def generate_report_and_plots():
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
     dataset_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset.json')
-    output_dir = os.path.join(base_dir, 'docs/figures')
+    output_dir = os.path.join(base_dir, 'docs', 'figures', 'gpt_augmented')
     report_path = os.path.join(base_dir, 'docs/experiment_report.md')
     
     if not os.path.exists(output_dir):
@@ -112,7 +111,7 @@ def generate_report_and_plots():
 *解读：人类的平均段落数极少（仅为大模型的1/2到1/3），但每个段落的信息密度（字符数）是所有 AI 的数倍。大模型极度依赖双换行来组织思维。*
 
 ### 1.2 核心特征分布图
-![段落数量分布 (Violin Plot)](./figures/violin_num_paragraphs.png)
+![段落数量分布 (Violin Plot)](./figures/gpt_augmented/violin_num_paragraphs.png)
 
 ---
 
@@ -131,7 +130,7 @@ def generate_report_and_plots():
 *解读：不同模型在“何时使用行内公式”和“是否偏好复杂 LaTeX 环境”上差异明显。新增的 GPT-4.1-mini 也可在这组特征中与原五类来源一起比较。*
 
 ### 2.2 核心特征分布图
-![行内公式包裹频率 (Violin Plot)](./figures/violin_inline_math_count.png)
+![行内公式包裹频率 (Violin Plot)](./figures/gpt_augmented/violin_inline_math_count.png)
 
 ---
 
@@ -150,7 +149,7 @@ def generate_report_and_plots():
 *解读：几乎所有的 LLM 都极其喜欢使用 "We have", "Let x be", "Now consider" 这样的祈使代词句式作为推导开头，人类的使用密度要低得多。同时，大模型严格的语法训练导致其大写字母的分布（首字母大写规范）远高于随意的人类手写。*
 
 ### 3.2 核心特征分布图
-![大模型祈使句密度 (Violin Plot)](./figures/violin_declarative_density.png)
+![大模型祈使句密度 (Violin Plot)](./figures/gpt_augmented/violin_declarative_density.png)
 
 ---
 
@@ -158,7 +157,7 @@ def generate_report_and_plots():
 
 为了验证上述 28 个深度特征的组合能否在数学空间中有效区分这些文本，我们进行了 PCA 降维。
 
-![PCA 降维特征空间聚类](./figures/pca_clusters_2d.png)
+![PCA 降维特征空间聚类](./figures/gpt_augmented/pca_clusters_2d.png)
 
 *解读：在二维 PCA 空间中，不同来源的排版与措辞风格会形成可观察的聚类结构。加入 GPT-4.1-mini 后，可以直接观察它与原五类来源在结构特征空间中的相对位置。*
 

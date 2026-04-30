@@ -1,21 +1,41 @@
 import os
+import sys
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-plt.style.use('seaborn-v0_8-whitegrid')
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
-plt.rcParams['axes.unicode_minus'] = False
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from plotting_utils import configure_matplotlib_fonts
+
+configure_matplotlib_fonts()
 
 def plot_stealth_results():
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
-    output_path = os.path.join(base_dir, 'docs', 'figures', 'stealth_success_rate.png')
-    
-    models = ['Deepseek', 'Kimi', 'GLM', 'Qwen']
-    success_rates = [68.18, 18.00, 70.00, 98.00]
+    output_path = os.path.join(base_dir, 'docs', 'figures', 'gpt_augmented', 'stealth_success_rate.png')
+    predictions_path = os.path.join(base_dir, 'results', 'adversarial', 'stealth_predictions.csv')
+
+    df = pd.read_csv(predictions_path)
+    grouped = (
+        df.assign(fooled=df['predicted_label'].eq('Human'))
+        .groupby('true_label', sort=False)['fooled']
+        .mean()
+        .mul(100)
+    )
+
+    model_order = ['Deepseek', 'Kimi', 'GLM', 'Qwen', 'GPT-4.1-mini']
+    models = [model for model in model_order if model in grouped.index]
+    success_rates = [grouped.loc[model] for model in models]
     
     plt.figure(figsize=(10, 6))
     
-    colors = ['#1f77b4', '#ff7f0e', '#d62728', '#9467bd']
+    color_map = {
+        'Deepseek': '#1f77b4',
+        'Kimi': '#ff7f0e',
+        'GLM': '#d62728',
+        'Qwen': '#9467bd',
+        'GPT-4.1-mini': '#2ca02c',
+    }
+    colors = [color_map[model] for model in models]
     
     bars = plt.bar(models, success_rates, color=colors, edgecolor='black', linewidth=1.2, alpha=0.8)
     

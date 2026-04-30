@@ -28,14 +28,13 @@ SOURCE_FIELDS = [
     ('gpt_4_1_mini', 'GPT-4.1-mini'),
 ]
 
-# 设置绘图样式与字体，确保在 Mac 上正常显示中文和高清图
-plt.style.use('seaborn-v0_8-whitegrid')
-plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
-plt.rcParams['axes.unicode_minus'] = False
-
 base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+sys.path.append(os.path.join(base_dir, 'scripts'))
 sys.path.append(os.path.join(base_dir, 'scripts', 'model_training'))
+from plotting_utils import configure_matplotlib_fonts
 from train_classifier import TextFeatureExtractor, DenseTransformer
+
+configure_matplotlib_fonts()
 
 class MathTextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_length=512):
@@ -159,7 +158,7 @@ def evaluate_dl_model(df, classes, y_true_text, y_true_encoded, label_encoder):
         y_pred_dl_text,
         classes,
         f"Confusion Matrix: E2E DistilBERT (Acc: {acc_dl:.1%})",
-        os.path.join(base_dir, 'docs', 'figures', 'confusion_matrix_dl.png'),
+        os.path.join(base_dir, 'docs', 'figures', 'gpt_augmented', 'confusion_matrix_dl.png'),
     )
     return y_pred_dl_text, acc_dl
 
@@ -191,7 +190,7 @@ def main():
     
     plot_cm(y_true_text, y_pred_ml_text, classes, 
             f"Confusion Matrix: ML Baseline (Acc: {acc_ml:.1%})", 
-            os.path.join(base_dir, 'docs', 'figures', 'confusion_matrix_ml.png'))
+            os.path.join(base_dir, 'docs', 'figures', 'gpt_augmented', 'confusion_matrix_ml.png'))
 
     # ---------------------------------------------------------
     # 2. Evaluate DL Model (DistilBERT), if the environment supports it
