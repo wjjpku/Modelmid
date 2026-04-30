@@ -56,7 +56,7 @@ Model_mid/
 ├── docs/
 │   ├── figures/                      # 主线使用: PCA、混淆矩阵、小提琴图等可视化输出
 │   │   ├── gpt_augmented/            # 已加入 GPT 数据后重新生成的新版图片
-│   │   │   # 包含: feature_importances / PCA / 3 张 violin / confusion_matrix_ml
+│   │   │   # 包含: feature_importances / PCA / 3 张 violin / confusion_matrix_ml / stealth_success_rate
 │   │   └── legacy_pre_gpt/           # 历史旧图，仍对应原五分类或旧实验阶段
 │   ├── reports/
 │   │   ├── comprehensive_evaluation_report.md
@@ -183,6 +183,8 @@ Model_mid/
 - `docs/figures/gpt_augmented/violin_declarative_density.png`
 - `docs/figures/gpt_augmented/pca_clusters_2d.png`
 - `docs/figures/gpt_augmented/confusion_matrix_ml.png`
+- `docs/figures/gpt_augmented/stealth_success_rate.png`
+  - 已补入 `GPT-4.1-mini` 的 zero-shot stealth 检测结果，并与原四模型保持同一静态 prompt 与同一分类器口径
 - `results/generalization/clean_test_predictions.csv`
   - 已更新为 6 类 clean set 的 ML 预测结果
   - 由于本机暂未重训 DL，这个文件当前不含 `DL_Prediction` 列
