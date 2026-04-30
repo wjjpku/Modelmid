@@ -48,8 +48,8 @@ def call_qwen(prompt, max_retries=3):
     return ""
 
 def process_archive_data():
-    csv_path = os.path.join(base_dir, 'archive', 'full_dataset_cn.csv')
-    output_path = os.path.join(base_dir, 'dataset', 'test_100_chinese_archive_questions.json')
+    csv_path = os.path.join(base_dir, 'archive', 'raw_chinese_sources', 'full_dataset_cn.csv')
+    output_path = os.path.join(base_dir, 'dataset', 'generalization', 'test_100_chinese_archive_questions.json')
     
     if os.path.exists(output_path):
         print(f"Found existing {output_path}. Skipping generation.")

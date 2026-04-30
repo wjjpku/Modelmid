@@ -18,3 +18,11 @@
 
 **建议：** 可以延伸研究防检测与反制干预，基于你们对判别器的研究，给出几条让 LLM 生成的数学作业更像“人类学生手写”的建议（即如何对抗这种判别器）。
 
+## Repo Extension Note
+
+The current repository also contains an optional OpenAI generation extension
+based on `OPENAI_API_KEY` and `gpt-4.1-mini`. It adds dataset fields such as
+`gpt_4_1_mini` and `gpt_4_1_mini_stealth`, but the historical midterm report
+results remain the original 5-source setup unless the training pipeline is
+explicitly rerun with the new source included.
+

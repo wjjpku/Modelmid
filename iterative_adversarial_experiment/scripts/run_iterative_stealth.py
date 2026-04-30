@@ -53,7 +53,7 @@ def call_kimi(system_prompt, user_prompt):
 def run_iterative_experiment(num_rounds=8, sample_size=15):
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
     model_path = os.path.join(base_dir, 'models/best_classifier_model.pkl')
-    dataset_path = os.path.join(base_dir, 'dataset/full_dataset.json')
+    dataset_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset.json')
     history_path = os.path.join(base_dir, 'iterative_adversarial_experiment/data/kimi_data_driven_stealth_history.json')
     
     print("Loading model and dataset...")

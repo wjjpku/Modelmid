@@ -72,8 +72,8 @@ def call_qwen(prompt):
 
 def generate_stealth_data():
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
-    dataset_path = os.path.join(base_dir, 'dataset/full_dataset.json')
-    stealth_output_path = os.path.join(base_dir, 'dataset/stealth_dataset.json')
+    dataset_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset.json')
+    stealth_output_path = os.path.join(base_dir, 'dataset', 'adversarial', 'stealth_dataset.json')
     
     # Load original data to get 50 random test questions
     with open(dataset_path, 'r', encoding='utf-8') as f:

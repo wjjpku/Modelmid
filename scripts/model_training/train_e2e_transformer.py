@@ -10,6 +10,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, accuracy_score
 
+SOURCE_FIELDS = [
+    ('human', 'Human'),
+    ('deepseek', 'Deepseek'),
+    ('kimi', 'Kimi'),
+    ('glm', 'GLM'),
+    ('qwen', 'Qwen'),
+    ('gpt_4_1_mini', 'GPT-4.1-mini'),
+]
+
 # 1. Dataset Preparation
 class MathTextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_length=512):
@@ -51,11 +60,9 @@ def load_and_split_data(json_path):
         subject = row.get('subject', 'unknown')
         q_df_list.append({'id': q_id, 'subject': subject})
         
-        if row.get('human'): records.append({'id': q_id, 'text': row['human'], 'label': 'Human'})
-        if row.get('deepseek'): records.append({'id': q_id, 'text': row['deepseek'], 'label': 'Deepseek'})
-        if row.get('kimi'): records.append({'id': q_id, 'text': row['kimi'], 'label': 'Kimi'})
-        if row.get('glm'): records.append({'id': q_id, 'text': row['glm'], 'label': 'GLM'})
-        if row.get('qwen'): records.append({'id': q_id, 'text': row['qwen'], 'label': 'Qwen'})
+        for field_name, label in SOURCE_FIELDS:
+            if row.get(field_name):
+                records.append({'id': q_id, 'text': row[field_name], 'label': label})
         
     df = pd.DataFrame(records)
     q_df = pd.DataFrame(q_df_list).drop_duplicates('id')
@@ -72,11 +79,11 @@ def load_and_split_data(json_path):
 # 2. Main Training Function
 def train_e2e_model():
     print("="*50)
-    print("🤖 STARTING END-TO-END LLM CLASSIFICATION EXPERIMENT")
+    print("STARTING END-TO-END LLM CLASSIFICATION EXPERIMENT")
     print("="*50)
     
     base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
-    json_path = os.path.join(base_dir, 'dataset', 'full_dataset_pro.json')
+    json_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset_pro.json')
     
     train_df, test_df = load_and_split_data(json_path)
     
@@ -86,6 +93,7 @@ def train_e2e_model():
     test_labels = le.transform(test_df['label'].values)
     
     print(f"Data Split: {len(train_df)} Train records, {len(test_df)} Test records.")
+    print(f"Detected labels: {sorted(le.classes_)}")
     
     # 3. Model & Tokenizer Selection
     # Using a fast, highly capable embedding/encoder model (distilbert is robust and light)
@@ -134,15 +142,18 @@ def train_e2e_model():
     
     # Check for existing checkpoint to resume
     if os.path.exists(checkpoint_path):
-        print(f"\n🔄 Found checkpoint! Resuming training from {checkpoint_path}...")
-        checkpoint = torch.load(checkpoint_path, map_location=device)
-        model.load_state_dict(checkpoint['model_state_dict'])
-        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
-        start_epoch = checkpoint['epoch'] + 1
-        best_acc = checkpoint['best_acc']
-        epochs_no_improve = checkpoint['epochs_no_improve']
-        print(f"Resumed from epoch {start_epoch} with Best Acc: {best_acc:.4f}\n")
+        print(f"\nFound checkpoint! Resuming training from {checkpoint_path}...")
+        try:
+            checkpoint = torch.load(checkpoint_path, map_location=device)
+            model.load_state_dict(checkpoint['model_state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+            scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+            start_epoch = checkpoint['epoch'] + 1
+            best_acc = checkpoint['best_acc']
+            epochs_no_improve = checkpoint['epochs_no_improve']
+            print(f"Resumed from epoch {start_epoch} with Best Acc: {best_acc:.4f}\n")
+        except Exception as exc:
+            print(f"Checkpoint could not be resumed ({exc}). Starting a fresh training run instead.\n")
     
     t0_total = time.time()
     
@@ -201,7 +212,7 @@ def train_e2e_model():
             best_acc = val_acc
             epochs_no_improve = 0
             torch.save(model.state_dict(), best_model_path)
-            print(f"    🌟 New Best Accuracy! Model saved to: {best_model_path}")
+            print(f"    New Best Accuracy! Model saved to: {best_model_path}")
         else:
             epochs_no_improve += 1
             
@@ -214,15 +225,15 @@ def train_e2e_model():
             'best_acc': best_acc,
             'epochs_no_improve': epochs_no_improve
         }, checkpoint_path)
-        print(f"    💾 Checkpoint for epoch {epoch+1} saved to: {checkpoint_path}")
+        print(f"    Checkpoint for epoch {epoch+1} saved to: {checkpoint_path}")
             
         if epochs_no_improve >= patience:
-            print(f"⚠️ Early stopping triggered at epoch {epoch+1}.")
+            print(f"Early stopping triggered at epoch {epoch+1}.")
             break
             
     total_time = time.time() - t0_total
     print("\n" + "="*50)
-    print(f"🏆 E2E TRAINING COMPLETE 🏆")
+    print("E2E TRAINING COMPLETE")
     print(f"Total Time: {total_time:.2f}s | Best Validation Accuracy: {best_acc:.4f}")
     
     # Load best model and generate full report
@@ -261,9 +272,9 @@ def train_e2e_model():
         "Epochs": epoch + 1
     }
     
-    docs_dir = os.path.join(base_dir, 'docs')
-    os.makedirs(docs_dir, exist_ok=True)
-    pd.DataFrame([results]).to_csv(os.path.join(docs_dir, 'e2e_dl_results.csv'), index=False)
+    results_dir = os.path.join(base_dir, 'results', 'classification')
+    os.makedirs(results_dir, exist_ok=True)
+    pd.DataFrame([results]).to_csv(os.path.join(results_dir, 'e2e_dl_results.csv'), index=False)
 
 if __name__ == '__main__':
     train_e2e_model()

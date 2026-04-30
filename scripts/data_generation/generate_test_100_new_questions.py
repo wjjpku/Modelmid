@@ -110,8 +110,8 @@ class MathTextDataset(Dataset):
         }
 
 def evaluate_e2e_new_data():
-    output_path = os.path.join(base_dir, 'dataset', 'test_100_new_questions.json')
-    original_dataset_path = os.path.join(base_dir, 'dataset', 'full_dataset_pro.json')
+    output_path = os.path.join(base_dir, 'dataset', 'generalization', 'test_100_new_questions.json')
+    original_dataset_path = os.path.join(base_dir, 'dataset', 'training', 'full_dataset_pro.json')
     
     print(f"Loading original dataset from {original_dataset_path} to avoid overlapping...")
     with open(original_dataset_path, 'r', encoding='utf-8') as f:
